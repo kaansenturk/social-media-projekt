@@ -3,7 +3,15 @@
 
 
 ## Frontend mit Vue.js:
+Frontend aufsetzen:
 
+´´´
+npm install
+
+npm run build
+
+npm run serve
+´´´
 - Erstellen einer Hauptkomponente, die das grundlegende Layout deiner Social-Media-Plattform enthält, wie z.B. eine Navigationsleiste, einen Seiteninhalt und einen Fußzeilenbereich.
 
 - Definieren einer separaten Komponenten für verschiedene Ansichten, z.B. für die Startseite, den News-Feed, Benutzerprofile, Benachrichtigungen usw.
