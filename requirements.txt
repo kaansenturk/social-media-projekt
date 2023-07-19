@@ -1,0 +1,10 @@
+numpy
+pandas
+pymongo
+openpyxl
+datetime
+requests
+fastapi
+uvicorn
+pytest
+httpx

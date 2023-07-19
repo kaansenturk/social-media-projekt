@@ -1,5 +1,7 @@
 # social-media-projekt
 
+
+
 ## Frontend mit Vue.js:
 
 - Erstellen einer Hauptkomponente, die das grundlegende Layout deiner Social-Media-Plattform enthält, wie z.B. eine Navigationsleiste, einen Seiteninhalt und einen Fußzeilenbereich.
@@ -11,7 +13,10 @@
 - Verwendung von Vuex oder einer ähnlichen State-Management-Lösung, um den Anwendungsstatus zu verwalten, Benutzerdaten zu speichern und die Kommunikation zwischen den Komponenten zu erleichtern.
 
 
-## Backend mit FastAPI oder Django:
+## Backend mit FastAPI:
+- Backend im src Ordner. Von dort starten mit
+
+    ´´´uvicorn app:app --reload´´´
 
 - Definieren von notwendigen Modellen, um Daten in der SQLite-Datenbank zu speichern, z.B. Benutzerprofile, Beiträge, Kommentare usw.
 
