@@ -56,3 +56,25 @@ npm run serve
 
 
 - Verwendung von RESTful-APIs oder GraphQL, um die Kommunikation zwischen Frontend und Backend zu erleichtern.
+
+## Mögliche Pages:
+
+Profil: Ein persönliches Profil, auf dem Nutzer Informationen wie ihren Namen, ein Profilbild, eine Biografie und andere Details über sich selbst angeben können.
+
+Beiträge/Timeline: Der Hauptbereich, in dem Nutzer Inhalte wie Texte, Bilder, Videos, Links oder Updates veröffentlichen und anzeigen können. Diese Inhalte werden oft in einer chronologischen Reihenfolge angezeigt.
+
+Freunde/Follower: Eine Liste der anderen Nutzer, mit denen der Nutzer eine Verbindung hergestellt hat, entweder durch Freundschaftsanfragen oder durch das Abonnieren (Folgen) ihrer Aktivitäten.
+
+Interaktionsmöglichkeiten: Die meisten Social-Media-Seiten ermöglichen es den Nutzern, Beiträge zu kommentieren, zu liken, zu teilen oder anderweitig darauf zu reagieren, um Interaktionen zu fördern.
+
+Nachrichten/Facebook Messenger: Ein privater Messaging-Dienst, über den Nutzer direkt miteinander kommunizieren können.
+
+Suchfunktion: Eine Suchleiste, mit der Nutzer nach anderen Nutzern, Seiten, Gruppen oder bestimmten Inhalten suchen können.
+
+Gruppen/Communities: Eine Möglichkeit, sich mit anderen Nutzern zu bestimmten Themen, Interessen oder Zielen zu verbinden und in speziellen Gruppen gemeinsam zu interagieren.
+
+Veranstaltungen: Die Möglichkeit, Veranstaltungen zu erstellen, sich für Veranstaltungen anzumelden oder an Veranstaltungen teilzunehmen, die von anderen Nutzern organisiert wurden.
+
+Einstellungen und Datenschutz: Eine Seite, auf der Nutzer ihre Kontoeinstellungen, Datenschutzeinstellungen und Benachrichtigungseinstellungen anpassen können.
+
+Statistiken/Analytics: Wenn es sich um eine Seite für Unternehmen oder öffentliche Figuren handelt, haben sie möglicherweise Zugriff auf Statistiken und Analysen über die Leistung ihrer Beiträge und ihrer Zielgruppe.
