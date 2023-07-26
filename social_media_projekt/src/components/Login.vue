@@ -4,7 +4,7 @@
     <form id="login-form">
       <input type="text" id="username" placeholder="Username" required>
       <input type="password" id="password" placeholder="Password" required>
-      <button type="submit">Log in</button>
+      <button type="submit" :click="login_try">Log in</button>
     </form>
   </div>
 </template>
@@ -14,8 +14,23 @@ export default {
   name: 'LoginPage',
   props: {
     msg: String
+  },
+  data() {
+    return {
+      username: "",
+      password: "",
+    }},
+    methods: {
+  login_try(){
+    
+  },
+  getUser(name){
+    this.username = name
   }
+  
 }
+}
+
 </script>
 
 <style>
