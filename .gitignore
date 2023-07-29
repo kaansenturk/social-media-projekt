@@ -1,0 +1,7 @@
+**/.DS_Store
+
+**/src/__pycache__/
+
+**/src/social_media.db
+
+**/src/sql_app.db
