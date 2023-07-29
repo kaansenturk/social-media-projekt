@@ -42,6 +42,14 @@ def get_db():
         db.close()
 
 
+@app.post("/deleteUsers/")
+def delete_users(db: Session = Depends(get_db)):
+    db_delete_users = crud.delete_users(db)
+    if db_delete_users:
+        raise HTTPException(status_code=400, detail="Not Found")
+    #return crud.get_users(db=db, skip=0, limit=100)
+
+
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
@@ -75,6 +83,18 @@ def create_item_for_user(
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
+
+@app.post("/login/", response_model=schemas.Login)
+def create_login(user_id: int, login: schemas.LoginCreate, db: Session = Depends(get_db)):
+    #db_logins = crud.get_logins(db, 0, 100)
+    #if db_logins:
+        #raise HTTPException(status_code=400, detail="No entries found")
+    return crud.create_login(db=db, login=login, owner_id=user_id)
+
+@app.get("/logins/", response_model=list[schemas.Login])
+def read_logins(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    logins = crud.get_logins(db, skip=skip, limit=limit)
+    return logins
 
 @app.get("/")
 async def root():
