@@ -11,17 +11,33 @@
         <strong>Role:</strong> {{ role }}
       </div>
     </div>
+    <FriendsList :friends="friendsList"/>
   </template>
   
   <script>
+  import FriendsList from "./Friendslist.vue"
   export default {
     name: 'AccountInfo',
+    components: {
+    FriendsList,
+  },
     data() {
       return {
         username: 'Fr@dt',
         email: 'fredmetzler@battlenet.com',
         role: 'CEO',
+        // Hier Freunde aus DB beziehen ... 
+        friendsList: [
+        { id: 1, name: "Daniel" },
+        { id: 2, name: "Johann" },
+        { id: 3, name: "Kaan" },
+      ],
       };
+    },
+    methods: {
+      fetchData(){
+        // Datenzugriff regeln
+      },
     },
   };
   </script>
@@ -30,7 +46,9 @@
   .account-info {
     background-color: #2200cd;
     color: white;
+    width: 60%;
     padding: 20px;
+    margin: auto;
   }
   
   .title {
