@@ -12,8 +12,9 @@ export default {
   props: {
     friends: {
       type: Array,
-      required: true,
+      required: false,
     },
+    userId: Number,
   },
   data() {
     return {
@@ -27,6 +28,9 @@ export default {
   getFriendState(){
     // Checken ob Online oder nicht
   },
+  getData(){
+    // Get requests for users friends with userId
+  }
 }
 
 }
