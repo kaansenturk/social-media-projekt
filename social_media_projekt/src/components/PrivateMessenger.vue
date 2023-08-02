@@ -1,76 +1,98 @@
 <template>
-    <div class="private-messenger">
-      <div v-if="selectedUser">
-        <h2>Nachrichten mit {{ selectedUser.name }}</h2>
-        <div class="message-list">
-          <div v-for="message in selectedUserMessages" :key="message.id" :class="getMessageClass(message)">
-            <span>{{ message.sender }}: {{ message.content }}</span>
+  <div class="private-messenger">
+    <div v-if="selectedUser">
+      <h2>Nachrichten mit {{ selectedUser.name }}</h2>
+      <div class="message-list">
+        <div v-for="(message, index) in selectedUser.messages" :key="message.id">
+          <div :class="getMessageContainerClass(message.sender)">
+            <div v-if="shouldDisplayUserName(index)" class="user-name" :class="getUserNameClass(message.sender)">
+              {{ message.sender }}
+            </div>
+            <div :class="getMessageClass(message.sender)">
+              {{ message.content }}
+            </div>
+            <div style="clear: both;"></div>
           </div>
         </div>
-        <div class="message-input">
-          <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Nachricht eingeben..." />
-          <button @click="sendMessage">Senden</button>
-        </div>
       </div>
-      <div v-else>
-        <p>Wähle einen Nutzer aus, um Nachrichten anzuzeigen.</p>
-      </div>
-      <FriendsList :friends="friends" @friendSelected="onFriendSelected" />
-      <div class="friends-container">
-        <div v-for="friend in friends" :key="friend.id" :class="getFriendClass(friend)" @click="onFriendSelected(friend)">
-          {{ friend.name }}
-        </div>
+      <div class="message-input">
+        <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Nachricht eingeben..." />
+        <button @click="sendMessage">Senden</button>
       </div>
     </div>
-  </template>
-  
-  <script>
-  import FriendsList from "./Friendslist.vue";
-  
-  export default {
-    name: 'PrivateMessenger',
-    components: {
-      FriendsList,
+    <div v-else>
+      <p>Wähle einen Nutzer aus, um Nachrichten anzuzeigen.</p>
+    </div>
+    <FriendsList :friends="friends" @friendSelected="onFriendSelected" />
+    <div class="friends-container">
+      <div v-for="friend in friends" :key="friend.id" :class="getFriendClass(friend)" @click="onFriendSelected(friend)">
+        {{ friend.name }}
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import FriendsList from "./Friendslist.vue";
+
+export default {
+  name: 'PrivateMessenger',
+  components: {
+    FriendsList,
+  },
+  data() {
+    return {
+      selectedUser: null,
+      newMessage: '',
+      currentUser: 'Fr@dt', // Set the current user (change this based on your logged-in user)
+      friends: [
+        { id: 1, name: "Daniel", messages: [{ id: 1, sender: 'Daniel', content: 'Hallo Fr@dt' }] },
+        { id: 2, name: "Johann", messages: [{ id: 2, sender: 'Johann', content: 'Hi Fr@dt' }] },
+        { id: 3, name: "Kaan", messages: [{ id: 3, sender: 'Kaan', content: 'Moin Fr@dt' }] },
+      ],
+      selectedFriend: null,
+    };
+  },
+  computed: {
+    selectedUserMessages() {
+      return this.selectedUser ? this.selectedUser.messages : [];
     },
-    data() {
-      return {
-        selectedUser: null,
-        newMessage: '',
-        currentUser: 'Fr@dt',
-        friends: [
-          { id: 1, name: "Daniel", messages: [{ id: 1, sender: 'Daniel', content: 'Hallo Fr@dt' }] },
-          { id: 2, name: "Johann", messages: [{ id: 2, sender: 'Johann', content: 'Hi Fr@dt' }] },
-          { id: 3, name: "Kaan", messages: [{ id: 3, sender: 'Kaan', content: 'Moin Fr@dt' }] },
-        ],
-        selectedFriend: null,
-      };
+  },
+  methods: {
+    sendMessage() {
+      if (this.newMessage.trim() !== '') {
+        this.selectedUser.messages.push({
+          id: this.selectedUser.messages.length + 1,
+          sender: this.currentUser,
+          content: this.newMessage,
+        });
+        this.newMessage = '';
+      }
     },
-    computed: {
-      selectedUserMessages() {
-        return this.selectedUser ? this.selectedUser.messages : [];
-      },
+    onFriendSelected(friend) {
+      this.selectedUser = friend;
+      this.selectedFriend = friend;
     },
-    methods: {
-      sendMessage() {
-        if (this.newMessage.trim() !== '') {
-          this.selectedUser.messages.push({
-            id: this.selectedUser.messages.length + 1,
-            sender: this.currentUser,
-            content: this.newMessage,
-          });
-          this.newMessage = '';
-        }
-      },
-      onFriendSelected(friend) {
-        this.selectedUser = friend;
-        this.selectedFriend = friend;
-      },
-      getMessageClass(message) {
+    getMessageClass(sender) {
       return {
         'message': true,
-        'sent-message': message.sender === this.currentUser,
-        'received-message': message.sender !== this.currentUser,
-      }; // Correctly placed the closing brace
+        'sent-message': sender === this.currentUser,
+        'received-message': sender !== this.currentUser,
+      };
+    },
+    getMessageContainerClass(sender) {
+      return {
+        'message': true,
+        'sent-message-container': sender === this.currentUser,
+        'received-message-container': sender !== this.currentUser,
+      };
+    },
+    shouldDisplayUserName(index) {
+      if (index === 0) {
+        return true;
+      } else {
+        return this.selectedUser.messages[index].sender !== this.selectedUser.messages[index - 1].sender;
+      }
     },
     isSelectedFriend(friend) {
       return this.selectedFriend === friend;
@@ -81,49 +103,70 @@
         'selected-friend': this.isSelectedFriend(friend),
       };
     },
+    getUserNameClass(sender) {
+      return {
+        'user-name-sent': sender === this.currentUser,
+        'user-name-received': sender !== this.currentUser,
+      };
+    },
   },
 };
 </script>
-  
-  <style>
-  /* Stil für die Komponente */
-  .private-messenger {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .message-list {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  
-  .message {
-    margin-bottom: 5px;
-    padding: 5px;
-    border-radius: 5px;
-  }
-  
-  .sent-message {
-    background-color: #DCF8C6;
-    text-align: right;
-  }
-  
-  .received-message {
-    background-color: #F3F3F3;
-    text-align: left;
-  }
-  
-  .own-message {
-    color: blue;
-  }
 
-  .selected-friend {
-    background-color: #DCF8C6;
-    font-weight: bold;
-  }
-  </style>
-  
+<style>
+/* Stil für die Komponente */
+.private-messenger {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.message-list {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.message {
+  margin-bottom: 3px;
+  padding: 3px;
+  border-radius: 3px;
+  word-break: break-word;
+}
+
+.sent-message-container {
+  text-align: right;
+  margin-right: 20px; /* Adjust the spacing for sent messages */
+}
+
+.received-message-container {
+  text-align: left;
+  margin-left: 20px; /* Adjust the spacing for received messages */
+}
+
+.sent-message {
+  display: inline-block;
+  background-color: #DCF8C6;
+}
+
+.received-message {
+  display: inline-block;
+  background-color: #F3F3F3;
+}
+
+.user-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.user-name-sent {
+  text-align: right;
+}
+
+.user-name-received {
+  text-align: left;
+}
+
+</style>
