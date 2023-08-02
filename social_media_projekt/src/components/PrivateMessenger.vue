@@ -182,4 +182,9 @@ export default {
   text-align: left;
 }
 
+.selected-friend {
+  font-weight: bold;
+  background-color: #F3F3F3;
+}
+
 </style>
