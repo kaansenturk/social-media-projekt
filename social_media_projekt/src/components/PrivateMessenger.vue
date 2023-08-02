@@ -2,7 +2,7 @@
   <div class="private-messenger">
     <div v-if="selectedUser">
       <h2>Nachrichten mit {{ selectedUser.name }}</h2>
-      <div class="message-list">
+      <div class="message-list" ref="messageList">
         <div v-for="(message, index) in selectedUser.messages" :key="message.id">
           <div :class="getMessageContainerClass(message.sender)">
             <div v-if="shouldDisplayUserName(index)" class="user-name" :class="getUserNameClass(message.sender)">
@@ -44,7 +44,7 @@ export default {
     return {
       selectedUser: null,
       newMessage: '',
-      currentUser: 'Fr@dt', // Set the current user (change this based on your logged-in user)
+      currentUser: 'Fr@dt',
       friends: [
         { id: 1, name: "Daniel", messages: [{ id: 1, sender: 'Daniel', content: 'Hallo Fr@dt' }] },
         { id: 2, name: "Johann", messages: [{ id: 2, sender: 'Johann', content: 'Hi Fr@dt' }] },
@@ -67,11 +67,18 @@ export default {
           content: this.newMessage,
         });
         this.newMessage = '';
+
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        });
       }
     },
     onFriendSelected(friend) {
       this.selectedUser = friend;
       this.selectedFriend = friend;
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      });
     },
     getMessageClass(sender) {
       return {
@@ -109,6 +116,10 @@ export default {
         'user-name-received': sender !== this.currentUser,
       };
     },
+    scrollToBottom() {
+      const messageList = this.$refs.messageList;
+      messageList.scrollTop = messageList.scrollHeight;
+    },
   },
 };
 </script>
@@ -125,7 +136,7 @@ export default {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 10px;
-  max-height: 200px;
+  max-height: 300px;
   overflow-y: auto;
 }
 
@@ -138,22 +149,24 @@ export default {
 
 .sent-message-container {
   text-align: right;
-  margin-right: 20px; /* Adjust the spacing for sent messages */
+  margin-right: 20px;
 }
 
 .received-message-container {
   text-align: left;
-  margin-left: 20px; /* Adjust the spacing for received messages */
+  margin-left: 20px;
 }
 
 .sent-message {
   display: inline-block;
   background-color: #DCF8C6;
+  max-width: 300px;
 }
 
 .received-message {
   display: inline-block;
   background-color: #F3F3F3;
+  max-width: 300px;
 }
 
 .user-name {
