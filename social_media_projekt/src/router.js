@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import HelloWorld from "./components/HelloWorld" 
 import LoginPage from "./components/Login.vue"
 import AccountInfo from "./components/AccountInfo.vue"
+import PrivateMessenger from "./components/PrivateMessenger.vue"
 
 Vue.use(VueRouter);
 
@@ -12,6 +13,8 @@ Vue.use(VueRouter);
       {path: "/", component: HelloWorld},
       {path:"/login", component: LoginPage},
       {path:"/my_account", component: AccountInfo},
+      {path:"/private_messenger", component: PrivateMessenger}
+
   
   ]
 
