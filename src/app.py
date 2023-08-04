@@ -3,12 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import logging
 from starlette.responses import RedirectResponse
 import sqlite3
-
 from sqlalchemy.orm import Session
-
 import crud, models, schemas
 from database import SessionLocal, engine
-import httpx
 from fastapi.responses import JSONResponse
 
 logging.basicConfig(filename='../logs/api.log', encoding='utf-8',format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
@@ -17,12 +14,15 @@ logger=logging.getLogger("fast_api_logger")
 
 logger.setLevel(logging.INFO)
 
+#
 models.Base.metadata.create_all(bind=engine)
 
+#
 app = FastAPI()
 
 origins = ["*"]
 
+#
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -41,7 +41,7 @@ def get_db():
     finally:
         db.close()
 
-
+# post method to delete table "users"
 @app.post("/deleteUsers/")
 def delete_users(db: Session = Depends(get_db)):
     db_delete_users = crud.delete_users(db)
@@ -49,7 +49,14 @@ def delete_users(db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Not Found")
     #return crud.get_users(db=db, skip=0, limit=100)
 
+# post method to delete a single user from table "users" by id
+@app.post("deleteUser")
+def delete_user(db: Session = Depends(get_db)):
+    db_delete_user = crud.delete_user(db)
+    if db_delete_user:
+        raise HTTPException(status_code=400, detail="Not Found")
 
+# post method to create a user into table "users"
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
@@ -96,6 +103,18 @@ def read_logins(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     logins = crud.get_logins(db, skip=skip, limit=limit)
     return logins
 
+
+
+@app.get("/login/validation")
+def check_login(email: str, password: str, db: Session = Depends(get_db)):
+    user = crud.get_user_by_email(db, email)
+    
+    if user:
+        raise HTTPException(status_code=400, detail="Email does not exist")
+
+
+
+
 @app.get("/")
 async def root():
     return RedirectResponse(url="/docs")
@@ -126,8 +145,6 @@ def testDB():
     c.execute('''INSERT INTO testTable (name, number) VALUES ("John", 3)''')
     c.execute('''SELECT * FROM testTable;''')
     results = c.fetchall()
-
-    print(results)
     
     conn.commit()
     conn.close()

@@ -32,7 +32,8 @@ class User(UserBase):
     items: list[Item] = []
 
 class LoginBase(BaseModel):
-    pass
+    login_time: str
+    ip: str
 
 class LoginCreate(LoginBase):
     pass
@@ -40,8 +41,6 @@ class LoginCreate(LoginBase):
 class Login(LoginBase):
     id: int
     user_id: int
-    login_time: str
-    ip: str
 
     class Config:
         orm_mode = True

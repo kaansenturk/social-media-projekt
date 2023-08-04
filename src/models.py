@@ -1,9 +1,10 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
+# import Base to create classes that inherit from it
 from database import Base
 
-
+# Class to create db tables named "users"
 class User(Base):
     __tablename__ = "users"
 
@@ -15,7 +16,11 @@ class User(Base):
 
     items = relationship("Item", back_populates="owner")
 
+    def verify_password(self, password):
+        pwhash = bcrypt.hashpw(password, self.password)
+        return self.password == pwhash
 
+# Class for sqlalchemy to create db tables named "items"
 class Item(Base):
     __tablename__ = "items"
 
@@ -26,6 +31,7 @@ class Item(Base):
 
     owner = relationship("User", back_populates="items")
 
+# Class for sqlalchemy to create db tables named "login"
 class Login(Base):
     __tablename__="login"
 
@@ -34,6 +40,7 @@ class Login(Base):
     login_time = Column(String)
     user_id = Column(Integer, ForeignKey("users.id"))
 
+# Class for sqlalchemy to create db tables named "post"
 class Post(Base):
     __tablename__="post"
 
@@ -61,6 +68,7 @@ class Comments(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     post_id = Column(Integer, ForeignKey("post.id"))
 
+# Class for sqlalchemy to create db tables named "comment_likes"
 #class Comment_Likes(Base):
     #__tablename__="comment_likes"
 
@@ -68,6 +76,7 @@ class Comments(Base):
     #user_id = Column(Integer, ForeignKey("users.id"))
     #comment_id = Column(Integer, ForeignKey("comment.id"))
 
+# Class for sqlalchemy to create db tables named "photos"
 class Photos(Base):
     __tablename__="photos"
 
@@ -77,6 +86,7 @@ class Photos(Base):
     size = Column(Integer, index=True)
     post_id = Column(Integer, ForeignKey("post.id"))
 
+# Class for sqlalchemy to create db tables named "videos"
 class Videos(Base):
     __tablename__="videos"
 
@@ -86,6 +96,7 @@ class Videos(Base):
     size = Column(Integer, index=True)
     post_id = Column(Integer, ForeignKey("post.id"))
 
+# Class for sqlalchemy to create db tables named "follows"
 class Follows(Base):
     __tablename__="follows"
 
