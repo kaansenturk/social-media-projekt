@@ -1,28 +1,59 @@
 <template>
     <div class="login-container">
-    <h1>Login</h1>
-    <form id="login-form">
-      <input type="text" id="username" placeholder="Username" required>
-      <input type="password" id="password" placeholder="Password" required>
-      <button type="submit" :click="login_try">Log in</button>
+      <h1>{{ showRegister ? 'Registrieren' : 'Login' }}</h1>
+    <form v-if="!showRegister" id="login-form">
+      <input type="text" id="username" placeholder="Username" required v-model="username">
+      <input type="password" id="password" placeholder="Password" required v-model="password">
+      <button type="submit" @click.prevent="login_try">Log in</button>
+      <button type="button" @click.prevent="showRegister = !showRegister">Registrieren</button>
+    </form>
+    <form v-else>
+      <input type="text" id="username" placeholder="Username" required v-model="username">
+      <input type="mail" id="email" placeholder="Email" required v-model="email">
+      <input type="password" id="password" placeholder="Password" required v-model="password">
+      <input type="password" id="password" placeholder="Password wiederholen" required>
+
+      <button type="button" @click.prevent="register_new_user">Registrieren</button>
     </form>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'LoginPage',
   props: {
-    msg: String
+    
   },
   data() {
     return {
       username: "",
       password: "",
+      API: "http://localhost:8000",
+      showRegister: false,
     }},
     methods: {
+      register_new_user(){
+          if(this.showRegister){
+            try
+            {
+              console.log("Fred")
+            }
+            catch
+            {
+              return
+            }
+          }
+      },
   login_try(){
-    
+    const response =  axios.post(this.API + "/login_try", null, {
+      params: {
+        username: this.username,
+        password: this.password,
+      }
+    })
+    console.log(response)
   },
   getUser(name){
     this.username = name
