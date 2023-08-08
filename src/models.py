@@ -11,14 +11,15 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
     username = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
+    password = Column(String)
     is_active = Column(Boolean, default=True)
 
     items = relationship("Item", back_populates="owner")
+    # posts = relationship("Post", back_populates="owner")
 
-    def verify_password(self, password):
-        pwhash = bcrypt.hashpw(password, self.password)
-        return self.password == pwhash
+    # def verify_password(self, password):
+    #     pwhash = bcrypt.hashpw(password, self.password)
+    #     return self.password == pwhash
 
 # Class for sqlalchemy to create db tables named "items"
 class Item(Base):
@@ -37,6 +38,7 @@ class Login(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     ip = Column(String, index=True)
+    location = Column(String, index=True)
     login_time = Column(String)
     user_id = Column(Integer, ForeignKey("users.id"))
 
@@ -52,12 +54,13 @@ class Post(Base):
     photo_id = Column(Integer, ForeignKey("photos.id"))
     video_id = Column(Integer, ForeignKey("videos.id"))
 
-#class Post_Likes(Base):
-    #__tablename__="post_likes"
+class Post_Likes(Base):
+    __tablename__="post_likes"
 
-    #created_at = Column(String, index=True)
-    #user_id = Column(Integer, ForeignKey("users.id"))
-    #post_id = Column(Integer, ForeignKey("post.id"))
+    id = Column(Integer, primary_key=True, index=True)
+    created_at = Column(String, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    post_id = Column(Integer, ForeignKey("post.id"))
 
 class Comments(Base):
     __tablename__="comment"
@@ -102,6 +105,6 @@ class Follows(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     created_at = Column(String, index=True)
-    followee_id = Column(String, index=True)
+    followee_id = Column(Integer, ForeignKey("users.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
 

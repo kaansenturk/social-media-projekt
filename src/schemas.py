@@ -21,19 +21,22 @@ class Item(ItemBase):
 class UserBase(BaseModel):
     email: str
     username: str
+    password: str
 
 
 class UserCreate(UserBase):
-    password: str
+    pass
 
 class User(UserBase):
     id: int
     is_active: bool
     items: list[Item] = []
+    # posts: list[Post] = []
 
 class LoginBase(BaseModel):
     login_time: str
     ip: str
+    location: str
 
 class LoginCreate(LoginBase):
     pass
@@ -44,3 +47,37 @@ class Login(LoginBase):
 
     class Config:
         orm_mode = True
+
+class FollowBase(BaseModel):
+    login_time: str
+    ip: str
+    
+
+class FollowCreate(FollowBase):
+    pass
+
+class Follow(FollowBase):
+    id: int
+    user_id: int
+    followee_id: int
+
+    class Config:
+        orm_mode = True
+
+class PostBase(BaseModel):
+    created_at: str
+    location: str
+    caption: str
+    photo_id: int
+    video_id: int
+
+class PostCreate(PostBase):
+    pass
+
+class Post(PostBase):
+    id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
+
