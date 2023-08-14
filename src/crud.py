@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine, MetaData, Table
+from sqlalchemy import create_engine, MetaData, Table, LargeBinary
 from datetime import datetime
+from fastapi import UploadFile
 import socket
 import models, schemas, database
 import geocoder
@@ -159,3 +160,46 @@ def create_post_like(db: Session, user_id: int, post_id: int):
 # method to get post_like amount
 def get_post_like_amount(db: Session, post_id: int):
     return len(db.query(models.Post_Likes).filter(models.Post_Likes.post_id == post_id).all())
+
+# method to create a comment
+def create_comment(db: Session, post_id: int, user_id: int, comment_text: str):
+    now = datetime.now()
+    current_date = now.strftime("%D %H:%M:%S")
+    db_comment = models.Comments(comment_text=comment_text, user_id=user_id, created_at=current_date, post_id=post_id)
+    db.add(db_comment)
+    db.commit()
+    db.refresh(db_comment)
+    return db_comment
+
+# method to get comments of post
+def get_comments_of_post(db: Session, post_id: int):
+    return db.query(models.Comments).filter(models.Comments.post_id == post_id).all()
+
+# method to create a comment like
+def create_comment_like(db: Session, comment_id: int, user_id):
+    now = datetime.now()
+    current_date = now.strftime("%D %H:%M:%S")
+    db_comment_like = models.Comment_Likes(user_id=user_id, created_at=current_date, comment_id=comment_id)
+    db.add(db_comment_like)
+    db.commit()
+    db.refresh(db_comment_like)
+    return db_comment_like
+
+# method to upload a phtoto
+async def upload_photo(db: Session, title: str, image_data: UploadFile):
+    file_content = await image_data.read()
+    #file_content_data = await file_content
+    now = datetime.now()
+    current_date = now.strftime("%D %H:%M:%S")
+    async def store_data():
+        db_photo = models.Photos(created_at=current_date, title=title, image_data=file_content)
+        db.add(db_photo)
+        db.commit()
+        db.refresh(db_photo)
+
+    await store_data()
+    return {"message": "File uploaded and stored."}
+
+# method to read a photo entry
+def read_photo(db: Session, id: int):
+    return db.query(models.Photos).filter(models.Photos.id == id).first()

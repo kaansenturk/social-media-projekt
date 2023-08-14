@@ -5,3 +5,5 @@
 **/src/social_media.db
 
 **/src/sql_app.db
+
+**/logs/api.log

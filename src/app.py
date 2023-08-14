@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import FastAPI, HTTPException, Depends, Request, Form, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from starlette.responses import RedirectResponse
@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 import crud, models, schemas
 from database import SessionLocal, engine
 from fastapi.responses import JSONResponse
+import base64
 
 logging.basicConfig(filename='../logs/api.log', encoding='utf-8',format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
 
@@ -174,6 +175,26 @@ def create_post_like(user_id: int, post_id: int, db: Session = Depends(get_db)):
 @app.get('/getPostLikeAmount')
 def get_post_like_amount(post_id: int, db: Session = Depends(get_db)):
     return crud.get_post_like_amount(db=db, post_id=post_id)
+
+@app.post('/createComment')
+def create_comment(user_id: int, post_id: int, comment_text: str, db: Session = Depends(get_db)):
+    return crud.create_comment(db=db, post_id=post_id, user_id=user_id, comment_text=comment_text)
+
+@app.get('/getCommentsOfPost')
+def get_comments_of_post(post_id: int, db: Session = Depends(get_db)):
+    return crud.get_comments_of_post(post_id=post_id, db=db)
+
+@app.post('/createCommentLike')
+def create_comment_like(comment_id: int, user_id: int, db: Session = Depends(get_db)):
+    return crud.create_comment_like(comment_id=comment_id, db=db, user_id=user_id)
+
+@app.post("/uploadPhoto")
+async def upload_photo(title: str = Form(...), image: UploadFile = File(...), db: Session = Depends(get_db)):
+    return await crud.upload_photo(title=title, image_data=image, db=db)
+
+@app.get('/getPhoto')
+def read_photo(id: int, db: Session = Depends(get_db)):
+    return crud.read_photo(id=id, db=db)
 
 @app.get("/")
 async def root():

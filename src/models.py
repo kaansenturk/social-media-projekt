@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, LargeBinary
 from sqlalchemy.orm import relationship
 
 # import Base to create classes that inherit from it
@@ -72,12 +72,13 @@ class Comments(Base):
     post_id = Column(Integer, ForeignKey("post.id"))
 
 # Class for sqlalchemy to create db tables named "comment_likes"
-#class Comment_Likes(Base):
-    #__tablename__="comment_likes"
+class Comment_Likes(Base):
+    __tablename__="comment_likes"
 
-    #created_at = Column(String, index=True)
-    #user_id = Column(Integer, ForeignKey("users.id"))
-    #comment_id = Column(Integer, ForeignKey("comment.id"))
+    id = Column(Integer, primary_key=True, index=True)
+    created_at = Column(String, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    comment_id = Column(Integer, ForeignKey("comment.id"))
 
 # Class for sqlalchemy to create db tables named "photos"
 class Photos(Base):
@@ -85,9 +86,8 @@ class Photos(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     created_at = Column(String, index=True)
-    photo_url = Column(String, index=True)
-    size = Column(Integer, index=True)
-    post_id = Column(Integer, ForeignKey("post.id"))
+    title = Column(String, index=True)
+    image_data = Column(LargeBinary)
 
 # Class for sqlalchemy to create db tables named "videos"
 class Videos(Base):
