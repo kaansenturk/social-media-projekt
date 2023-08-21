@@ -14,6 +14,7 @@
       <input type="password" id="password" placeholder="Password wiederholen" required>
 
       <button type="button" @click.prevent="register_new_user">Registrieren</button>
+  
     </form>
   </div>
 </template>
@@ -59,7 +60,12 @@ export default {
     this.username = name
   }
   
-}
+},
+computed: {
+    count () {
+      return this.$store.state.count
+    }
+  }
 }
 
 </script>

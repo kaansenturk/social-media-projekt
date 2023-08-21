@@ -5,6 +5,8 @@ import HelloWorld from "./components/HelloWorld"
 import LoginPage from "./components/Login.vue"
 import AccountInfo from "./components/AccountInfo.vue"
 import PrivateMessenger from "./components/PrivateMessenger.vue"
+import store from "./store"
+
 const app = createApp(App)
 createApp(App)
 const routes = [
@@ -23,4 +25,5 @@ const router = createRouter(
 )
 
 app.use(router)
+app.use(store)
 app.mount('#app')

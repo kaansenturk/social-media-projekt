@@ -1,4 +1,6 @@
 <template>
+       <PostCreator />
+
     <div class="account-info">
       <h2 class="title">Account Information</h2>
       <div class="info-item">
@@ -16,11 +18,13 @@
   
   <script>
   import FriendsList from "./Friendslist.vue"
+import PostCreator from "./postCreator.vue";
   export default {
     name: 'AccountInfo',
     components: {
     FriendsList,
-  },
+    PostCreator,
+},
     data() {
       return {
         username: 'Fr@dt',
