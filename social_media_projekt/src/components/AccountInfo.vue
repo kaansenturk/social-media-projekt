@@ -14,16 +14,19 @@
       </div>
     </div>
     <FriendsList :friends="friendsList"/>
+    <FriendsMap class="map-container"></FriendsMap>
   </template>
   
   <script>
   import FriendsList from "./Friendslist.vue"
-import PostCreator from "./postCreator.vue";
+import PostCreator from "./postCreator.vue"
+import FriendsMap from "./map.vue"
   export default {
     name: 'AccountInfo',
     components: {
     FriendsList,
     PostCreator,
+    FriendsMap,
 },
     data() {
       return {
@@ -47,6 +50,9 @@ import PostCreator from "./postCreator.vue";
   </script>
   
   <style scoped>
+  .map-container {
+    position: fixed; top: 47vh; right: 1vh;
+  }
   .account-info {
     background-color: #2200cd;
     color: white;

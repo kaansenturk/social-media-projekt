@@ -1,15 +1,17 @@
 <template>
   <div>
+    <HeaderPart></HeaderPart>
   <img class="app_icon" alt="App Logo" src="./assets/hacker.png">
   <router-view></router-view>
 </div>
 </template>
 
 <script>
-
+import HeaderPart from './components/Header.vue';
 export default {
   name: 'App',
   components: {
+HeaderPart
 }
 }
 </script>
