@@ -21,7 +21,7 @@
 
 <script>
 import axios from 'axios';
-
+import { mapState, mapActions } from 'vuex';
 export default {
   name: 'LoginPage',
   props: {
@@ -35,6 +35,7 @@ export default {
       showRegister: false,
     }},
     methods: {
+      ...mapActions(['login', 'logout']),
       register_new_user(){
           if(this.showRegister){
             try
@@ -48,13 +49,18 @@ export default {
           }
       },
   login_try(){
+    try {
     const response =  axios.post(this.API + "/login_try", null, {
       params: {
         username: this.username,
         password: this.password,
       }
     })
+    this.login(this.username);
     console.log(response)
+  } catch (error) {
+    console.log(error)
+  }
   },
   getUser(name){
     this.username = name
@@ -62,9 +68,16 @@ export default {
   
 },
 computed: {
+  ...mapState(['user']),
     count () {
       return this.$store.state.count
-    }
+    },
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
+    },
+    currentUser() {
+      return this.$store.getters.currentUser;
+    },
   }
 }
 

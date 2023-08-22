@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'FriendsList',
   props: {
@@ -23,13 +25,23 @@ export default {
         { id: 2, name: "Johann" },
         { id: 3, name: "Kaan" },
       ],
+      friendsList: [],
     }},
     methods: {
   getFriendState(){
     // Checken ob Online oder nicht
   },
-  getData(){
-    // Get requests for users friends with userId
+  getFriends(){
+    try {
+      const response = axios.get(this.$store.state.API + "/getAllFollowers", null, {
+      params: {
+        followee: this.$store.state.logged_user
+      }}
+      ) 
+      this.friendsList = response.data
+    }catch (error){
+      console.log(error)
+    }
   }
 }
 
