@@ -31,6 +31,7 @@ const router = createRouter(
 )
 // always check if user is logged in before allowing routes other then login
 router.beforeEach((to, from, next) => {
+    console.log("Logged in?")
     if (to.meta.requiresAuth && !store.getters.isLoggedIn) {
       next('/login');
     } else {

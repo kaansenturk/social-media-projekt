@@ -1,6 +1,13 @@
 <template>
-    <div class="Header">
-    <SearchModule class=""></SearchModule>
+  <div class="Header sticky-top">
+    <div class="row ">
+      <div class="col-md-2">
+        <img id="app_icon" alt="App Logo" src="../assets/hacker.png">
+      </div>
+      <div class="col-md-10 d-flex justify-content-end">
+        <SearchModule />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -33,25 +40,17 @@ SearchModule,
 </script>
 
 <style>
-  
-  .Header {
-  display: flex;
-  flex-direction: column;
+
+#app_icon {
+  width: 100px;
 }
 
-.friend-item {
-  margin: 0px 5px 0px 5px;
-}
+/* Overriding Bootstrap's sticky-top styles to make sure it sticks to the top */
+.sticky-top {
 
-.friends-container {
-    width: 12%;
-  position: fixed;
-  right: 20px; 
-  top: 40%; 
-  height: 40%;
-  transform: translateY(-50%);
-  border: solid 2px blue;
-  border-radius: 2px;
+  position: sticky;
+  top: 2vh;
+  z-index: 1020; /* Ensure it appears above other elements */
 }
   
 </style>

@@ -11,7 +11,7 @@
       <input type="text" id="username" placeholder="Username" required v-model="username">
       <input type="mail" id="email" placeholder="Email" required v-model="email">
       <input type="password" id="password" placeholder="Password" required v-model="password">
-      <input type="password" id="password" placeholder="Password wiederholen" required>
+      <input type="password" id="repeat_password" placeholder="Password wiederholen" required v-model="repeat_password">
 
       <button type="button" @click.prevent="register_new_user">Registrieren</button>
   
@@ -31,16 +31,26 @@ export default {
     return {
       username: "",
       password: "",
+      repeat_password:"",
+      email: "",
       API: "http://localhost:8000",
       showRegister: false,
     }},
     methods: {
       ...mapActions(['login', 'logout']),
       register_new_user(){
-          if(this.showRegister){
+          if(this.showRegister && this.repeat_password === this.password){
             try
             {
-              console.log("Fred")
+              const response =  axios.post(this.API + "/createUser", null, {
+          params: {
+              email: this.email,
+              username: this.username,
+              password: this.password,
+                  }
+    })
+    console.log(response.data)
+    this.login(this.username);
             }
             catch
             {

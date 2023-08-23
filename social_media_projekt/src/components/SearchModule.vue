@@ -1,14 +1,21 @@
 <template>
-    <div class="post-container">  
-    <form>
-        <span>
-      <input  id="post_text" placeholder="What's on your mind..." required v-model="text" />
-      <button class="search-button" @click="handleSearch">
-    <i class="fa-solid fa-magnifying-glass"  style="color: #f1dbff;"></i>
-    
-  </button>
-</span>
-    </form>
+  <div class="search-container">
+    <div class="row">
+      <div class="col-md-6">
+        <input
+          id="post_text"
+          class="form-control"
+          placeholder="Search..."
+          required
+          v-model="text"
+        />
+      </div>
+      <div class="col-md-2 button-group">
+        <button class="btn btn-primary btn-block search-button" @click.prevent="handleSearch">
+          <i class="fa-solid fa-magnifying-glass" style="color: #f1dbff;"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -17,94 +24,62 @@ import axios from 'axios';
 
 export default {
   name: 'SearchModule',
-  props: {
-    
-  },
   data() {
     return {
       API: "http://localhost:8000",
-    }},
-    methods: {
-      search(text){
-          {
-            try
-            {
-              const response =  axios.get(this.API + "/get_users", null, {
-      params: {
-        text: text,
-      }
-      
-    })
-    console.log(response)
-              console.log("Fred")
-            }
-            catch
-            {
-              return
-            }
-          }
-      },
-  login_try(){
-    
-    
+      text: "",
+    };
   },
-  getUser(name){
-    this.username = name
-  }
-  
-}
-}
-
+  methods: {
+    async handleSearch() {
+      try {
+        const response = await axios.get(this.API + "/get_users", {
+          params: {
+            text: this.text,
+          },
+        });
+        console.log(response);
+        console.log("Search completed");
+      } catch (error) {
+        console.error("Search error:", error);
+      }
+    },
+  },
+};
 </script>
 
-<style>
-#post_text {
-  width: 70%;
-  height: 20px;
+<style scoped>
+.button-group {
+  padding-left: 0;
+  padding-right: 0;
 }
-.search-button {
-    background-color: #2200cd;
-    border-radius: 10px;
-    margin-left: 5px;
+.form-control {
+  border-radius: 10px 0 0 10px;
+  height: 15vh; /* Set height to 'auto' */
+  line-height: 1.5; /* Adjust line height for better vertical alignment */
+}
+.search-container {
+  display: flex;
+  align-items: center;
+  height: 20vh;
+}
 
+.input-group {
+  display: flex;
+  align-items: center;
 }
-  
-  .post-container {
-    margin-left: auto;
-    margin-right: auto;
-    width: 25%;
-    height: 10%;
-    padding: 15px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .login-container h1 {
-    text-align: center;
-  }
-  
-  .login-container input[type="text"],
-  .login-container input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  .login-container button {
-    width: 100%;
-    padding: 10px;
-    background-color: #2200cd;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .login-container button:hover {
-    background-color: #2200cd;
-  }
-  
+
+.form-control {
+  border-radius: 10px 0 0 10px;
+}
+
+.input-group-append {
+  display: flex;
+}
+
+.search-button {
+  border-radius: 0 10px 10px 0;
+  background-color: #2200cd;
+  color: #fff;
+}
 </style>
