@@ -203,3 +203,17 @@ async def upload_photo(db: Session, title: str, image_data: UploadFile):
 # method to read a photo entry
 def read_photo(db: Session, id: int):
     return db.query(models.Photos).filter(models.Photos.id == id).first()
+
+def create_message(db: Session, sender_id: int, receiver_id: int, content: str):
+    now = datetime.now()
+    current_date = now.strftime("%D %H:%M:%S")
+    db_message = models.Message(sender=sender_id, receiver=receiver_id, content=content, created_at=current_date)
+    db.add(db_message)
+    db.commit()
+    db.refresh(db_message)
+    return db_message
+
+def get_user_messages(db: Session, user: str):
+    user_messages = db.query(models.Message).filter(models.Message.sender == user or models.Message.receiver == user).all()
+    return user_messages
+

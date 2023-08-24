@@ -200,6 +200,16 @@ def read_photo(id: int, db: Session = Depends(get_db)):
 async def root():
     return RedirectResponse(url="/docs")
 
+
+@app.post("/send_message/")
+async def send_message(sender_id: int, receiver_id: int, content: str, db: Session = Depends(get_db)):
+    db_message = crud.create_message(db, sender_id, receiver_id, content)
+    return {"message": "Message sent successfully"}
+
+@app.get("/get_messages/{user}")
+async def get_messages(user: str, db: Session = Depends(get_db)):
+    user_messages = crud.get_user_messages(db, user)
+    return user_messages
 # @app.get("/user_data")
 # def get_all_users():
 #     conn = sqlite3.connect(DBNAME)

@@ -16,10 +16,10 @@ import '@fortawesome/fontawesome-free/css/all.css'
 const app = createApp(App)
 createApp(App)
 const routes = [
-    {path: "/", component: HelloWorld},
+    {path: "/", component: HelloWorld, meta: { requiresAuth: true }},
     {path:"/login", component: LoginPage},
-    {path:"/account", component: AccountInfo},
-    {path:"/messenger", component: PrivateMessenger}
+    {path:"/account", component: AccountInfo, meta: { requiresAuth: true }},
+    {path:"/messenger", component: PrivateMessenger, meta: { requiresAuth: true }}
 
 ]
 const router = createRouter(

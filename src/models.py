@@ -107,4 +107,12 @@ class Follows(Base):
     created_at = Column(String, index=True)
     followee_id = Column(Integer, ForeignKey("users.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
+# Class for a message from one user to another
+class Message(Base):
+    __allow_unmapped__ = True
+    __tablename__="messages"
+    id = Column(Integer, primary_key=True, index=True)
+    sender_id: Integer
+    receiver_id: Integer
+    content: str
 
