@@ -45,6 +45,11 @@ npm run serve
 
 - Implementierung von Abfragen und Operationen, um Daten aus der Datenbank abzurufen, zu aktualisieren und zu löschen.
 
+Needed Libraries:
+
+$pip install python-multipart
+
+$pip install geocoder
 
 ## Admin-Backend:
 
