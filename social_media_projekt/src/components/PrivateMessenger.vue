@@ -16,9 +16,9 @@
         </div>
       </div>
       <div class="message-input">
-        <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Nachricht eingeben..." />
-        <button @click="sendMessage">Senden</button>
-      </div>
+    <input v-model="newMessage" placeholder="Nachricht eingeben..." />
+    <button @click="sendMessage">Send</button>
+  </div>
     </div>
     <div v-else>
       <p>Wähle einen Nutzer aus, um Nachrichten anzuzeigen.</p>
@@ -34,7 +34,7 @@
 
 <script>
 import FriendsList from "./Friendslist.vue";
-
+import axios from "axios";
 export default {
   name: 'PrivateMessenger',
   components: {
@@ -44,7 +44,7 @@ export default {
     return {
       selectedUser: null,
       newMessage: '',
-      currentUser: 'Fr@dt',
+      currentUser: this.$store.state.logged_user,
       friends: [
         { id: 1, name: "Daniel", messages: [{ id: 1, sender: 'Daniel', content: 'Hallo Fr@dt' }] },
         { id: 2, name: "Johann", messages: [{ id: 2, sender: 'Johann', content: 'Hi Fr@dt' }] },
@@ -59,20 +59,42 @@ export default {
     },
   },
   methods: {
-    sendMessage() {
-      if (this.newMessage.trim() !== '') {
-        this.selectedUser.messages.push({
-          id: this.selectedUser.messages.length + 1,
-          sender: this.currentUser,
+    async sendMessage() {
+      if (this.newMessage.trim() === '') {
+        return;
+      }
+
+      try {
+        const response = await axios.post('/send_message/', {
+          sender: this.currentUser, 
+          receiver: this.selectedUser.name,
           content: this.newMessage,
         });
-        this.newMessage = '';
 
+        console.log('Message sent:', response.data);
         this.$nextTick(() => {
-          this.scrollToBottom();
+         this.scrollToBottom();
         });
+        // Input field gets cleared after sending of message
+        this.newMessage = '';
+      } catch (error) {
+        console.error('Error sending message:', error);
       }
     },
+    // sendMessage() {
+    //   if (this.newMessage.trim() !== '') {
+    //     this.selectedUser.messages.push({
+    //       id: this.selectedUser.messages.length + 1,
+    //       sender: this.currentUser,
+    //       content: this.newMessage,
+    //     });
+    //     this.newMessage = '';
+
+    //     this.$nextTick(() => {
+    //       this.scrollToBottom();
+    //     });
+    //   }
+    // },
     onFriendSelected(friend) {
       this.selectedUser = friend;
       this.selectedFriend = friend;

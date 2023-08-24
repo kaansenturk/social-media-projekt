@@ -81,3 +81,6 @@ class Post(PostBase):
     class Config:
         orm_mode = True
 
+class UserUpdate(BaseModel):
+    username: str
+    email: str

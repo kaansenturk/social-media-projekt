@@ -65,6 +65,15 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
     return crud.create_user(db=db, user=user)
 
+@app.get("/get_user/{username}")
+async def get_user(username: str, db: Session = Depends(get_db)):
+    user = crud.get_user_by_username(db, username)
+    return user
+
+@app.put("/update_user/{username}")
+async def update_user(username: str, user_update: schemas.UserUpdate, db: Session = Depends(get_db)):
+    updated_user = crud.update_user_by_username(db, username, user_update)
+    return {"message": "User updated successfully"}
 
 @app.get("/getUsers/", response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):

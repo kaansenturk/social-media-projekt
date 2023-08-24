@@ -1,3 +1,4 @@
+from http.client import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, MetaData, Table, LargeBinary
 from datetime import datetime
@@ -25,7 +26,8 @@ def delete_user(db: Session, user_id: int):
 # method to get a user from table "users" by id
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
-
+def get_user_by_username(db: Session, username: str):
+    return db.query(models.User).filter(models.User.username == username).first()
 # method to get a user from table "users" by email
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
@@ -42,6 +44,21 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
+def update_user_by_username(db: Session, username: str, updated_data: schemas.UserUpdate):
+    db_user = db.query(models.User).filter(models.User.username == username).first()
+    
+    if db_user:
+        # Update attributes
+        db_user.username = updated_data.username
+        db_user.email = updated_data.email
+        db_user.password = updated_data.password
+        db_user.is_active = updated_data.is_active
+        
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
 # method
 def get_items(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Item).offset(skip).limit(limit).all()
