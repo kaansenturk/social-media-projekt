@@ -1,17 +1,19 @@
 # social-media-projekt
 
+Dokumentation: 
+
 
 
 ## Frontend mit Vue.js:
 Frontend aufsetzen:
 
-´´´
+```
 npm install
 
 npm run build
 
 npm run serve
-´´´
+```
 - Erstellen einer Hauptkomponente, die das grundlegende Layout deiner Social-Media-Plattform enthält, wie z.B. eine Navigationsleiste, einen Seiteninhalt und einen Fußzeilenbereich.
 
 - Definieren einer separaten Komponenten für verschiedene Ansichten, z.B. für die Startseite, den News-Feed, Benutzerprofile, Benachrichtigungen usw.
@@ -24,7 +26,9 @@ npm run serve
 ## Backend mit FastAPI:
 - Backend im src Ordner. Von dort starten mit
 
-    ´´´uvicorn app:app --reload´´´
+    ```
+    uvicorn app:app --reload
+    ```
 
 - Definieren von notwendigen Modellen, um Daten in der SQLite-Datenbank zu speichern, z.B. Benutzerprofile, Beiträge, Kommentare usw.
 

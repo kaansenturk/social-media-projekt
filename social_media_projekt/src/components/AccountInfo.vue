@@ -1,5 +1,8 @@
 <template>
-    <div class="account-info">
+  <div class="row">
+       
+
+    <div class="col-md-2 account-info">
       <h2 class="title">Account Information</h2>
       <div class="info-item">
         <strong>Username:</strong> {{ username }}
@@ -11,16 +14,23 @@
         <strong>Role:</strong> {{ role }}
       </div>
     </div>
-    <FriendsList :friends="friendsList"/>
+    <PostCreator class="col-md-7"/>
+    <FriendsList class="col-md-2" :friends="friendsList"/>
+  </div>
+    <FriendsMap class="map-container"></FriendsMap>
   </template>
   
   <script>
   import FriendsList from "./Friendslist.vue"
+import PostCreator from "./postCreator.vue"
+import FriendsMap from "./map.vue"
   export default {
     name: 'AccountInfo',
     components: {
     FriendsList,
-  },
+    PostCreator,
+    FriendsMap,
+},
     data() {
       return {
         username: 'Fr@dt',
@@ -34,6 +44,20 @@
       ],
       };
     },
+    mounted() {
+    document.addEventListener('drop', this.preventGlobalDrop, false);
+  },
+  beforeUnmount() {
+    document.removeEventListener('drop', this.preventGlobalDrop, false);
+  },
+  computed: {
+    preventGlobalDrop() {
+      return function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+      };
+    },
+    },
     methods: {
       fetchData(){
         // Datenzugriff regeln
@@ -43,12 +67,15 @@
   </script>
   
   <style scoped>
+  .map-container {
+    position: fixed; ; right: 1vh;
+    width: 15%;
+  }
   .account-info {
     background-color: #2200cd;
     color: white;
-    width: 60%;
-    padding: 20px;
-    margin: auto;
+    padding: 35px;
+    margin-left: 15px;
   }
   
   .title {

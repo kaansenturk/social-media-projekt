@@ -1,16 +1,18 @@
 <template>
   <div>
-  <img class="app_icon" alt="App Logo" src="./assets/hacker.png">
+    <HeaderPart class="header"></HeaderPart>
   <router-view></router-view>
 </div>
 </template>
 
 <script>
-
+import HeaderPart from './components/Header.vue';
 export default {
   name: 'App',
   components: {
-}
+HeaderPart
+},
+
 }
 </script>
 
@@ -21,11 +23,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
-.app_icon{
-  width: 20%;
-  margin-left: auto;
-  margin-right: auto;
-}
+
 </style>
