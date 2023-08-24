@@ -18,8 +18,8 @@ createApp(App)
 const routes = [
     {path: "/", component: HelloWorld},
     {path:"/login", component: LoginPage},
-    {path:"/my_account", component: AccountInfo},
-    {path:"/private_messenger", component: PrivateMessenger}
+    {path:"/account", component: AccountInfo},
+    {path:"/messenger", component: PrivateMessenger}
 
 ]
 const router = createRouter(
@@ -29,6 +29,15 @@ const router = createRouter(
         linkActiveClass: "active"
     }
 )
+// always check if user is logged in before allowing routes other then login
+router.beforeEach((to, from, next) => {
+    console.log("Logged in?")
+    if (to.meta.requiresAuth && !store.getters.isLoggedIn) {
+      next('/login');
+    } else {
+      next();
+    }
+  });
 app.use(BootstrapVue3)
 app.use(router)
 app.use(store)

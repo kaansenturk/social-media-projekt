@@ -1,9 +1,10 @@
 <template>
-    <div id="map" style="height: 400px;"></div>
+    <div id="map" >
     <LMap :zoom="mapOptions.zoom" :center="mapOptions.center">
   <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
   <LMarker :lat-lng="mapOptions.center"></LMarker>
 </LMap>
+</div>
   </template>
   
   <script>
@@ -34,6 +35,8 @@
   /* You can add some styling for the map container here */
   #map {
     width: 20%;
+    height: 25%;
+    margin-right: 3px;
   }
   </style>
   

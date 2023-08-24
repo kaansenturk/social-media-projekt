@@ -5,7 +5,7 @@
       <div class="file-list">
       <div class="file-item" v-for="(file, index) in droppedFiles" :key="index">
         {{ file.name }}
-        <img v-if="isImage(file)" :src="file.preview" alt="Preview" />
+        <img v-if="isImage(file)" :src="file.preview" alt="Preview" class="image-preview"/>
         <video v-else-if="isVideo(file)" controls>
           <source :src="file.preview" type="video/mp4" />
         </video>
@@ -50,12 +50,17 @@ export default {
       isDragging: false,
       droppedFiles: [],
     }},
+   
     methods: {
       uploadFiles() {
-      // Here you can implement your upload logic, like sending files to a server
-      // and saving them to a database
       for (const file of this.droppedFiles) {
-        // Upload the file here
+        if (this.isImage){
+        axios.post(this.API + "upload_photo", null, {
+        params: {
+          image_data: file,
+        }
+      })
+        }
         console.log('Uploading file:', file.name);
       }
     },
@@ -87,7 +92,17 @@ export default {
     processDroppedFiles(files) {
       for (const file of files) {
         if (this.isValidFileType(file)) {
-          this.droppedFiles.push(file);
+          // Read the image file and generate a data URL for preview
+          if (this.isImage(file)) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              file.preview = event.target.result;
+              this.droppedFiles.push(file);
+            };
+            reader.readAsDataURL(file);
+          } else {
+            this.droppedFiles.push(file);
+          }
         }
       }
     },
@@ -96,6 +111,7 @@ export default {
       return allowedTypes.includes(file.type);
     },
       upload_post(text){
+        if (this.droppedFiles.length == 0)
           {
             try
             {
@@ -114,11 +130,10 @@ export default {
               return
             }
           }
+          else {
+            this.uploadFiles()
+          }
       },
-  login_try(){
-    
-    
-  },
   getUser(name){
     this.username = name
   }
@@ -129,6 +144,11 @@ export default {
 </script>
 
 <style>
+.image-preview {
+  max-width: 100%;
+  max-height: 200px; /* Adjust the maximum height as needed */
+  object-fit: contain; /* Maintain aspect ratio */
+}
 .active {
   border: 2px dashed #0066ff;
 }
@@ -160,9 +180,6 @@ export default {
 }
   
   .post-container {
-    margin-left: auto;
-    margin-right: auto;
-    width: 30%;
     height: 20%;
     padding: 30px;
     background-color: #fff;
