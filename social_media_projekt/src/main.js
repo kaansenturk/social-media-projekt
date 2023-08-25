@@ -6,6 +6,7 @@ import LoginPage from "./components/Login.vue"
 import AccountInfo from "./components/AccountInfo.vue"
 import PrivateMessenger from "./components/PrivateMessenger.vue"
 import store from "./store"
+import HomePage from "./components/Homepage"
 
 import BootstrapVue3 from 'bootstrap-vue-3'
 
@@ -16,10 +17,12 @@ import '@fortawesome/fontawesome-free/css/all.css'
 const app = createApp(App)
 createApp(App)
 const routes = [
-    {path: "/", component: HelloWorld},
+    {path: "/", component: HelloWorld, meta: { requiresAuth: true }},
+    {path: "/home", component: HomePage, meta: { requiresAuth: true }},
+
     {path:"/login", component: LoginPage},
-    {path:"/account", component: AccountInfo},
-    {path:"/messenger", component: PrivateMessenger}
+    {path:"/account", component: AccountInfo, meta: { requiresAuth: true }},
+    {path:"/messenger", component: PrivateMessenger, meta: { requiresAuth: true }}
 
 ]
 const router = createRouter(

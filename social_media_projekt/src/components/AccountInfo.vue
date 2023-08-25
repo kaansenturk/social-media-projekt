@@ -1,9 +1,20 @@
 <template>
   <div class="row">
-       
-
     <div class="col-md-2 account-info">
       <h2 class="title">Account Information</h2>
+      <form @submit.prevent="saveChanges" v-if="editMode">
+        <div class="info-item">
+          <label for="username">Username:</label>
+          <input v-model="editedUsername" id="username" />
+        </div>
+        <div class="info-item">
+          <label for="email">Email:</label>
+          <input v-model="editedEmail" id="email" />
+        </div>
+        <button type="submit">Save</button>
+        <button @click="editMode = false">Cancel</button>
+      </form>
+      <div v-else>
       <div class="info-item">
         <strong>Username:</strong> {{ username }}
       </div>
@@ -13,23 +24,19 @@
       <div class="info-item">
         <strong>Role:</strong> {{ role }}
       </div>
-    </div>
-    <PostCreator class="col-md-7"/>
+      <button @click="editMode = true" v-if="!editMode">Edit</button>
+    </div></div>
     <FriendsList class="col-md-2" :friends="friendsList"/>
   </div>
-    <FriendsMap class="map-container"></FriendsMap>
   </template>
   
   <script>
   import FriendsList from "./Friendslist.vue"
-import PostCreator from "./postCreator.vue"
-import FriendsMap from "./map.vue"
+  import axios from "axios";
   export default {
     name: 'AccountInfo',
     components: {
     FriendsList,
-    PostCreator,
-    FriendsMap,
 },
     data() {
       return {
@@ -42,6 +49,9 @@ import FriendsMap from "./map.vue"
         { id: 2, name: "Johann" },
         { id: 3, name: "Kaan" },
       ],
+      editMode: false,
+      editedUsername: '',
+      editedEmail: '',
       };
     },
     mounted() {
@@ -59,6 +69,24 @@ import FriendsMap from "./map.vue"
     },
     },
     methods: {
+      async saveChanges() {
+      try {
+        const response = await axios.put('/update_user', {
+          username: this.editedUsername,
+          email: this.editedEmail,
+        });
+
+        console.log('User updated:', response.data);
+
+        // Update current user info
+        this.username = this.editedUsername;
+        this.email = this.editedEmail;
+
+        this.editMode = false;
+      } catch (error) {
+        console.error('Error updating user:', error);
+      }
+    },
       fetchData(){
         // Datenzugriff regeln
       },

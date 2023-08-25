@@ -65,6 +65,15 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
     return crud.create_user(db=db, user=user)
 
+@app.get("/get_user/{username}")
+async def get_user(username: str, db: Session = Depends(get_db)):
+    user = crud.get_user_by_username(db, username)
+    return user
+
+@app.put("/update_user/{username}")
+async def update_user(username: str, user_update: schemas.UserUpdate, db: Session = Depends(get_db)):
+    updated_user = crud.update_user_by_username(db, username, user_update)
+    return {"message": "User updated successfully"}
 
 @app.get("/getUsers/", response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -200,6 +209,16 @@ def read_photo(id: int, db: Session = Depends(get_db)):
 async def root():
     return RedirectResponse(url="/docs")
 
+
+@app.post("/send_message/")
+async def send_message(sender_id: int, receiver_id: int, content: str, db: Session = Depends(get_db)):
+    db_message = crud.create_message(db, sender_id, receiver_id, content)
+    return {"message": "Message sent successfully"}
+
+@app.get("/get_messages/{user}")
+async def get_messages(user: str, db: Session = Depends(get_db)):
+    user_messages = crud.get_user_messages(db, user)
+    return user_messages
 # @app.get("/user_data")
 # def get_all_users():
 #     conn = sqlite3.connect(DBNAME)
