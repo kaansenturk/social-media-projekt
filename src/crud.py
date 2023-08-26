@@ -6,7 +6,7 @@ from fastapi import UploadFile
 import socket
 import models, schemas, database
 import geocoder
-
+import bcrypt
 # method to delete the table "users"
 def delete_users(db: Session):
     metadata = MetaData()
@@ -33,12 +33,14 @@ def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
 # method to get all data from table "users" (max. 100 entries)
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
+def get_users(db: Session, query: str = '', limit: int = 100):
+    users = db.query(models.User).filter(models.User.username.like(f"%{query}%")).limit(limit).all()
+    return [u.__dict__ for u in users]
 
 # method to create a user into table "users"
 def create_user(db: Session, user: schemas.UserCreate):
-    db_user = models.User(email=user.email, password=user.password, username=user.username)
+    hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
+    db_user = models.User(email=user.email, password=hashed_password, username=user.username)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

@@ -47,7 +47,10 @@ class Login(LoginBase):
 
     class Config:
         orm_mode = True
-
+class LoginRequest(BaseModel):
+    user: str
+    password: str
+    
 class FollowBase(BaseModel):
     login_time: str
     ip: str
