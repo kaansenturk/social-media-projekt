@@ -9,11 +9,12 @@
     </form>
     <form v-else>
       <input type="text" id="username" placeholder="Username" required v-model="username">
-      <input type="mail" id="email" placeholder="Email" required v-model="email">
+      <input type="text" id="email" placeholder="Email" required v-model="email">
       <input type="password" id="password" placeholder="Password" required v-model="password">
       <input type="password" id="repeat_password" placeholder="Password wiederholen" required v-model="repeat_password">
 
       <button type="button" @click.prevent="register_new_user">Registrieren</button>
+      <button type="button" @click.prevent="showRegister = !showRegister">Back to Login</button>
   
     </form>
   </div>
@@ -22,6 +23,8 @@
 <script>
 import axios from 'axios';
 import { mapState, mapActions } from 'vuex';
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import 'sweetalert2/dist/sweetalert2.min.css';
 export default {
   name: 'LoginPage',
   props: {
@@ -38,19 +41,19 @@ export default {
     }},
     methods: {
       ...mapActions(['login', 'logout']),
-      register_new_user(){
+      async register_new_user(){
           if(this.showRegister && this.repeat_password === this.password){
             try
             {
-              const response =  axios.post(this.API + "/createUser", null, {
-          params: {
+              const response = await axios.post(this.API + "/createUser",  {
+               
               email: this.email,
               username: this.username,
               password: this.password,
-                  }
+                  
     })
     console.log(response.data)
-    this.login(this.username);
+    this.showSuccess();
             }
             catch
             {
@@ -58,23 +61,48 @@ export default {
             }
           }
       },
-  login_try(){
+      async login_try(){
     try {
-    const response =  axios.post(this.API + "/login_try", null, {
-      params: {
-        username: this.username,
-        password: this.password,
-      }
-    })
-    this.login(this.username);
-    console.log(response)
-  } catch (error) {
-    console.log(error)
-  }
-  },
+        const response = await axios.post(this.API + "/login", {
+            user: this.username,
+            password: this.password,
+        });
+        
+        if (response.data) {
+            this.getUser(response.data.username);
+            this.login(response.data.username, response.data.id)
+            this.$router.push('/home');
+        }
+    } catch (error) {
+      console.log(this.username, this.password)
+        if (error.response && error.response.data && error.response.data.detail) {
+            console.log(error.response.data.detail); 
+        } else {
+            console.log(error);
+        }
+    }
+},
   getUser(name){
     this.username = name
-  }
+  },
+  showSuccess(){
+    Swal.fire({
+      title: 'Erfolgreich registriert',
+      text: 'Du kannst dich jetzt einloggen',
+       icon: 'info',
+      iconColor: '#2200cd',
+      showCloseButton: false,
+      confirmButtonText: 'Schließen',
+      confirmButtonColor: '#2200cd',
+    }).then((result) => {
+      if (result.value) {
+        console.log("Hi")
+        this.showRegister = !this.showRegister
+ } 
+else{
+  console.log("ciao")
+}
+})},
   
 },
 computed: {

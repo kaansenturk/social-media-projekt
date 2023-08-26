@@ -8,6 +8,8 @@ import crud, models, schemas
 from database import SessionLocal, engine
 from fastapi.responses import JSONResponse
 import base64
+import bcrypt
+
 
 logging.basicConfig(filename='../logs/api.log', encoding='utf-8',format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
 
@@ -51,9 +53,9 @@ def delete_users(db: Session = Depends(get_db)):
     #return crud.get_users(db=db, skip=0, limit=100)
 
 # post method to delete a single user from table "users" by id
-@app.post("deleteUser")
-def delete_user(db: Session = Depends(get_db)):
-    db_delete_user = crud.delete_user(db)
+@app.post("/deleteUser/{username}")
+def delete_user(username: str, db: Session = Depends(get_db)):
+    db_delete_user = crud.delete_user(db, username)
     if db_delete_user:
         raise HTTPException(status_code=400, detail="Not Found")
 
@@ -76,10 +78,9 @@ async def update_user(username: str, user_update: schemas.UserUpdate, db: Sessio
     return {"message": "User updated successfully"}
 
 @app.get("/getUsers/", response_model=list[schemas.User])
-def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    users = crud.get_users(db, skip=skip, limit=limit)
+def read_users(query: str = '', limit: int = 100, db: Session = Depends(get_db)):
+    users = crud.get_users(db, query=query, limit=limit)
     return users
-
 
 @app.get("/users/{user_id}", response_model=schemas.User)
 def read_user(user_id: int, db: Session = Depends(get_db)):
@@ -101,12 +102,22 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
 
-@app.post("/login/", response_model=schemas.Login)
-def create_login(user_id: int, login: schemas.LoginCreate, db: Session = Depends(get_db)):
-    #db_logins = crud.get_logins(db, 0, 100)
-    #if db_logins:
-        #raise HTTPException(status_code=400, detail="No entries found")
-    return crud.create_login(db=db, login=login, owner_id=user_id)
+@app.post("/login/")
+def user_login(login_request: schemas.LoginRequest, db: Session = Depends(get_db)):
+    user = crud.get_user_by_username(db, login_request.user)
+    print(type(user.password))
+    if not user:
+        raise HTTPException(status_code=400, detail="Email does not exist")
+
+    if not  bcrypt.checkpw(login_request.password.encode('utf-8'), user.password):
+        raise HTTPException(status_code=400, detail="Incorrect password")
+
+    return {
+        "username": user.username,
+        "email": user.email,
+        "id": user.id,
+        "is_active": user.is_active
+    }
 
 @app.get("/getLogins/", response_model=list[schemas.Login])
 def read_logins(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
