@@ -9,7 +9,7 @@
     </form>
     <form v-else>
       <input type="text" id="username" placeholder="Username" required v-model="username">
-      <input type="mail" id="email" placeholder="Email" required v-model="email">
+      <input type="text" id="email" placeholder="Email" required v-model="email">
       <input type="password" id="password" placeholder="Password" required v-model="password">
       <input type="password" id="repeat_password" placeholder="Password wiederholen" required v-model="repeat_password">
 
@@ -23,6 +23,8 @@
 <script>
 import axios from 'axios';
 import { mapState, mapActions } from 'vuex';
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import 'sweetalert2/dist/sweetalert2.min.css';
 export default {
   name: 'LoginPage',
   props: {
@@ -51,7 +53,7 @@ export default {
                   
     })
     console.log(response.data)
-    this.login(this.username);
+    this.showSuccess();
             }
             catch
             {
@@ -80,10 +82,27 @@ export default {
         }
     }
 },
-
   getUser(name){
     this.username = name
-  }
+  },
+  showSuccess(){
+    Swal.fire({
+      title: 'Erfolgreich registriert',
+      text: 'Du kannst dich jetzt einloggen',
+       icon: 'info',
+      iconColor: '#2200cd',
+      showCloseButton: false,
+      confirmButtonText: 'Schließen',
+      confirmButtonColor: '#2200cd',
+    }).then((result) => {
+      if (result.value) {
+        console.log("Hi")
+        this.showRegister = !this.showRegister
+ } 
+else{
+  console.log("ciao")
+}
+})},
   
 },
 computed: {

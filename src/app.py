@@ -53,9 +53,9 @@ def delete_users(db: Session = Depends(get_db)):
     #return crud.get_users(db=db, skip=0, limit=100)
 
 # post method to delete a single user from table "users" by id
-@app.post("deleteUser")
-def delete_user(db: Session = Depends(get_db)):
-    db_delete_user = crud.delete_user(db)
+@app.post("/deleteUser/{username}")
+def delete_user(username: str, db: Session = Depends(get_db)):
+    db_delete_user = crud.delete_user(db, username)
     if db_delete_user:
         raise HTTPException(status_code=400, detail="Not Found")
 
