@@ -30,9 +30,6 @@ SearchModule,
 
     }},
     methods: {
-  getData(){
-    // Get requests for users friends with userId
-  },
 }
 
 }

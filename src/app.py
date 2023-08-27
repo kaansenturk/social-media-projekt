@@ -153,8 +153,8 @@ async def login_try(request: Request):
         raise HTTPException(status_code=401, detail='Authentication failed')
     
 @app.post('/createFollower')
-def create_follow(followee: int, owner_id: int, db: Session = Depends(get_db)):
-    return crud.create_follow(db=db, followee_id=followee, follower_id=owner_id)
+def create_follow(follower_data: schemas.CreateFollower, db: Session = Depends(get_db)):
+    return crud.create_follow(db=db, followee_id=follower_data.followee, follower_id=follower_data.owner_id)
 
 @app.get('/getAllFollowers')
 def get_all_followers(followee: int, db: Session = Depends(get_db)):
@@ -226,10 +226,10 @@ async def send_message(sender_id: int, receiver_id: int, content: str, db: Sessi
     db_message = crud.create_message(db, sender_id, receiver_id, content)
     return {"message": "Message sent successfully"}
 
-@app.get("/get_messages/{user}")
-async def get_messages(user: str, db: Session = Depends(get_db)):
-    user_messages = crud.get_user_messages(db, user)
-    return user_messages
+@app.get("/get_messages/{logged_user}/{recipient}")
+async def get_messages(logged_user: str, recipient: str, db: Session = Depends(get_db)):
+    conversation = crud.get_user_messages(db, logged_user, recipient)
+    return conversation
 # @app.get("/user_data")
 # def get_all_users():
 #     conn = sqlite3.connect(DBNAME)

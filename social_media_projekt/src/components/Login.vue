@@ -22,7 +22,7 @@
 
 <script>
 import axios from 'axios';
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/dist/sweetalert2.min.css';
 export default {
@@ -40,7 +40,6 @@ export default {
       showRegister: false,
     }},
     methods: {
-      ...mapActions(['login', 'logout']),
       async register_new_user(){
           if(this.showRegister && this.repeat_password === this.password){
             try
@@ -69,9 +68,11 @@ export default {
         });
         
         if (response.data) {
+          console.log(response.data.id)
             this.getUser(response.data.username);
-            this.login(response.data.username, response.data.id)
+            this.$store.dispatch('login', { user: response.data.username, user_id: response.data.id });
             this.$router.push('/home');
+            console.log(this.$store.state.logged_user,this.$store.state.logged_user_id)
         }
     } catch (error) {
       console.log(this.username, this.password)

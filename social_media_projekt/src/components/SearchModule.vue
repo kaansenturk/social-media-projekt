@@ -16,11 +16,21 @@
         </button>
       </div>
     </div>
+    <div class="search-results" v-if="searchResults.length">
+      <ul class="list-group">
+        <li class="list-group-item" v-for="user in searchResults" :key="user.id">
+          {{ user.username }}
+          <button class="btn btn-sm btn-secondary float-right" @click="followUser(user.id, user.username)">Follow</button>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 export default {
   name: 'SearchModule',
@@ -28,35 +38,74 @@ export default {
     return {
       API: "http://localhost:8000",
       text: "",
+      searchResults: [],
     };
   },
   methods: {
     async handleSearch() {
       try {
-        const response = await axios.get(this.API + "/get_users", {
+        const response = await axios.get(this.API + "/getUsers", {
           params: {
-            text: this.text,
+            query: this.text,
           },
         });
+        print
         console.log(response);
+        console.log(response.data);
         console.log("Search completed");
+        this.searchResults = response.data;
       } catch (error) {
         console.error("Search error:", error);
       }
     },
+    async followUser(followerId, username) {
+    try {
+
+      const followee_id = this.$store.state.logged_user_id;
+      console.log(followee_id, followerId)
+      const response = await axios.post(this.API + "/createFollower", {
+        followee: followee_id,
+        owner_id: followerId
+      });
+      if (response.data) {
+        Swal.fire({
+      title: 'Folgen erfolgreich',
+      text: `Du folgst jetzt ${username}`,
+       icon: 'info',
+      iconColor: '#2200cd',
+      showCloseButton: false,
+      confirmButtonText: 'Schließen',
+      confirmButtonColor: '#2200cd',
+    }).then((result) => {
+      if (result.value) {
+        console.log("Hi")
+        this.showRegister = !this.showRegister
+ } 
+else{
+  console.log("ciao")
+}
+})
+      }
+    } catch (error) {
+      console.error("Error following user:", error);
+    }
+  }
   },
 };
 </script>
 
 <style scoped>
+.search-results {
+  margin-top: 15px;
+}
 .button-group {
   padding-left: 0;
   padding-right: 0;
 }
 .form-control {
   border-radius: 10px 0 0 10px;
-  height: 15vh; /* Set height to 'auto' */
-  line-height: 1.5; /* Adjust line height for better vertical alignment */
+  height: 15vh; 
+  line-height: 1.5; 
 }
 .search-container {
   display: flex;

@@ -63,7 +63,10 @@ class FollowBase(BaseModel):
     login_time: str
     ip: str
     
-
+class CreateFollower(BaseModel):
+    followee: int
+    owner_id: int
+    
 class FollowCreate(FollowBase):
     pass
 
@@ -95,3 +98,4 @@ class Post(PostBase):
 class UserUpdate(BaseModel):
     username: str
     email: str
+    
