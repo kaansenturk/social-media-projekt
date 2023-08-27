@@ -17,7 +17,7 @@ export default createStore({
       },
     },
     actions: {
-      login({ commit }, user, user_id) {
+      login({ commit }, { user, user_id }) {
         commit('setUser', user);
         commit('setUserId', user_id);
       },

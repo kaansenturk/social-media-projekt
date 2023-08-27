@@ -226,13 +226,17 @@ def read_photo(db: Session, id: int):
 def create_message(db: Session, sender_id: int, receiver_id: int, content: str):
     now = datetime.now()
     current_date = now.strftime("%D %H:%M:%S")
-    db_message = models.Message(sender=sender_id, receiver=receiver_id, content=content, created_at=current_date)
+    db_message = models.Message(sender_id=sender_id, receiver_id=receiver_id, content=content, created_at=current_date)
     db.add(db_message)
     db.commit()
     db.refresh(db_message)
     return db_message
 
-def get_user_messages(db: Session, user: str):
-    user_messages = db.query(models.Message).filter(models.Message.sender == user or models.Message.receiver == user).all()
-    return user_messages
+def get_user_messages(db: Session, logged_user: str, recipient: str):
 
+    conversation = db.query(models.Message).filter(
+        (models.Message.sender_id == logged_user) & (models.Message.receiver_id == recipient) |
+        (models.Message.sender_id == recipient) & (models.Message.receiver_id == logged_user)
+    ).all()
+    
+    return conversation
