@@ -1,12 +1,14 @@
-from http.client import HTTPException
+
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy import create_engine, MetaData, Table, LargeBinary, delete
 from datetime import datetime
-from fastapi import UploadFile
+from fastapi import UploadFile, HTTPException
 import socket
 import models, schemas, database
 import geocoder
 import bcrypt
+
 # method to delete the table "users"
 def delete_users(db: Session):
     metadata = MetaData()
@@ -100,13 +102,25 @@ def check_login(db: Session, user: schemas.User, pw: str):
 
 # method to create a follow
 def create_follow(db: Session, followee_id: int, follower_id: int):
+    # Check if both users exist
+    follower = db.query(models.User).filter(models.User.id == follower_id).first()
+    followee = db.query(models.User).filter(models.User.id == followee_id).first()
+
+    if not follower or not followee:
+        raise HTTPException(status_code=400, detail="User not found.")
+    
     now = datetime.now()
     current_date = now.strftime("%D %H:%M:%S")
     db_follow = models.Follows(created_at=current_date, followee_id=followee_id, user_id=follower_id)
-    db.add(db_follow)
-    db.commit()
-    db.refresh(db_follow)
-    return db_follow
+    
+    try:
+        db.add(db_follow)
+        db.commit()
+        db.refresh(db_follow)
+        return db_follow
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="You are already following this user.")
 
 # method to return all logins of a user in table "login"
 def get_logins_by_user_id(db: Session, owner_id: int):

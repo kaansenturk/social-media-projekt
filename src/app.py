@@ -154,7 +154,10 @@ async def login_try(request: Request):
     
 @app.post('/createFollower')
 def create_follow(follower_data: schemas.CreateFollower, db: Session = Depends(get_db)):
-    return crud.create_follow(db=db, followee_id=follower_data.followee, follower_id=follower_data.owner_id)
+    try:
+        return crud.create_follow(db=db, followee_id=follower_data.followee, follower_id=follower_data.owner_id)
+    except HTTPException as e:
+        return JSONResponse(status_code=e.status_code, content={"detail": e.detail})
 
 @app.get('/getAllFollowers')
 def get_all_followers(followee: int, db: Session = Depends(get_db)):
