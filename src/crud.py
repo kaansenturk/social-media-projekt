@@ -8,6 +8,7 @@ import socket
 import models, schemas, database
 import geocoder
 import bcrypt
+from typing import Optional
 # method to delete the table "users"
 def delete_users(db: Session):
     metadata = MetaData()
@@ -153,16 +154,30 @@ def unfollow(db: Session, followee_id: int, user_id: int):
     db.close()
 
 #method to create a post
-def create_post(db: Session, user_id: int, caption: str):#, photo_id: int, video_id: int):
+def create_post(db: Session, user_id: int, caption: str, photo_id: Optional[int] = None, video_id: Optional[int] = None):
+    # Generate current date
     now = datetime.now()
     current_date = now.strftime("%D %H:%M:%S")
+    
+    # Get location data
     g = geocoder.ip('me')
-    db_post = models.Post(user_id=user_id, created_at=current_date, location="lat:" + str(g.lat) + ", lng:" + str(g.lng), caption=caption)#, photo_id=photo_id, video_id=video_id)
+    location = f"lat:{g.lat}, lng:{g.lng}"
+    
+    # Create Post
+    db_post = models.Post(
+        created_at=current_date,
+        location=location,
+        caption=caption,
+        user_id=user_id,
+        photo_id=photo_id,
+        video_id=video_id
+    )
+    
     db.add(db_post)
     db.commit()
     db.refresh(db_post)
+    
     return db_post
-
 # method to return all posts from a user
 def get_all_posts(db: Session, id: int):
     return db.query(models.Post).filter(models.Post.user_id == id).all()
@@ -218,20 +233,17 @@ def create_comment_like(db: Session, comment_id: int, user_id):
     return db_comment_like
 
 # method to upload a phtoto
-async def upload_photo(db: Session, title: str, image_data: UploadFile):
+async def upload_photo(db: Session, title: str, image_data: UploadFile, user_id: int):
     file_content = await image_data.read()
-    #file_content_data = await file_content
     now = datetime.now()
     current_date = now.strftime("%D %H:%M:%S")
-    async def store_data():
-        db_photo = models.Photos(created_at=current_date, title=title, image_data=file_content)
-        db.add(db_photo)
-        db.commit()
-        db.refresh(db_photo)
 
-    await store_data()
-    return {"message": "File uploaded and stored."}
+    db_photo = models.Photos(created_at=current_date, title=title, image_data=file_content, user_id=user_id)
+    db.add(db_photo)
+    db.commit()
+    db.refresh(db_photo)
 
+    return db_photo.id
 # method to read a photo entry
 def read_photo(db: Session, id: int):
     return db.query(models.Photos).filter(models.Photos.id == id).first()

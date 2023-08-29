@@ -1,7 +1,7 @@
 <template>
     <div class="post-container">  
     <form>
-      <textarea  id="post_text" placeholder="What's on your mind..." required v-model="text" />
+      <textarea  id="post_text" placeholder="What's on your mind..." required v-model="caption" />
       <div class="file-list">
       <div class="file-item" v-for="(file, index) in droppedFiles" :key="index">
         {{ file.name }}
@@ -31,7 +31,7 @@
   
     <input type="file" ref="fileInput" @change="handleFileChange" style="display: none" />
   </div>
-      <button type="button" @click.prevent="upload_post(this.text)">posten</button>
+      <button type="button" @click.prevent="submitPost">posten</button>
     </form>
   </div>
 </template>
@@ -49,19 +49,42 @@ export default {
       API: "http://localhost:8000",
       isDragging: false,
       droppedFiles: [],
+      caption: "",
     }},
    
     methods: {
-      uploadFiles() {
-      for (const file of this.droppedFiles) {
-        if (this.isImage){
-        axios.post(this.API + "upload_photo", null, {
-        params: {
-          image_data: file,
-        }
-      })
-        }
-        console.log('Uploading file:', file.name);
+      async submitPost() {
+      // Create form data
+      
+      if (this.droppedFiles.length > 0) {
+        const formData = new FormData();
+        formData.append("image_data", this.droppedFiles[0]);
+      console.log("Bild versuchen")
+      try {
+        const response = await axios.post("http://localhost:8000/create_post/", formData, {
+          params: {
+            caption: this.caption,
+            user_id: this.$store.state.logged_user_id
+          },
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(response.data);
+      } catch (error) {
+        console.error("An error occurred while submitting the post:", error);
+      }} else {
+        try {
+        const response = await axios.post("http://localhost:8000/create_post/", null, {
+          params: {
+            caption: this.caption,
+            user_id: this.$store.state.logged_user_id
+          },
+        });
+        console.log(response.data);
+      } catch (error) {
+        console.error("An error occurred while submitting the post:", error);
+      }
       }
     },
 
@@ -110,30 +133,6 @@ export default {
       const allowedTypes = ['image/jpeg', 'image/png', 'video/mp4'];
       return allowedTypes.includes(file.type);
     },
-      upload_post(text){
-        if (this.droppedFiles.length == 0)
-          {
-            try
-            {
-              const response =  axios.post(this.API + "/create_post", null, {
-      params: {
-        username: this.username,
-        text: text,
-      }
-      
-    })
-    console.log(response)
-              console.log("Fred")
-            }
-            catch
-            {
-              return
-            }
-          }
-          else {
-            this.uploadFiles()
-          }
-      },
   getUser(name){
     this.username = name
   }
