@@ -71,6 +71,8 @@ export default {
           console.log(response.data.id)
             this.getUser(response.data.username);
             this.$store.dispatch('login', { user: response.data.username, user_id: response.data.id });
+            localStorage.setItem('logged_user', response.data.username)
+            localStorage.setItem('logged_user_id', response.data.id)
             this.$router.push('/home');
             console.log(this.$store.state.logged_user,this.$store.state.logged_user_id)
         }

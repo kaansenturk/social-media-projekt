@@ -23,25 +23,39 @@
     <div v-else>
       <p>Wähle einen Nutzer aus, um Nachrichten anzuzeigen.</p>
     </div>
-    <FriendsList :friends="friends" @friendSelected="onFriendSelected" />
+
     <div class="friends-container">
-      <div v-for="friend in friends" :key="friend.id" :class="getFriendClass(friend)" @click="onFriendSelected(friend)">
-        {{ friend.name }}
-      </div>
+      <div class="friends-container">
+    <div v-for="friend in friends" :key="friend.id" class="friend-item">
+      {{ friend.name }}
+      <button @click="onFriendSelected(friend)">Chat</button>
+    </div>
+  </div>
     </div>
   </div>
 </template>
 
 <script>
-import FriendsList from "./Friendslist.vue";
+
 import axios from "axios";
 export default {
   name: 'PrivateMessenger',
   components: {
-    FriendsList,
+
+  },
+  props: {
+    receiver: null,
+  },
+  async created() {
+    await this.fetchFollowers();
+    if (this.receiver) {
+      const friend = this.friends.find(f => f.name === this.receiver);
+      this.onFriendSelected(friend);
+    }
   },
   data() {
     return {
+      API: 'http://localhost:8000',
       selectedUser: null,
       newMessage: '',
       currentUser: this.$store.state.logged_user,
@@ -59,6 +73,28 @@ export default {
     },
   },
   methods: {
+    async fetchFollowers() {
+      try {
+        console.log(this.$store.state.logged_user_id )
+        const followee_id = this.$store.state.logged_user_id 
+        const response = await axios.get(this.API + "/getAllFollowers", {
+          params: { followee: followee_id }
+        });
+        this.friends = response.data;
+        console.log(response.data)
+      } catch (error) {
+        console.error('Error fetching followers:', error);
+      }
+    },
+    async onFriendSelected(friend) {
+      this.selectedUser = friend;
+      try {
+        const response = await axios.get(`/get_messages/${this.currentUser}/${friend.id}`);
+        this.selectedUser.messages = response.data;
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    },
     async sendMessage() {
       if (this.newMessage.trim() === '') {
         return;
@@ -71,12 +107,16 @@ export default {
           content: this.newMessage,
         });
 
-        console.log('Message sent:', response.data);
-        this.$nextTick(() => {
-         this.scrollToBottom();
+        this.selectedUser.messages.push({
+          id: response.data.id,
+          sender: this.currentUser,
+          content: this.newMessage
         });
-        // Input field gets cleared after sending of message
+
         this.newMessage = '';
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        });
       } catch (error) {
         console.error('Error sending message:', error);
       }
@@ -95,13 +135,7 @@ export default {
     //     });
     //   }
     // },
-    onFriendSelected(friend) {
-      this.selectedUser = friend;
-      this.selectedFriend = friend;
-      this.$nextTick(() => {
-        this.scrollToBottom();
-      });
-    },
+    
     getMessageClass(sender) {
       return {
         'message': true,

@@ -21,8 +21,11 @@
         <li class="list-group-item" v-for="user in searchResults" :key="user.id">
           {{ user.username }}
           <button class="btn btn-sm btn-secondary float-right" @click="followUser(user.id, user.username)">Follow</button>
+          <button class="btn btn-sm btn-secondary float-right" @click="chatWithUser(user.id, user.username)"><i class="fa-regular fa-message"></i></button>
+
         </li>
       </ul>
+      <i class="fa-solid fa-messages"></i>
     </div>
   </div>
 </template>
@@ -42,6 +45,14 @@ export default {
     };
   },
   methods: {
+    async chatWithUser(user_id, username){
+      try {
+        console.log("Hi", user_id)
+      }
+      catch {
+        console.log("Hi", username)
+      }
+    },
     async handleSearch() {
       try {
         const response = await axios.get(this.API + "/getUsers", {

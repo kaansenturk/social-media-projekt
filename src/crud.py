@@ -1,8 +1,9 @@
-from http.client import HTTPException
+
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy import create_engine, MetaData, Table, LargeBinary, delete
 from datetime import datetime
-from fastapi import UploadFile
+from fastapi import UploadFile, HTTPException
 import socket
 import models, schemas, database
 import geocoder
@@ -76,11 +77,11 @@ def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
 # method to create a login entry into table "login"
 def create_login(db: Session, login: schemas.LoginCreate, owner_id: int):
     now = datetime.now()
-    current_date = now.strftime("%D %H:%M:%S")
+    current_date = now
     hostname=socket.gethostname() 
     IPAddr=socket.gethostbyname(hostname)
     g = geocoder.ip('me')
-    db_login = models.Login(login_time=current_date, location="lat:" + str(g.lat) + ", lng:" + str(g.lng), user_id=owner_id, ip=hostname + " " + IPAddr)
+    db_login = models.Login(login_time=current_date, location= {"lat": g.lat, "lng": g.lng}, user_id=owner_id, ip=hostname + " " + IPAddr)
     db.add(db_login)
     db.commit()
     db.refresh(db_login)
@@ -100,13 +101,25 @@ def check_login(db: Session, user: schemas.User, pw: str):
 
 # method to create a follow
 def create_follow(db: Session, followee_id: int, follower_id: int):
+    # Check if both users exist
+    follower = db.query(models.User).filter(models.User.id == follower_id).first()
+    followee = db.query(models.User).filter(models.User.id == followee_id).first()
+
+    if not follower or not followee:
+        raise HTTPException(status_code=400, detail="User not found.")
+    
     now = datetime.now()
     current_date = now.strftime("%D %H:%M:%S")
     db_follow = models.Follows(created_at=current_date, followee_id=followee_id, user_id=follower_id)
-    db.add(db_follow)
-    db.commit()
-    db.refresh(db_follow)
-    return db_follow
+    
+    try:
+        db.add(db_follow)
+        db.commit()
+        db.refresh(db_follow)
+        return db_follow
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="You are already following this user.")
 
 # method to return all logins of a user in table "login"
 def get_logins_by_user_id(db: Session, owner_id: int):

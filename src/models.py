@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, LargeBinary
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, LargeBinary, UniqueConstraint, JSON
 from sqlalchemy.orm import relationship
 
 # import Base to create classes that inherit from it
@@ -38,7 +38,7 @@ class Login(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     ip = Column(String, index=True)
-    location = Column(String, index=True)
+    location = Column(JSON, index=True)
     login_time = Column(String)
     user_id = Column(Integer, ForeignKey("users.id"))
 
@@ -105,8 +105,11 @@ class Follows(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     created_at = Column(String, index=True)
-    followee_id = Column(Integer, ForeignKey("users.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
+    followee_id = Column(Integer, ForeignKey("users.id"))
+
+    __table_args__ = (UniqueConstraint('user_id', 'followee_id', name='uq_user_followee'),)
+    
 # Class for a message from one user to another
 class Message(Base):
     __tablename__="messages"
