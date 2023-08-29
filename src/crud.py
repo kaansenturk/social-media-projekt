@@ -8,7 +8,6 @@ import socket
 import models, schemas, database
 import geocoder
 import bcrypt
-
 # method to delete the table "users"
 def delete_users(db: Session):
     metadata = MetaData()
@@ -78,11 +77,11 @@ def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
 # method to create a login entry into table "login"
 def create_login(db: Session, login: schemas.LoginCreate, owner_id: int):
     now = datetime.now()
-    current_date = now.strftime("%D %H:%M:%S")
+    current_date = now
     hostname=socket.gethostname() 
     IPAddr=socket.gethostbyname(hostname)
     g = geocoder.ip('me')
-    db_login = models.Login(login_time=current_date, location="lat:" + str(g.lat) + ", lng:" + str(g.lng), user_id=owner_id, ip=hostname + " " + IPAddr)
+    db_login = models.Login(login_time=current_date, location= {"lat": g.lat, "lng": g.lng}, user_id=owner_id, ip=hostname + " " + IPAddr)
     db.add(db_login)
     db.commit()
     db.refresh(db_login)

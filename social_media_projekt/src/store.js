@@ -6,7 +6,7 @@ export default createStore({
         logged_user: null,
         logged_user_id: null,
         API: "http://localhost:8000",
-
+        friendsList: [],
     },
     mutations: {
       setUser(state, user) {
@@ -14,6 +14,9 @@ export default createStore({
       },
       setUserId(state, user_id) {
         state.logged_user_id = user_id;
+      },
+      setFriendsList(state, list) {
+state.friendsList = list;
       },
     },
     actions: {

@@ -105,19 +105,26 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 @app.post("/login/")
 def user_login(login_request: schemas.LoginRequest, db: Session = Depends(get_db)):
     user = crud.get_user_by_username(db, login_request.user)
-    print(type(user.password))
+    
     if not user:
         raise HTTPException(status_code=400, detail="Email does not exist")
 
     if not  bcrypt.checkpw(login_request.password.encode('utf-8'), user.password):
         raise HTTPException(status_code=400, detail="Incorrect password")
 
+    # Creating a login record after successful authentication
+    login_record = crud.create_login(db, user.id, user.id)  # Removed schemas.LoginCreate()
+
+    if not login_record:
+        raise HTTPException(status_code=500, detail="Could not create login record")
+    
     return {
         "username": user.username,
         "email": user.email,
         "id": user.id,
         "is_active": user.is_active
     }
+
 
 @app.get("/getLogins/", response_model=list[schemas.Login])
 def read_logins(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -233,6 +240,15 @@ async def send_message(sender_id: int, receiver_id: int, content: str, db: Sessi
 async def get_messages(logged_user: str, recipient: str, db: Session = Depends(get_db)):
     conversation = crud.get_user_messages(db, logged_user, recipient)
     return conversation
+
+@app.get("/get_user_location/{user_id}")
+def get_user_location(user_id: int, db: Session = Depends(get_db)):
+    login_record = db.query(models.Login).filter(models.Login.user_id == user_id).order_by(models.Login.login_time.desc()).first()
+    
+    if not login_record:
+        raise HTTPException(status_code=404, detail="No login records found for this user.")
+        
+    return {"location": login_record.location}
 # @app.get("/user_data")
 # def get_all_users():
 #     conn = sqlite3.connect(DBNAME)

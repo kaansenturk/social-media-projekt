@@ -18,12 +18,10 @@ const app = createApp(App)
 createApp(App)
 const routes = [
     {path: "/", component: HelloWorld, meta: { requiresAuth: true }},
-    {path: "/home", component: HomePage, meta: { requiresAuth: true }},
-
+    {path: "/home", component: HomePage, meta: { requiresAuth: false }},
     {path:"/login", component: LoginPage},
-    {path:"/account", component: AccountInfo, meta: { requiresAuth: true }},
-    {path:"/messenger", component: PrivateMessenger, meta: { requiresAuth: true }}
-
+    {path:"/account", component: AccountInfo, meta: { requiresAuth: false }},
+    {path:"/messenger", component: PrivateMessenger, meta: { requiresAuth: false }}
 ]
 const router = createRouter(
     {
@@ -41,6 +39,13 @@ router.beforeEach((to, from, next) => {
       next();
     }
   });
+  if (localStorage.getItem('logged_user') && localStorage.getItem('logged_user_id')) {
+    console.log(localStorage.getItem('tables'))
+    const user = localStorage.getItem('logged_user')
+    const user_id = localStorage.getItem('logged_user_id')
+    store.commit('setUser', user)
+    store.commit('setUserId', user_id)
+}
 app.use(BootstrapVue3)
 app.use(router)
 app.use(store)

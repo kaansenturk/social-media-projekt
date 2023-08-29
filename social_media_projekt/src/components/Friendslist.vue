@@ -1,7 +1,8 @@
 <template>
-    <div class="friends-container">
-    <div v-for="friend in friends" :key="friend.id" class="friend-item">
-      {{ friend.name }}
+  <div class="friends-container">
+    <div v-for="friend in friendsList" :key="friend.userId" class="friend-item">
+      {{ friend.username }}
+      <button>Hi</button>
     </div>
   </div>
 </template>
@@ -26,21 +27,68 @@ export default {
         { id: 3, name: "Kaan" },
       ],
       friendsList: [],
+      API: "http://localhost:8000",
     }},
+    mounted() {
+    this.getFriends();
+  },
     methods: {
   getFriendState(){
     // Checken ob Online oder nicht
   },
-  getFriends(){
-    try {
-      const response = axios.get(this.$store.state.API + "/getAllFollowers", null, {
+  async getUserById (userId)  {
+  try {
+    const response = await axios.get(this.API + `/users/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`An error occurred while fetching user with ID ${userId}: `, error);
+    return null;
+  }
+},
+async  getFriendsLocation(userId) {
+          try {
+            const response = await axios.get(this.API + `/get_user_locations/${userId}`)
+              console.log(response.data)
+              return response.data
+          } catch {
+            console.log("hallo")
+          }
+        },
+  async getFriends(){
+    const query = this.$store.state.logged_user_id
+      try {
+    const response =  await axios.get(this.API + '/getAllFollowers', {
       params: {
-        followee: this.$store.state.logged_user
-      }}
-      ) 
-      this.friendsList = response.data
+        followee: query
+      }
+    });
+    let List = [];
+    for (const follower of response.data) {
+      let userLocation = null;
+      try {
+        const userId = follower.user_id;
+        const user =  await this.getUserById(userId);
+        
+         userLocation = await this.getFriendsLocation(userId);
+        if (user) {
+          List.push({
+            userId: userId,
+            username: user.username, // Assuming 'username' is a field in the User schema
+            location: userLocation
+          });
+        }
+      }  
+         catch {
+          console.log("Error")
+        }
+      }
+      console.log(List)
+      this.friendsList = List;
+      return List;
     }catch (error){
+
       console.log(error)
+      return null
     }
   }
 }
