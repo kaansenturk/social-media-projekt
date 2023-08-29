@@ -9,6 +9,8 @@ from database import SessionLocal, engine
 from fastapi.responses import JSONResponse
 import base64
 import bcrypt
+from typing import Optional
+
 
 
 logging.basicConfig(filename='../logs/api.log', encoding='utf-8',format='%(asctime)s %(levelname)-8s %(message)s',datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
@@ -186,10 +188,27 @@ def number_of_followers(user_id: int, db: Session = Depends(get_db)):
 def unfollow(followee_id: int, user_id: int, db: Session = Depends(get_db)):
     return crud.unfollow(db=db, followee_id=followee_id, user_id=user_id)
 
-@app.post('/cratePost')
-def create_post(user_id: int, caption: str, db: Session = Depends(get_db)):#,photo_id: int, video_id: int):
-    return crud.create_post(db=db, user_id=user_id, caption=caption)#, photo_id=photo_id, video_id=video_id)
-
+@app.post("/create_post/")
+async def create_post_endpoint(
+    caption: str, 
+    user_id: int, 
+    image_data: Optional[UploadFile] = None, 
+    video_data: Optional[UploadFile] = None,
+    db: Session = Depends(get_db)
+):
+    photo_id = None
+    video_id = None
+    
+    if image_data:
+        photo_id = await crud.upload_photo(db, caption, image_data, user_id)
+        
+    if video_data:
+        # Assuming you would have a similar crud function for uploading video
+        video_id = await crud.upload_video(db, video_data, user_id)
+    
+    post =   crud.create_post(db, user_id, caption, photo_id, video_id)
+    
+    return {"message": "Post created", "post": post}
 @app.get('/getPosts')
 def get_posts(user_id: int, db: Session = Depends(get_db)):
     return crud.get_all_posts(db=db, id=user_id)
@@ -218,9 +237,9 @@ def get_comments_of_post(post_id: int, db: Session = Depends(get_db)):
 def create_comment_like(comment_id: int, user_id: int, db: Session = Depends(get_db)):
     return crud.create_comment_like(comment_id=comment_id, db=db, user_id=user_id)
 
-@app.post("/uploadPhoto")
-async def upload_photo(title: str = Form(...), image: UploadFile = File(...), db: Session = Depends(get_db)):
-    return await crud.upload_photo(title=title, image_data=image, db=db)
+@app.post("/upload_photo/")
+async def upload_photo_endpoint(title: str, image_data: UploadFile, user_id: int, db: Session = Depends(get_db)):
+    return await crud.upload_photo(db, title, image_data, user_id)
 
 @app.get('/getPhoto')
 def read_photo(id: int, db: Session = Depends(get_db)):

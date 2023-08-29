@@ -88,6 +88,7 @@ class Photos(Base):
     created_at = Column(String, index=True)
     title = Column(String, index=True)
     image_data = Column(LargeBinary)
+    user_id = Column(Integer, ForeignKey("users.id"))  # New field
 
 # Class for sqlalchemy to create db tables named "videos"
 class Videos(Base):
@@ -98,6 +99,7 @@ class Videos(Base):
     video_url = Column(String, index=True)
     size = Column(Integer, index=True)
     post_id = Column(Integer, ForeignKey("post.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))  # New field
 
 # Class for sqlalchemy to create db tables named "follows"
 class Follows(Base):
