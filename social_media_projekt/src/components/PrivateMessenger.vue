@@ -23,25 +23,18 @@
     <div v-else>
       <p>Wähle einen Nutzer aus, um Nachrichten anzuzeigen.</p>
     </div>
-
-    <div class="friends-container">
-      <div class="friends-container">
-    <div v-for="friend in friends" :key="friend.id" class="friend-item">
-      {{ friend.name }}
-      <button @click="onFriendSelected(friend)">Chat</button>
-    </div>
+      <Friendslist :fromMessenger="true" @userSelected="onFriendSelected"></Friendslist>
   </div>
-    </div>
-  </div>
+  <div v-for="friend in getFriends" :key="friend">{{ friend }}</div>
 </template>
-
 <script>
-
 import axios from "axios";
+import Friendslist from "./Friendslist.vue";
+import { mapState } from 'vuex';
 export default {
   name: 'PrivateMessenger',
   components: {
-
+    Friendslist
   },
   props: {
     receiver: null,
@@ -59,17 +52,17 @@ export default {
       selectedUser: null,
       newMessage: '',
       currentUser: this.$store.state.logged_user,
-      friends: [
-        { id: 1, name: "Daniel", messages: [{ id: 1, sender: 'Daniel', content: 'Hallo Fr@dt' }] },
-        { id: 2, name: "Johann", messages: [{ id: 2, sender: 'Johann', content: 'Hi Fr@dt' }] },
-        { id: 3, name: "Kaan", messages: [{ id: 3, sender: 'Kaan', content: 'Moin Fr@dt' }] },
-      ],
       selectedFriend: null,
+      friends: [],
     };
   },
   computed: {
     selectedUserMessages() {
       return this.selectedUser ? this.selectedUser.messages : [];
+    },
+    ...mapState(['friendsList']),
+    getFriends() {
+      return this.friendsList;
     },
   },
   methods: {
@@ -121,20 +114,6 @@ export default {
         console.error('Error sending message:', error);
       }
     },
-    // sendMessage() {
-    //   if (this.newMessage.trim() !== '') {
-    //     this.selectedUser.messages.push({
-    //       id: this.selectedUser.messages.length + 1,
-    //       sender: this.currentUser,
-    //       content: this.newMessage,
-    //     });
-    //     this.newMessage = '';
-
-    //     this.$nextTick(() => {
-    //       this.scrollToBottom();
-    //     });
-    //   }
-    // },
     
     getMessageClass(sender) {
       return {
@@ -181,7 +160,7 @@ export default {
 </script>
 
 <style>
-/* Stil für die Komponente */
+/* Style for compoennt*/
 .private-messenger {
   max-width: 600px;
   margin: 0 auto;

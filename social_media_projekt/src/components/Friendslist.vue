@@ -2,11 +2,11 @@
   <div class="friends-container">
     <div v-for="friend in friendsList" :key="friend.userId" class="friend-item">
       {{ friend.username }}
-      <button>Hi</button>
+      <button v-if="fromMessenger" @click="$emit('userSelected', friend.userId)">Chat</button>
+      <button @click="visitUserProfile(friend.userId)">Visit Profile</button>
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios';
 
@@ -18,6 +18,7 @@ export default {
       required: false,
     },
     userId: Number,
+    fromMessenger: Boolean,
   },
   data() {
     return {
@@ -84,6 +85,7 @@ async  getFriendsLocation(userId) {
       }
       console.log(List)
       this.friendsList = List;
+      this.$store.commit('setFriendsList', List);
       return List;
     }catch (error){
 

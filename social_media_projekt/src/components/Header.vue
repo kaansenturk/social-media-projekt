@@ -4,7 +4,8 @@
       <div class="col-md-2">
         <img id="app_icon" alt="App Logo" src="../assets/hacker.png">
       </div>
-      <div class="col-md-10 d-flex justify-content-end">
+      <NavBar v-if="isUserLoggedIn" class="col-md-6" ></NavBar>
+      <div v-if="isUserLoggedIn" class="col-md-4 d-flex justify-content-end">
         <SearchModule />
       </div>
     </div>
@@ -13,24 +14,27 @@
 
 <script>
 import SearchModule from './SearchModule.vue';
+import NavBar from './NavBar.vue';
+import { mapState } from 'vuex';
 export default {
   name: 'HeaderPart',
   components: {
 SearchModule,
+NavBar,
   },
   props: {
-    friends: {
-      type: Array,
-      required: false,
+  },
+  computed: {
+    ...mapState(['logged_user']),
+    isUserLoggedIn() {
+      return this.logged_user !== null;
     },
-    userId: Number,
   },
   data() {
     return {
-
     }},
     methods: {
-}
+},
 
 }
 

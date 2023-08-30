@@ -1,0 +1,61 @@
+<template>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><router-link to="/home">Home</router-link></li>
+        <li><router-link to="/account">Account Info</router-link></li>
+        <li><router-link to="/messenger">Messenger</router-link></li>
+        <button type="submit" @click="logout">Logout</button>
+      </ul>
+    </nav>
+  </template>
+  <script>
+  export default {
+    name: 'NavBar',
+    components: {
+    },
+    methods: {
+        logout() {
+  localStorage.removeItem('logegd_user_id');
+  localStorage.removeItem('logged_user');
+  this.$store.commit('setUser', null)
+  this.$store.commit('setUserId', null)
+  this.$router.push('/login')
+},
+    },
+    data() {
+      return {
+      };
+    },}
+</script>
+  <style scoped>
+  .navbar {
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .nav-links li {
+    padding: 15px;
+  }
+  
+  .nav-links li a {
+    text-decoration: none;
+    color: white;
+  }
+  button {
+    padding: 10px;
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  </style>
+  

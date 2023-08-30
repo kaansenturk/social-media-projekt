@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import { createRouter, createWebHashHistory} from "vue-router"
-import HelloWorld from "./components/HelloWorld"
 import LoginPage from "./components/Login.vue"
 import AccountInfo from "./components/AccountInfo.vue"
 import PrivateMessenger from "./components/PrivateMessenger.vue"
@@ -17,7 +16,6 @@ import '@fortawesome/fontawesome-free/css/all.css'
 const app = createApp(App)
 createApp(App)
 const routes = [
-    {path: "/", component: HelloWorld, meta: { requiresAuth: true }},
     {path: "/home", component: HomePage, meta: { requiresAuth: false }},
     {path:"/login", component: LoginPage},
     {path:"/account", component: AccountInfo, meta: { requiresAuth: false }},

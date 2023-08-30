@@ -54,8 +54,7 @@ export default {
    
     methods: {
       async submitPost() {
-      // Create form data
-      
+      // if there is an Image or Video store the data as formData to append to post
       if (this.droppedFiles.length > 0) {
         const formData = new FormData();
         formData.append("image_data", this.droppedFiles[0]);
@@ -145,8 +144,8 @@ export default {
 <style>
 .image-preview {
   max-width: 100%;
-  max-height: 200px; /* Adjust the maximum height as needed */
-  object-fit: contain; /* Maintain aspect ratio */
+  max-height: 200px;
+  object-fit: contain; 
 }
 .active {
   border: 2px dashed #0066ff;
