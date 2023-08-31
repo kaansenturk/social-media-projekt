@@ -45,11 +45,9 @@ export default {
             try
             {
               const response = await axios.post(this.API + "/createUser",  {
-               
               email: this.email,
               username: this.username,
-              password: this.password,
-                  
+              password: this.password,   
     })
     console.log(response.data)
     this.showSuccess();

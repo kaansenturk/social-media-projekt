@@ -1,13 +1,13 @@
 <template>
   <div class="private-messenger">
     <div v-if="selectedUser">
-      <h2>Nachrichten mit {{ selectedUser.name }}</h2>
+      <h2>Nachrichten mit {{ this.friendName }}</h2>
       <div class="message-list" ref="messageList">
-        <div v-for="(message, index) in selectedUser.messages" :key="message.id">
+        <div v-for="(message) in selectedUser.messages" :key="message.id">
           <div :class="getMessageContainerClass(message.sender)">
-            <div v-if="shouldDisplayUserName(index)" class="user-name" :class="getUserNameClass(message.sender)">
+            <!-- <div v-if="shouldDisplayUserName(index)" class="user-name" :class="getUserNameClass(message.sender)">
               {{ message.sender }}
-            </div>
+            </div> -->
             <div :class="getMessageClass(message.sender)">
               {{ message.content }}
             </div>
@@ -25,7 +25,6 @@
     </div>
       <Friendslist :fromMessenger="true" @userSelected="onFriendSelected"></Friendslist>
   </div>
-  <div v-for="friend in getFriends" :key="friend">{{ friend }}</div>
 </template>
 <script>
 import axios from "axios";
@@ -49,10 +48,13 @@ export default {
   data() {
     return {
       API: 'http://localhost:8000',
-      selectedUser: null,
+      selectedUser: {},
       newMessage: '',
       currentUser: this.$store.state.logged_user,
+      currentUserId: this.$store.state.logged_user_id,
       selectedFriend: null,
+      friendId: null,
+      friendName: null,
       friends: [],
     };
   },
@@ -68,22 +70,28 @@ export default {
   methods: {
     async fetchFollowers() {
       try {
-        console.log(this.$store.state.logged_user_id )
         const followee_id = this.$store.state.logged_user_id 
         const response = await axios.get(this.API + "/getAllFollowers", {
           params: { followee: followee_id }
         });
         this.friends = response.data;
-        console.log(response.data)
       } catch (error) {
         console.error('Error fetching followers:', error);
       }
     },
-    async onFriendSelected(friend) {
-      this.selectedUser = friend;
+    async onFriendSelected(id, friendsname) {
+      this.friendName = friendsname
+      //this.selectedUser = friend;
+      this.friendId = id;
       try {
-        const response = await axios.get(`/get_messages/${this.currentUser}/${friend.id}`);
-        this.selectedUser.messages = response.data;
+        const response = await axios.get(this.$store.state.API + `/get_messages/${this.currentUserId}/${id}`);
+        this.selectedUser.messages = response.data.map(msg => ({
+          id: msg.id,
+          sender: msg.sender_id,
+          content: msg.content,
+          created_at: msg.created_at // We include this field now for sorting
+        }));
+       this.sortMessagesByDate();
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
@@ -92,19 +100,16 @@ export default {
       if (this.newMessage.trim() === '') {
         return;
       }
-
       try {
-        const response = await axios.post('/send_message/', {
-          sender: this.currentUser, 
-          receiver: this.selectedUser.name,
+        const response = await axios.post(this.$store.state.API + '/send_message/', null,  {params: {
+          sender_id: this.currentUserId, 
+          receiver_id: this.friendId,
           content: this.newMessage,
-        });
-
-        this.selectedUser.messages.push({
-          id: response.data.id,
-          sender: this.currentUser,
-          content: this.newMessage
-        });
+        }});
+        setTimeout(() => {
+      this.onFriendSelected(this.friendId);
+    }, 1000);
+    console.log(response.data)
 
         this.newMessage = '';
         this.$nextTick(() => {
@@ -116,45 +121,56 @@ export default {
     },
     
     getMessageClass(sender) {
-      return {
-        'message': true,
-        'sent-message': sender === this.currentUser,
-        'received-message': sender !== this.currentUser,
-      };
-    },
-    getMessageContainerClass(sender) {
-      return {
-        'message': true,
-        'sent-message-container': sender === this.currentUser,
-        'received-message-container': sender !== this.currentUser,
-      };
-    },
-    shouldDisplayUserName(index) {
-      if (index === 0) {
-        return true;
-      } else {
-        return this.selectedUser.messages[index].sender !== this.selectedUser.messages[index - 1].sender;
-      }
-    },
-    isSelectedFriend(friend) {
-      return this.selectedFriend === friend;
-    },
-    getFriendClass(friend) {
-      return {
-        'friend-item': true,
-        'selected-friend': this.isSelectedFriend(friend),
-      };
-    },
-    getUserNameClass(sender) {
-      return {
-        'user-name-sent': sender === this.currentUser,
-        'user-name-received': sender !== this.currentUser,
-      };
-    },
-    scrollToBottom() {
-      const messageList = this.$refs.messageList;
-      messageList.scrollTop = messageList.scrollHeight;
-    },
+    return {
+      'message': true,
+      'sent-message': sender == this.currentUserId,
+      'received-message': sender != this.currentUserId,
+    };
+  },
+  
+  getMessageContainerClass(sender) {
+    return {
+      'message': true,
+      'sent-message-container': sender == this.currentUserId,
+      'received-message-container': sender != this.currentUserId,
+    };
+  },
+  
+  shouldDisplayUserName(index) {
+    if (index === 0) {
+      return true;
+    } else {
+      return this.selectedUser.messages[index].sender !== this.selectedUser.messages[index - 1].sender;
+    }
+  },
+  
+  isSelectedFriend(friend) {
+    return this.selectedFriend === friend;
+  },
+  
+  getFriendClass(friend) {
+    return {
+      'friend-item': true,
+      'selected-friend': this.isSelectedFriend(friend),
+    };
+  },
+  
+  getUserNameClass(sender) {
+    return {
+      'user-name-sent': sender == this.currentUser,
+      'user-name-received': sender != this.currentUser,
+    };
+  },
+  
+  scrollToBottom() {
+    const messageList = this.$refs.messageList;
+    messageList.scrollTop = messageList.scrollHeight;
+  },
+  
+  // To sort the messages by date
+  sortMessagesByDate() {
+    this.selectedUser.messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+  },
   },
 };
 </script>

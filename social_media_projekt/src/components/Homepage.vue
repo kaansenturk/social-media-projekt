@@ -1,15 +1,8 @@
 <template>
     <div class="row">
       <div class="col-md-2 account-info">
-        <h2 class="title">Account Information</h2>
-        <div class="info-item">
-          <strong>Username:</strong> {{ username }}
-        </div>
-        <div class="info-item">
-          <strong>Email:</strong> {{ email }}
-        </div>
-        <div class="info-item">
-          <strong>Role:</strong> {{ role }}
+        <div class="title">
+          <strong>{{ username }}</strong> 
         </div>
       </div>
       <PostCreator class="col-md-7"/>
@@ -41,12 +34,12 @@ export default {
         { id: 2, name: "Johann" },
         { id: 3, name: "Kaan" },
       ],
-      userLocation: [],  // Add this line to store user location
+      userLocation: [], 
     };
   },
   async mounted() {
     document.addEventListener('drop', this.preventGlobalDrop, false);
-    await this.fetchUserLocation();  // Fetch the user location when the component mounts
+    await this.fetchUserLocation(); 
   },
   beforeUnmount() {
     document.removeEventListener('drop', this.preventGlobalDrop, false);
@@ -60,9 +53,6 @@ export default {
     },
   },
   methods: {
-    fetchData() {
-      // Datenzugriff regeln
-    },
     async fetchUserLocation() {
       const userId = this.$store.state.logged_user_id;
       try {
@@ -87,6 +77,7 @@ export default {
       color: white;
       padding: 35px;
       margin-left: 15px;
+      height: fit-content;
     }
     
     .title {

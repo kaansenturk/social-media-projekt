@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-2 account-info">
+    <div class="col-md-6 account-info">
       <h2 class="title">Account Information</h2>
       <form @submit.prevent="saveChanges" v-if="editMode">
         <div class="info-item">
@@ -21,15 +21,11 @@
       <div class="info-item">
         <strong>Email:</strong> {{ email }}
       </div>
-      <div class="info-item">
-        <strong>Role:</strong> {{ role }}
-      </div>
       <button @click="editMode = true" v-if="!editMode">Edit</button>
     </div></div>
     <FriendsList class="col-md-2" :friends="friendsList"/>
   </div>
   </template>
-  
   <script>
   import FriendsList from "./Friendslist.vue"
   import axios from "axios";
@@ -40,57 +36,46 @@
 },
     data() {
       return {
-        username: 'Fr@dt',
-        email: 'fredmetzler@battlenet.com',
-        role: 'CEO',
-        // Hier Freunde aus DB beziehen ... 
-        friendsList: [
-        { id: 1, name: "Daniel" },
-        { id: 2, name: "Johann" },
-        { id: 3, name: "Kaan" },
-      ],
+        username: this.$store.state.logged_user,
+        email: '',
       editMode: false,
       editedUsername: '',
       editedEmail: '',
       };
     },
-    mounted() {
-    document.addEventListener('drop', this.preventGlobalDrop, false);
+    async mounted() {
+    await this.fetchData(); 
   },
-  beforeUnmount() {
-    document.removeEventListener('drop', this.preventGlobalDrop, false);
-  },
-  computed: {
-    preventGlobalDrop() {
-      return function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-      };
-    },
-    },
     methods: {
       async saveChanges() {
       try {
-        const response = await axios.put('/update_user', {
+        const response = await axios.put(this.$store.state.API + `/update_user/${this.username}`, {
           username: this.editedUsername,
           email: this.editedEmail,
         });
-
         console.log('User updated:', response.data);
-
-        // Update current user info
         this.username = this.editedUsername;
         this.email = this.editedEmail;
 
         this.editMode = false;
+        this.$store.dispatch('login', { user: this.username, user_id: this.$store.state.logged_user_id});
+        localStorage.setItem('logged_user', this.username)
       } catch (error) {
         console.error('Error updating user:', error);
       }
     },
-      fetchData(){
-        // Datenzugriff regeln
-      },
+      async fetchData(){
+        try {
+        const response = await axios.get(this.$store.state.API + `/users/${this.$store.state.logged_user_id}`);
+        
+        console.log(this.$store.state.API,this.$store.state.logged_user_id, response.data.email)
+        this.email = response.data.email
+        return response.data.email
+      } catch(error) {
+        console.log(error)
+      }
     },
+  }
   };
   </script>
   
@@ -101,9 +86,9 @@
   }
   .account-info {
     background-color: #2200cd;
+    padding: 2%;
     color: white;
-    padding: 35px;
-    margin-left: 15px;
+    margin: auto;
   }
   
   .title {

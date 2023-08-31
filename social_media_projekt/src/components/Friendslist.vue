@@ -2,8 +2,8 @@
   <div class="friends-container">
     <div v-for="friend in friendsList" :key="friend.userId" class="friend-item">
       {{ friend.username }}
-      <button v-if="fromMessenger" @click="$emit('userSelected', friend.userId)">Chat</button>
-      <button @click="visitUserProfile(friend.userId)">Visit Profile</button>
+      <button v-if="fromMessenger" @click="$emit('userSelected', friend.userId, friend.username)"><i class="fa-solid fa-message"></i></button>
+      <button @click="visitUserProfile(friend.userId, friend.username, friend.email)"><i class="fa-solid fa-user"></i></button>
     </div>
   </div>
 </template>
@@ -34,9 +34,9 @@ export default {
     this.getFriends();
   },
     methods: {
-  getFriendState(){
-    // Checken ob Online oder nicht
-  },
+      visitUserProfile(friendId, username,  email){
+        this.$router.push({ name: 'friend', query: { friendId, username, email } });
+      },
   async getUserById (userId)  {
   try {
     const response = await axios.get(this.API + `/users/${userId}`);
@@ -74,8 +74,9 @@ async  getFriendsLocation(userId) {
         if (user) {
           List.push({
             userId: userId,
-            username: user.username, // Assuming 'username' is a field in the User schema
-            location: userLocation
+            username: user.username,
+            location: userLocation,
+            email: user.email
           });
         }
       }  
@@ -100,7 +101,10 @@ async  getFriendsLocation(userId) {
 </script>
 
 <style>
-  
+  button {
+    background-color: blue;
+    border-radius: 10px;
+  }
   .friends-container {
   display: flex;
   flex-direction: column;
