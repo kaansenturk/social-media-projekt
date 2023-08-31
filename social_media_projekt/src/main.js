@@ -12,6 +12,7 @@ import BootstrapVue3 from 'bootstrap-vue-3'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 import '@fortawesome/fontawesome-free/css/all.css'
+import FriendPage from "./components/FriendPage"
 
 const app = createApp(App)
 createApp(App)
@@ -19,7 +20,8 @@ const routes = [
     {path: "/home", component: HomePage, meta: { requiresAuth: false }},
     {path:"/login", component: LoginPage},
     {path:"/account", component: AccountInfo, meta: { requiresAuth: false }},
-    {path:"/messenger", component: PrivateMessenger, meta: { requiresAuth: false }}
+    {path:"/messenger", component: PrivateMessenger, meta: { requiresAuth: false }},
+    {path: "/friend", component: FriendPage, meta: {requiresAuth: false}, name: "friend"}
 ]
 const router = createRouter(
     {

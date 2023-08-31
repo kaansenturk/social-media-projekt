@@ -9,3 +9,5 @@ uvicorn
 pytest
 httpx
 multipart
+sqalchemy
+bcrypt

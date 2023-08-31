@@ -6,10 +6,11 @@ import sqlite3
 from sqlalchemy.orm import Session
 import crud, models, schemas
 from database import SessionLocal, engine
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 import base64
 import bcrypt
 from typing import Optional
+from io import BytesIO
 
 
 
@@ -241,9 +242,13 @@ def create_comment_like(comment_id: int, user_id: int, db: Session = Depends(get
 async def upload_photo_endpoint(title: str, image_data: UploadFile, user_id: int, db: Session = Depends(get_db)):
     return await crud.upload_photo(db, title, image_data, user_id)
 
-@app.get('/getPhoto')
+@app.get("/getPhoto")
 def read_photo(id: int, db: Session = Depends(get_db)):
-    return crud.read_photo(id=id, db=db)
+    photo = crud.read_photo(id=id, db=db)
+    if photo is None:
+        raise HTTPException(status_code=404, detail="Photo not found")
+    
+    return StreamingResponse(BytesIO(photo.image_data), media_type="image/png")
 
 @app.get("/")
 async def root():

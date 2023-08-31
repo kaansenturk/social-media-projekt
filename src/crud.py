@@ -52,17 +52,18 @@ def update_user_by_username(db: Session, username: str, updated_data: schemas.Us
     db_user = db.query(models.User).filter(models.User.username == username).first()
     
     if db_user:
-        # Update attributes
-        db_user.username = updated_data.username
-        db_user.email = updated_data.email
-        db_user.password = updated_data.password
-        db_user.is_active = updated_data.is_active
-        
+        if updated_data.username:
+            db_user.username = updated_data.username
+        if updated_data.email:
+            db_user.email = updated_data.email
+        # No need to check for password or is_active as they are not in UserUpdate
+
         db.commit()
         db.refresh(db_user)
         return db_user
     else:
         raise HTTPException(status_code=404, detail="User not found")
+
 # method
 def get_items(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Item).offset(skip).limit(limit).all()
