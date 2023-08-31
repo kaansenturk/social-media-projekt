@@ -1,4 +1,7 @@
 <template>
+<div v-if="isUserLoggedIn">
+  <DropDownMenu />
+  </div>
   <div class="Header sticky-top">
     <div class="row ">
       <div class="col-md-2">
@@ -16,10 +19,12 @@
 import SearchModule from './SearchModule.vue';
 import NavBar from './NavBar.vue';
 import { mapState } from 'vuex';
+import DropDownMenu from "./Settings/DropDownMenu.vue";
 export default {
   name: 'HeaderPart',
   components: {
 SearchModule,
+DropDownMenu,
 NavBar,
   },
   props: {
