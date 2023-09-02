@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar">
       <ul class="nav-links">
-        <li><router-link to="/home">Home</router-link></li>
+        <li><router-link to="/">Home</router-link></li>
         <li><router-link to="/account">Account Info</router-link></li>
         <li><router-link to="/messenger">Messenger</router-link></li>
         <button type="submit" @click="logout">Logout</button>
