@@ -5,7 +5,7 @@ export default createStore({
         count: 1, // das ist nur ein Beispiel zur Hilfe zur Erklärung
         logged_user: null,
         logged_user_id: null,
-        API: "http://localhost:8000",
+        API: "",
         friendsList: [],
     },
     mutations: {
@@ -27,6 +27,9 @@ state.friendsList = list;
       logout({ commit }) {
         commit('setUser', null);
       },
+      setApi(state, API) {
+        state.API = API;
+              },
     },
     getters: {
       currentUser: (state) => state.logged_user,

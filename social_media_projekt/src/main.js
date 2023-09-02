@@ -17,11 +17,11 @@ import FriendPage from "./components/FriendPage"
 const app = createApp(App)
 createApp(App)
 const routes = [
-    {path: "/home", component: HomePage, meta: { requiresAuth: false }},
+    {path: "/", component: HomePage, meta: { requiresAuth: true }},
     {path:"/login", component: LoginPage},
-    {path:"/account", component: AccountInfo, meta: { requiresAuth: false }},
-    {path:"/messenger", component: PrivateMessenger, meta: { requiresAuth: false }},
-    {path: "/friend", component: FriendPage, meta: {requiresAuth: false}, name: "friend"}
+    {path:"/account", component: AccountInfo, meta: { requiresAuth: true }},
+    {path:"/messenger", component: PrivateMessenger, meta: { requiresAuth: true }},
+    {path: "/friend", component: FriendPage, meta: {requiresAuth: true}, name: "friend"}
 ]
 const router = createRouter(
     {
@@ -46,6 +46,7 @@ router.beforeEach((to, from, next) => {
     store.commit('setUser', user)
     store.commit('setUserId', user_id)
 }
+store.commit('setApi', import.meta.env.VITE_API_URL)
 app.use(BootstrapVue3)
 app.use(router)
 app.use(store)
