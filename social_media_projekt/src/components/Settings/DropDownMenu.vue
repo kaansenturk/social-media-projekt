@@ -94,7 +94,6 @@ export default {
   display: inline-block;
   top: 20px; 
   left: 10px; 
-  z-index: 1030;
 }
 
 .dropdown-button {

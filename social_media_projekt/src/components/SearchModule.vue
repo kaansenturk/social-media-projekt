@@ -1,7 +1,7 @@
 <template>
   <div class="search-container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-9">
         <input
           id="post_text"
           class="form-control"
@@ -116,12 +116,13 @@ else{
 .form-control {
   border-radius: 10px 0 0 10px;
   height: 15vh; 
-  line-height: 1.5; 
+  line-height: 1.5;
 }
 .search-container {
-  display: flex;
-  align-items: center;
-  height: 20vh;
+  position: absolute;
+  display: inline-block;
+  top: 0px; 
+  right: 10px; 
 }
 
 .input-group {
