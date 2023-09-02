@@ -15,10 +15,12 @@
     <div class="col-md-7 post-list">
       <h2 class="title">Friend's Posts</h2>
       <div v-for="post in this.posts" :key="post.id" class="post-item">
-        <h3>{{ post.caption }}</h3>
-        <p>{{ post.created_at }}</p>
-        <div v-if="post.photo_id !== null">
-          <img :src="photoData[post.photo_id]" alt="Photo" style="max-width: 30%;"/>
+        <div class="post-header">
+          <div>{{ post.caption }}</div>
+          <p class="post-date">{{ post.created_at }}</p>
+        </div>
+        <div v-if="post.photo_id !== null" class="post-photo">
+          <img :src="photoData[post.photo_id]" alt="Photo" />
         </div>
       </div></div>
       <FriendsList class="col-md-2" :friends="friendsList"/>
@@ -98,19 +100,42 @@
       color: white;
       padding: 35px;
       margin-left: 15px;
+      max-height: 200px;
+      overflow-y: auto; 
     }
     
     .title {
-      font-size: 24px;
+      font-size: 35px;
       margin-bottom: 10px;
     }
-    
-    .info-item {
-      margin-bottom: 5px;
-    }
+
     .post-item {
-        border: 1px solid blue;
-        max-width: 90%;
+      border: 1px solid blue;
+      padding: 20px;
+      margin-bottom: 20px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      max-width: 90%;
+      overflow: hidden;
+      text-align: left;
+      font-size: 20px;
+    }
+
+    .post-date {
+      font-size: 14px;
+      color: #555;
+      margin-top: 5px;
+}
+        
+    .info-item {
+      margin-bottom: 10px;
+    }
+
+    .post-photo img {
+      max-width: 60%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
     }
     </style>
     

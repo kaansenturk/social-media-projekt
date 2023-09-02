@@ -33,6 +33,8 @@
     color: white;
     display: flex;
     justify-content: center;
+    max-height: 100px;
+    width: 100%;
   }
   
   .nav-links {
