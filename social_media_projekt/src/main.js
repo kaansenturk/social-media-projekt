@@ -39,6 +39,7 @@ router.beforeEach((to, from, next) => {
       next();
     }
   });
+
   if (localStorage.getItem('logged_user') && localStorage.getItem('logged_user_id')) {
     console.log(localStorage.getItem('tables'))
     const user = localStorage.getItem('logged_user')
@@ -46,8 +47,9 @@ router.beforeEach((to, from, next) => {
     store.commit('setUser', user)
     store.commit('setUserId', user_id)
 }
-store.commit('setApi', import.meta.env.VITE_API_URL)
+store.commit('setApi', process.env.VUE_APP_API_URL)
 app.use(BootstrapVue3)
 app.use(router)
 app.use(store)
+
 app.mount('#app')
