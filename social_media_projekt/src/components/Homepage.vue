@@ -1,16 +1,17 @@
 <template>
-    <div class="row">
-      <div class="col-md-2 account-info">
-        <div class="title">
-          <strong>{{ username }}</strong> 
-        </div>
+  <div class="row">
+    <div class="col-md-2 account-info">
+      <div class="title">
+        <img :src="profileImageUrl" alt="Profilbild" class="profile-picture" />
+        <div>{{ username }}</div>
       </div>
-      <PostCreator class="col-md-7"/>
-      <FriendsList class="col-md-2" :friends="friendsList"/>
     </div>
-      <FriendsMap v-if="userLocation && userLocation.length === 2" :user="this.userLocation" class="map-container"></FriendsMap>
-    </template>
-    <script>
+    <PostCreator class="col-md-7"/>
+    <FriendsList class="col-md-2" :friends="friendsList"/>
+  </div>
+  <FriendsMap v-if="userLocation && userLocation.length === 2" :user="userLocation" class="map-container"></FriendsMap>
+</template>
+<script>
 import axios from 'axios';
 import FriendsList from "./Friendslist.vue";
 import PostCreator from "./postCreator.vue";
@@ -34,7 +35,8 @@ export default {
         { id: 2, name: "Johann" },
         { id: 3, name: "Kaan" },
       ],
-      userLocation: [], 
+      userLocation: [],
+      profileImageUrl: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png', 
     };
   },
   async mounted() {
@@ -67,26 +69,33 @@ export default {
 };
 </script>
     
-    <style scoped>
-    .map-container {
-      position: fixed; ; right: 1vh;
-      width: 15%;
-    }
-    .account-info {
-      background-color: #2200cd;
-      color: white;
-      padding: 35px;
-      margin-left: 15px;
-      height: fit-content;
-    }
-    
-    .title {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-    
-    .info-item {
-      margin-bottom: 5px;
-    }
-    </style>
-    
+<style scoped>
+.map-container {
+  position: fixed; right: 1vh; bottom: 4vh;
+  width: 15%;
+}
+.account-info {
+  background-color: #2200cd;
+  color: white;
+  padding: 35px;
+  margin-left: 15px;
+  height: fit-content;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.info-item {
+  margin-bottom: 5px;
+}
+
+
+.profile-picture {
+  width: 70px; 
+  height: 70px; 
+  border-radius: 50%;
+  margin-bottom: 10px; 
+}
+</style>
