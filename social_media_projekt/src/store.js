@@ -18,6 +18,9 @@ export default createStore({
       setFriendsList(state, list) {
 state.friendsList = list;
       },
+      setApi(state, API) {
+        state.API = API;
+              },
     },
     actions: {
       login({ commit }, { user, user_id }) {
@@ -27,9 +30,7 @@ state.friendsList = list;
       logout({ commit }) {
         commit('setUser', null);
       },
-      setApi(state, API) {
-        state.API = API;
-              },
+      
     },
     getters: {
       currentUser: (state) => state.logged_user,
