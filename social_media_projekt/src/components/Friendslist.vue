@@ -28,7 +28,7 @@ export default {
         { id: 3, name: "Kaan" },
       ],
       friendsList: [],
-      API: "http://localhost:8000",
+      API: this.$store.state.API,
     }},
     mounted() {
     this.getFriends();

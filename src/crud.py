@@ -259,7 +259,7 @@ def create_message(db: Session, sender_id: int, receiver_id: int, content: str):
     return db_message
 
 def get_user_messages(db: Session, logged_user: str, recipient: str):
-
+    
     conversation = db.query(models.Message).filter(
         (models.Message.sender_id == logged_user) & (models.Message.receiver_id == recipient) |
         (models.Message.sender_id == recipient) & (models.Message.receiver_id == logged_user)

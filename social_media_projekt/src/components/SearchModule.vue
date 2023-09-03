@@ -39,7 +39,7 @@ export default {
   name: 'SearchModule',
   data() {
     return {
-      API: "http://localhost:8000",
+      API: this.$store.state.API,
       text: "",
       searchResults: [],
     };

@@ -44,7 +44,7 @@ export default {
           if(this.showRegister && this.repeat_password === this.password){
             try
             {
-              const response = await axios.post(this.API + "/createUser",  {
+              const response = await axios.post(this.$store.state.API + "/createUser",  {
               email: this.email,
               username: this.username,
               password: this.password,   
@@ -60,7 +60,7 @@ export default {
       },
       async login_try(){
     try {
-        const response = await axios.post(this.API + "/login", {
+        const response = await axios.post(this.$store.state.API + "/login", {
             user: this.username,
             password: this.password,
         });
