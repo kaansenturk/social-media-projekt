@@ -27,20 +27,20 @@ export default {
     methods: {
       async  fetchAllFollowerPosts() {
     try {
-        // Assuming `loggedInUserId` is the ID of the currently logged-in user
+
         const followersResponse = await axios.get(`/getAllFollowers?followee=${loggedInUserId}`);
 
-        const followerIds = followersResponse.data; // Assuming the API returns an array of follower IDs
+        const followerIds = followersResponse.data; 
 
-        // Fetch posts of all followers
+  
         const allPostsPromises = followerIds.map(followerId => {
             return axios.get(`/getPosts?user_id=${followerId}`);
         });
 
-        // Wait for all requests to complete
+
         const allPostsResponses = await Promise.all(allPostsPromises);
 
-        // Extract posts from responses
+
         const allPosts = allPostsResponses.flatMap(response => response.data);
 
         return allPosts;

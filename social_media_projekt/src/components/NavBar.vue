@@ -29,8 +29,8 @@
 </script>
   <style scoped>
   .navbar {
-    background-color: #333;
-    color: white;
+    background-color: transparent;
+    color: blue;
     display: flex;
     justify-content: center;
     max-height: 100px;
@@ -49,12 +49,12 @@
   
   .nav-links li a {
     text-decoration: none;
-    color: white;
+    color: blue;
   }
   button {
     padding: 10px;
     background-color: transparent;
-    color: #fff;
+    color: blue;
     border: none;
     border-radius: 4px;
     cursor: pointer;
