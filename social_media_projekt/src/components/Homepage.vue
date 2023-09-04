@@ -55,6 +55,7 @@ export default {
     },
   },
   methods: {
+    
     async fetchUserLocation() {
       const userId = this.$store.state.logged_user_id;
       try {
