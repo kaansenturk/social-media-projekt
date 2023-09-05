@@ -245,10 +245,12 @@ async def upload_photo(db: Session, title: str, image_data: UploadFile, user_id:
     db.refresh(db_photo)
 
     return db_photo.id
+
 # method to read a photo entry
 def read_photo(db: Session, id: int):
     return db.query(models.Photos).filter(models.Photos.id == id).first()
 
+# method to create a message entry
 def create_message(db: Session, sender_id: int, receiver_id: int, content: str):
     now = datetime.now()
     current_date = now.strftime("%D %H:%M:%S")
