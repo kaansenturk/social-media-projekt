@@ -8,6 +8,7 @@ Setup über Makefile:
         make init # ausführen für komplettes Setup inklusive neuer DB.
         make start # ausführen um backend und frontend lokal hochzufahren
         ```
+            Windows10: $choco install make
 
 ## Frontend mit Vue.js:
 Frontend aufsetzen:
