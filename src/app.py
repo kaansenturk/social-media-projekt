@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, Request, Form, File, UploadFile
+from fastapi import FastAPI, HTTPException, Depends, Request, Form, File, UploadFile, Body
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from starlette.responses import RedirectResponse
@@ -59,8 +59,9 @@ def delete_users(db: Session = Depends(get_db)):
 @app.post("/deleteUser/{username}")
 def delete_user(username: str, db: Session = Depends(get_db)):
     db_delete_user = crud.delete_user(db, username)
-    if db_delete_user:
-        raise HTTPException(status_code=400, detail="Not Found")
+    if db_delete_user is None:
+        raise HTTPException(status_code=400, detail="User not found")
+    return {"message": "User deleted successfully", "status_code": 200}
 
 # post method to create a user into table "users"
 @app.post("/createUser/", response_model=schemas.User)
@@ -273,6 +274,13 @@ def get_user_location(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="No login records found for this user.")
         
     return {"location": login_record.location}
+
+@app.put("/users/{username}/update_password/")
+def update_password(username: str, password_update: schemas.PasswordUpdate = Body(...), db: Session = Depends(get_db)):
+    try:
+        return crud.update_user_password(db, username, password_update.current_password, password_update.new_password)
+    except HTTPException as e:
+        return {"error": e.detail}
 # @app.get("/user_data")
 # def get_all_users():
 #     conn = sqlite3.connect(DBNAME)

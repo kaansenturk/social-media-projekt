@@ -1,7 +1,7 @@
 <template>
   <div class="search-container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-9">
         <input
           id="post_text"
           class="form-control"
@@ -14,6 +14,7 @@
         <button class="btn btn-primary btn-block search-button" @click.prevent="handleSearch">
           <i class="fa-solid fa-magnifying-glass" style="color: #f1dbff;"></i>
         </button>
+        <div v-if="searchResults.length"><i class="fa fa-square-xmark" @click="clearSearchResults" style=" cursor: pointer" title="Liste leeren"></i></div>
       </div>
     </div>
     <div class="search-results" v-if="searchResults.length">
@@ -21,12 +22,13 @@
         <li class="list-group-item" v-for="user in searchResults" :key="user.id">
           {{ user.username }}
           <button class="btn btn-sm btn-secondary float-right" @click="followUser(user.id, user.username)">Follow</button>
-          <button class="btn btn-sm btn-secondary float-right" @click="chatWithUser(user.id, user.username)"><i class="fa-regular fa-message"></i></button>
+          <button class="btn btn-sm btn-secondary float-right" @click="openChat"><i class="fa-regular fa-message"></i></button>
 
         </li>
       </ul>
-      <i class="fa-solid fa-messages"></i>
+      
     </div>
+    
   </div>
 </template>
 
@@ -39,20 +41,20 @@ export default {
   name: 'SearchModule',
   data() {
     return {
-      API: "http://localhost:8000",
+      API: this.$store.state.API,
       text: "",
       searchResults: [],
     };
   },
   methods: {
-    async chatWithUser(user_id, username){
-      try {
-        console.log("Hi", user_id)
-      }
-      catch {
-        console.log("Hi", username)
-      }
+    clearSearchResults(){
+      this.searchResults = []
     },
+    openChat(){
+      this.$router.push("/messenger")
+      this.searchResults = []
+    },
+    // method to call the getUsers rooute and get all user with a name like the query we pass it
     async handleSearch() {
       try {
         const response = await axios.get(this.API + "/getUsers", {
@@ -60,10 +62,7 @@ export default {
             query: this.text,
           },
         });
-        print
         console.log(response);
-        console.log(response.data);
-        console.log("Search completed");
         this.searchResults = response.data;
       } catch (error) {
         console.error("Search error:", error);
@@ -73,7 +72,6 @@ export default {
     try {
 
       const followee_id = this.$store.state.logged_user_id;
-      console.log(followee_id, followerId)
       const response = await axios.post(this.API + "/createFollower", {
         followee: followee_id,
         owner_id: followerId
@@ -89,8 +87,7 @@ export default {
       confirmButtonColor: '#2200cd',
     }).then((result) => {
       if (result.value) {
-        console.log("Hi")
-        this.showRegister = !this.showRegister
+        this.clearSearchResults()
  } 
 else{
   console.log("ciao")
@@ -116,12 +113,13 @@ else{
 .form-control {
   border-radius: 10px 0 0 10px;
   height: 15vh; 
-  line-height: 1.5; 
+  line-height: 1.5;
 }
 .search-container {
-  display: flex;
-  align-items: center;
-  height: 20vh;
+  position: absolute;
+  display: inline-block;
+  top: 0px; 
+  right: 10px; 
 }
 
 .input-group {

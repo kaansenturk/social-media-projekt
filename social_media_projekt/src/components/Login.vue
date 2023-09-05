@@ -40,11 +40,12 @@ export default {
       showRegister: false,
     }},
     methods: {
+      // method to call api route to create a new user in the database
       async register_new_user(){
           if(this.showRegister && this.repeat_password === this.password){
             try
             {
-              const response = await axios.post(this.API + "/createUser",  {
+              const response = await axios.post(this.$store.state.API + "/createUser",  {
               email: this.email,
               username: this.username,
               password: this.password,   
@@ -58,20 +59,20 @@ export default {
             }
           }
       },
+      // method to create a Login for a user that exists in the db, also sets items in the vuex state management and localstorage
       async login_try(){
     try {
-        const response = await axios.post(this.API + "/login", {
+        const response = await axios.post(this.$store.state.API + "/login", {
             user: this.username,
             password: this.password,
         });
-        
         if (response.data) {
           console.log(response.data.id)
             this.getUser(response.data.username);
             this.$store.dispatch('login', { user: response.data.username, user_id: response.data.id });
             localStorage.setItem('logged_user', response.data.username)
             localStorage.setItem('logged_user_id', response.data.id)
-            this.$router.push('/home');
+            this.$router.push('/');
             console.log(this.$store.state.logged_user,this.$store.state.logged_user_id)
         }
     } catch (error) {
@@ -86,6 +87,7 @@ export default {
   getUser(name){
     this.username = name
   },
+  // method to create a popup toast with sweetalert
   showSuccess(){
     Swal.fire({
       title: 'Erfolgreich registriert',
@@ -108,9 +110,6 @@ else{
 },
 computed: {
   ...mapState(['user']),
-    count () {
-      return this.$store.state.count
-    },
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
     },
@@ -119,7 +118,6 @@ computed: {
     },
   }
 }
-
 </script>
 
 <style>

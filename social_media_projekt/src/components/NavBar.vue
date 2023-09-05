@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar">
       <ul class="nav-links">
-        <li><router-link to="/home">Home</router-link></li>
+        <li><router-link to="/">Home</router-link></li>
         <li><router-link to="/account">Account Info</router-link></li>
         <li><router-link to="/messenger">Messenger</router-link></li>
         <button type="submit" @click="logout">Logout</button>
@@ -29,10 +29,12 @@
 </script>
   <style scoped>
   .navbar {
-    background-color: #333;
-    color: white;
+    background-color: transparent;
+    color: blue;
     display: flex;
     justify-content: center;
+    max-height: 100px;
+    width: 100%;
   }
   
   .nav-links {
@@ -47,12 +49,12 @@
   
   .nav-links li a {
     text-decoration: none;
-    color: white;
+    color: blue;
   }
   button {
     padding: 10px;
     background-color: transparent;
-    color: #fff;
+    color: blue;
     border: none;
     border-radius: 4px;
     cursor: pointer;

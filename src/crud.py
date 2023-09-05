@@ -23,7 +23,7 @@ def delete_user(db: Session, username: str):
         return None
     db.delete(user)
     db.commit()
-    return user
+    return "User deleted Succesfully"
 # method to get a user from table "users" by id
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
@@ -261,10 +261,31 @@ def create_message(db: Session, sender_id: int, receiver_id: int, content: str):
     return db_message
 
 def get_user_messages(db: Session, logged_user: str, recipient: str):
-
+    
     conversation = db.query(models.Message).filter(
         (models.Message.sender_id == logged_user) & (models.Message.receiver_id == recipient) |
         (models.Message.sender_id == recipient) & (models.Message.receiver_id == logged_user)
     ).all()
     
     return conversation
+
+# method to update a user's password
+def update_user_password(db: Session, username: str, current_password: str, new_password: str):
+ 
+    db_user = get_user_by_username(db, username)
+    
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    current_password_bytes = current_password.encode('utf-8')
+    stored_password_bytes = db_user.password if isinstance(db_user.password, bytes) else db_user.password.encode('utf-8')
+    
+    if bcrypt.checkpw(current_password_bytes, stored_password_bytes):
+
+        hashed_new_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+        db_user.password = hashed_new_password
+        db.commit()
+        db.refresh(db_user)
+        return {"message": "Password updated successfully"}
+    else:
+        raise HTTPException(status_code=400, detail="Incorrect current password")

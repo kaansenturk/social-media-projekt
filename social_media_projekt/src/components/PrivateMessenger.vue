@@ -47,7 +47,7 @@ export default {
   },
   data() {
     return {
-      API: 'http://localhost:8000',
+      API: this.$store.state.API,
       selectedUser: {},
       newMessage: '',
       currentUser: this.$store.state.logged_user,

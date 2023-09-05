@@ -28,7 +28,7 @@ export default {
         { id: 3, name: "Kaan" },
       ],
       friendsList: [],
-      API: "http://localhost:8000",
+      API: this.$store.state.API,
     }},
     mounted() {
     this.getFriends();
@@ -48,7 +48,7 @@ export default {
 },
 async  getFriendsLocation(userId) {
           try {
-            const response = await axios.get(this.API + `/get_user_locations/${userId}`)
+            const response = await axios.get(this.API + `/get_user_location/${userId}`)
               console.log(response.data)
               return response.data
           } catch {
@@ -87,6 +87,7 @@ async  getFriendsLocation(userId) {
       console.log(List)
       this.friendsList = List;
       this.$store.commit('setFriendsList', List);
+      console.log(this.$store.state.friendsList)
       return List;
     }catch (error){
 
@@ -102,6 +103,7 @@ async  getFriendsLocation(userId) {
 
 <style>
   button {
+    color: white;
     background-color: blue;
     border-radius: 10px;
   }

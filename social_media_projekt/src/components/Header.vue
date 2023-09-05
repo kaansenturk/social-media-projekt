@@ -1,15 +1,15 @@
 <template>
-<div v-if="isUserLoggedIn">
-  <DropDownMenu />
-  </div>
   <div class="Header sticky-top">
-    <div class="row ">
-      <div class="col-md-2">
+    <div class="row align-items-center">
+      <div>
+        <NavBar v-if="isUserLoggedIn"></NavBar>
         <img id="app_icon" alt="App Logo" src="../assets/hacker.png">
       </div>
-      <NavBar v-if="isUserLoggedIn" class="col-md-6" ></NavBar>
-      <div v-if="isUserLoggedIn" class="col-md-4 d-flex justify-content-end">
-        <SearchModule />
+      <div class="d-flex justify-content-end">
+        <div v-if="isUserLoggedIn">
+          <DropDownMenu />
+          <SearchModule />
+        </div>
       </div>
     </div>
   </div>
@@ -48,14 +48,17 @@ NavBar,
 <style>
 
 #app_icon {
-  width: 100px;
+  width: 70px;
+  position: absolute;
+  display: inline-block;
+  top: 10px; 
+  left: 80px; 
 }
 
 /* Overriding Bootstrap's sticky-top styles to make sure it sticks to the top */
 .sticky-top {
 
   position: sticky;
-  top: 2vh;
   z-index: 1020; /* Ensure it appears above other elements */
 }
   

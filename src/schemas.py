@@ -40,6 +40,8 @@ class User(UserBase):
     is_active: bool
     items: list[Item] = []
     # posts: list[Post] = []
+    class Config:
+        orm_mode = True
 
 class LoginBase(BaseModel):
     login_time: str
@@ -98,4 +100,8 @@ class Post(PostBase):
 class UserUpdate(BaseModel):
     username: str
     email: str
+class PasswordUpdate(BaseModel):
+    current_password: str
+    new_password: str
+
     
