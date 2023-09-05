@@ -1,7 +1,7 @@
 .PHONY: all install-requirements clean-db init-db start-backend install-frontend start-frontend
 
 init: install-requirements clean-db init-db start-backend install-frontend start-frontend
-start: start-backend install-frontend start-frontend
+start:  start-backend install-frontend start-frontend
 setup-server:
 	@echo "Updating package lists..."
 	sudo apt-get update
@@ -26,13 +26,12 @@ init-db:
 
 start-backend:
 	@echo "Starting backend service..."
-	cd src && uvicorn app:app --reload &
+	@cd src && uvicorn app:app --reload &
 
 
 install-frontend:
 	@echo "Installing frontend dependencies..."
-	cd social_media_project && npm install
-
+	@cd social_media_projekt && npm install
 start-frontend:
 	@echo "Starting frontend..."
-	cd social_media_project && npm run serve
+	@cd social_media_projekt && npm run serve
