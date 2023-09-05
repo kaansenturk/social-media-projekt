@@ -1,7 +1,7 @@
 .PHONY: all install-requirements clean-db init-db start-backend install-frontend start-frontend
 
-all: install-requirements clean-db init-db start-backend install-frontend start-frontend
-
+init: install-requirements clean-db init-db start-backend install-frontend start-frontend
+start: start-backend install-frontend start-frontend
 setup-server:
 	@echo "Updating package lists..."
 	sudo apt-get update

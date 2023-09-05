@@ -136,6 +136,12 @@ else{
       try {
         const response = await axios.get(this.$store.state.API + `/getPosts?user_id=${this.$store.state.logged_user_id}`);
         this.posts = response.data;
+        this.posts.sort((a, b) => {
+        const dateA = new Date(a.created_at);
+        const dateB = new Date(b.created_at);
+
+      return dateB - dateA;
+    });
         console.log(this.$store.state.logged_user_id)
         console.log(response.data)
       } catch (error) {

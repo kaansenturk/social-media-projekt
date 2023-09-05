@@ -118,6 +118,12 @@
       try {
         const response = await axios.get(this.$store.state.API + `/getPosts?user_id=${userId}`);
         this.posts = response.data;
+        this.posts.sort((a, b) => {
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+
+      return dateB - dateA;
+    });
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
