@@ -23,7 +23,7 @@ def delete_user(db: Session, username: str):
         return None
     db.delete(user)
     db.commit()
-    return user
+    return "User deleted Succesfully"
 # method to get a user from table "users" by id
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
