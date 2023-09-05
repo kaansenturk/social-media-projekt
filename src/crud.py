@@ -266,3 +266,24 @@ def get_user_messages(db: Session, logged_user: str, recipient: str):
     ).all()
     
     return conversation
+
+# method to update a user's password
+def update_user_password(db: Session, username: str, current_password: str, new_password: str):
+ 
+    db_user = get_user_by_username(db, username)
+    
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    current_password_bytes = current_password.encode('utf-8')
+    stored_password_bytes = db_user.password if isinstance(db_user.password, bytes) else db_user.password.encode('utf-8')
+    
+    if bcrypt.checkpw(current_password_bytes, stored_password_bytes):
+
+        hashed_new_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+        db_user.password = hashed_new_password
+        db.commit()
+        db.refresh(db_user)
+        return {"message": "Password updated successfully"}
+    else:
+        raise HTTPException(status_code=400, detail="Incorrect current password")

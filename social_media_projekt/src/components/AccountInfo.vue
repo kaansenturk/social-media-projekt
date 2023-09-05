@@ -21,7 +21,28 @@
       <div class="info-item">
         <strong>Email:</strong> {{ email }}
       </div>
-      <button @click="editMode = true" v-if="!editMode">Edit</button>
+      <div v-if="changePasswordMode">
+        <form @submit.prevent="changePassword">
+        <div class="info-item">
+          <label for="username">Altes Passwort:  </label>
+          <input type="password" v-model="oldPassword" id="password" />
+        </div>
+        <div class="info-item">
+          <label for="email">Neues Passwort: </label>
+          <input type="password" v-model="newPassword" id="password" />
+        </div>
+        <div class="info-item">
+          <label for="email">Wiederholen: </label>
+          <input type="password" v-model="passwordRepeat" id="password" />
+        </div>
+        <button type="submit">Save</button>
+        <button @click="changePasswordMode = !changePasswordMode">Cancel</button>
+      </form>
+      </div>
+      <span>
+      <button @click="editMode = true" v-if="!editMode" title="Userinfo ändern">Edit</button> 
+      <button><i class="fa fa-wrench" title="Passwort ändern" @click="changePasswordMode = !changePasswordMode"></i></button>
+    </span>
     </div></div>
     <div class="col-md-7 post-list mx-auto">
       <h2 class="title">Your Posts</h2>
@@ -40,6 +61,8 @@
   <script>
   import FriendsList from "./Friendslist.vue"
   import axios from "axios";
+  import Swal from 'sweetalert2/dist/sweetalert2.js'
+import 'sweetalert2/dist/sweetalert2.min.css';
   export default {
     name: 'AccountInfo',
     components: {
@@ -50,6 +73,10 @@
         username: this.$store.state.logged_user,
         email: '',
       editMode: false,
+      changePasswordMode: false,
+      oldPassword: "",
+      newPassword: "",
+      passwordRepeat: "",
       editedUsername: '',
       editedEmail: '',
       posts: [],
@@ -65,6 +92,46 @@
             }
     },
     methods: {
+      async changePassword() {
+        if (this.newPassword == this.passwordRepeat){
+        const username = this.username
+        const currentPassword = this.oldPassword
+        const newPassword = this.newPassword
+      try {
+        const response = await axios.put(this.$store.state.API + `/users/${username}/update_password/`, {
+          current_password: currentPassword,
+          new_password: newPassword
+        });
+        console.log("Passwort geändert:", response.data);
+        if (response.status == 200) {
+          Swal.fire({
+      title: 'Passwort erfolgreich geändert!',
+       icon: 'info',
+      iconColor: '#2200cd',
+      showCloseButton: false,
+      confirmButtonText: 'Schließen',
+      confirmButtonColor: '#2200cd',
+    }).then((result) => {
+      if (result.value) {
+        this.$router.push("/login")
+ } 
+else{
+  console.log("ciao")
+}})
+        }
+      } catch (error) {
+        console.error("An error occurred while updating the password:", error);
+      }} else {
+        Swal.fire({
+      title: 'Bitte gib zweimal das gleiche Passwort ein!',
+       icon: 'info',
+      iconColor: '#FF0000',
+      showCloseButton: false,
+      confirmButtonText: 'Schließen',
+      confirmButtonColor: '#FF0000',
+    })
+      }
+    },
       async fetchPosts() {
       try {
         const response = await axios.get(this.$store.state.API + `/getPosts?user_id=${this.$store.state.logged_user_id}`);

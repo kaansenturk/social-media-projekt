@@ -35,6 +35,7 @@ state.friendsList = list;
     getters: {
       currentUser: (state) => state.logged_user,
       isLoggedIn: (state) => state.logged_user !== null,
+      getFriends: (state) => state.friendsList,
     }
 
 });

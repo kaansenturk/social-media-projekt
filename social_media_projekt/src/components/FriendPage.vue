@@ -10,6 +10,7 @@
         <div class="info-item">
           <strong>Email:</strong> {{ email }}
         </div>
+        <div><i class="fa fa-user-minus" @click="unfollowUser" style=" cursor: pointer" title="Follow Beenden"></i></div>
         </div>
     </div>
     <div class="col-md-7 post-list">
@@ -29,6 +30,8 @@
     <script>
     import FriendsList from "./Friendslist.vue"
     import axios from "axios";
+    import Swal from 'sweetalert2/dist/sweetalert2.js'
+    import 'sweetalert2/dist/sweetalert2.min.css';
     export default {
       name: 'FriendPage',
       components: {
@@ -43,6 +46,9 @@
           photoData: {},
         };
       },
+      watch: {
+    '$route': 'fetchData'
+  },
       created() {
     const friendIdFromQuery = this.$route.query.friendId;
     this.userId = friendIdFromQuery;
@@ -63,6 +69,51 @@
             this.email = this.$route.query.email
     },
       methods: {
+        // duplicate method to allow switching the user from within this page and circumvent the mounted lifecycle
+        async fetchData() {
+      const userId = this.$route.query.friendId;
+      this.userId = userId;
+      if (userId) {
+        await this.fetchPosts(userId);
+      }
+      for (const post of this.posts) {
+        if (post.photo_id !== null) {
+          this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
+        }
+      }
+      this.username = this.$route.query.username;
+      this.email = this.$route.query.email;
+    },
+    // method to call the app route to unfollow the selected user
+        async unfollowUser(){
+            try {
+                const response = await axios.post(this.$store.state.API + "/unfollowUser", null, {
+                    params: {
+                        followee_id: this.$store.state.logged_user_id,
+                        user_id: this.userId
+                    }
+                })
+                if (response.status == 200) {
+                    Swal.fire({
+      title: 'Erfolgreich Follow beendet',
+       icon: 'info',
+      iconColor: '#2200cd',
+      showCloseButton: false,
+      confirmButtonText: 'Zurück',
+      confirmButtonColor: '#2200cd',
+    }).then((result) => {
+      if (result.value) {
+        this.$router.push("/")
+        } 
+    else{
+  console.log("ciao")
+    }})
+        }
+            } catch(error) {
+                console.log(error)
+            }
+        },
+        // method to get all posts of the user we visit on this page
         async fetchPosts(userId) {
       try {
         const response = await axios.get(this.$store.state.API + `/getPosts?user_id=${userId}`);
@@ -71,6 +122,7 @@
         console.error("Error fetching posts:", error);
       }
     },
+    // method to get the image appended to a post
     async getPhoto(photoId) {
       try {
         const response = await axios.get(this.$store.state.API + `/getPhoto`, {params: {id: photoId}, responseType: 'arraybuffer'});
@@ -100,7 +152,7 @@
       color: white;
       padding: 35px;
       margin-left: 15px;
-      max-height: 200px;
+      max-height: 270px;
       overflow-y: auto; 
     }
     
