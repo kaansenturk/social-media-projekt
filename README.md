@@ -87,3 +87,11 @@ Veranstaltungen: Die Möglichkeit, Veranstaltungen zu erstellen, sich für Veran
 Einstellungen und Datenschutz: Eine Seite, auf der Nutzer ihre Kontoeinstellungen, Datenschutzeinstellungen und Benachrichtigungseinstellungen anpassen können.
 
 Statistiken/Analytics: Wenn es sich um eine Seite für Unternehmen oder öffentliche Figuren handelt, haben sie möglicherweise Zugriff auf Statistiken und Analysen über die Leistung ihrer Beiträge und ihrer Zielgruppe.
+
+
+### Credits
+    Blaues Icon: <a href="https://www.flaticon.com/free-icons/home-address" title="home address icons">Home address icons created by fjstudio - Flaticon</a>
+
+    Grünes Icon <a href="https://www.flaticon.com/free-icons/placeholder" title="placeholder icons">Placeholder icons created by Freepik - Flaticon</a>
+
+    Hacker Icon: <a href="https://www.flaticon.com/de/kostenlose-icons/hacker" title="hacker Icons">Hacker Icons erstellt von Talha Dogar - Flaticon</a>

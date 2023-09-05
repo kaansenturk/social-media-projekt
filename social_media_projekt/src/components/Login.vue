@@ -40,6 +40,7 @@ export default {
       showRegister: false,
     }},
     methods: {
+      // method to call api route to create a new user in the database
       async register_new_user(){
           if(this.showRegister && this.repeat_password === this.password){
             try
@@ -58,13 +59,13 @@ export default {
             }
           }
       },
+      // method to create a Login for a user that exists in the db, also sets items in the vuex state management and localstorage
       async login_try(){
     try {
         const response = await axios.post(this.$store.state.API + "/login", {
             user: this.username,
             password: this.password,
         });
-        
         if (response.data) {
           console.log(response.data.id)
             this.getUser(response.data.username);
@@ -86,6 +87,7 @@ export default {
   getUser(name){
     this.username = name
   },
+  // method to create a popup toast with sweetalert
   showSuccess(){
     Swal.fire({
       title: 'Erfolgreich registriert',
@@ -108,9 +110,6 @@ else{
 },
 computed: {
   ...mapState(['user']),
-    count () {
-      return this.$store.state.count
-    },
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
     },
@@ -119,7 +118,6 @@ computed: {
     },
   }
 }
-
 </script>
 
 <style>

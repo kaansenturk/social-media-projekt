@@ -100,4 +100,8 @@ class Post(PostBase):
 class UserUpdate(BaseModel):
     username: str
     email: str
+class PasswordUpdate(BaseModel):
+    current_password: str
+    new_password: str
+
     
