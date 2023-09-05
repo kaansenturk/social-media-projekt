@@ -85,6 +85,7 @@ export default {
         console.error("An error occurred while submitting the post:", error);
       }
       }
+      window.location.reload();
     },
 
     isImage(file) {

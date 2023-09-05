@@ -68,13 +68,13 @@ export default {
         console.error("Search error:", error);
       }
     },
-    async followUser(followerId, username) {
+    async followUser(followee_id, username) {
     try {
 
-      const followee_id = this.$store.state.logged_user_id;
+      const follower_id = this.$store.state.logged_user_id;
       const response = await axios.post(this.API + "/createFollower", {
         followee: followee_id,
-        owner_id: followerId
+        owner_id: follower_id
       });
       if (response.data) {
         Swal.fire({

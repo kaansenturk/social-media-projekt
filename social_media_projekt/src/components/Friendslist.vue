@@ -53,19 +53,20 @@ async  getFriendsLocation(userId) {
   async getFriends(){
     const query = this.$store.state.logged_user_id
       try {
-    const response =  await axios.get(this.API + '/getAllFollowers', {
+    const response =  await axios.get(this.API + '/getAllFollowees', {
       params: {
-        followee: query
+        user_id: query
       }
     });
+    
     if (response.status == 200) {
       this.$store.commit('setFriendsList', []);
     }
     let List = [];
-    for (const follower of response.data) {
+    for (const followee of response.data) {
       let userLocation = null;
       try {
-        const userId = follower.user_id;
+        const userId = followee.followee_id;
         const user =  await this.getUserById(userId);
         
          userLocation = await this.getFriendsLocation(userId);

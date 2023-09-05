@@ -113,7 +113,7 @@ def user_login(login_request: schemas.LoginRequest, db: Session = Depends(get_db
     if not user:
         raise HTTPException(status_code=400, detail="Email does not exist")
 
-    if not  bcrypt.checkpw(login_request.password.encode('utf-8'), user.password):
+    if not bcrypt.checkpw(login_request.password.encode('utf-8'), user.password):
         raise HTTPException(status_code=400, detail="Incorrect password")
 
     # Creating a login record after successful authentication
@@ -174,15 +174,15 @@ def create_follow(follower_data: schemas.CreateFollower, db: Session = Depends(g
 def get_all_followers(followee: int, db: Session = Depends(get_db)):
     return crud.get_all_followers(db=db, id=followee)
 
-@app.get('/readFollowers')
-def number_of_followers(followee: int, db: Session = Depends(get_db)):
-    return crud.get_number_of_followers(db=db, id=followee)
+@app.get('/readFollowers/{user_id}')
+def number_of_followers(user_id: int, db: Session = Depends(get_db)):
+    return crud.get_number_of_followers(db=db, id=user_id)
 
 @app.get('/getAllFollowees')
 def get_all_followees(user_id: int, db: Session = Depends(get_db)):
     return crud.get_all_followees(db=db, id=user_id)
 
-@app.get('/readFollowees')
+@app.get('/readFollowees/{user_id}')
 def number_of_followers(user_id: int, db: Session = Depends(get_db)):
     return crud.get_number_of_followees(db=db, id=user_id)
 

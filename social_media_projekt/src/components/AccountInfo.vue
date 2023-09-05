@@ -21,6 +21,12 @@
       <div class="info-item">
         <strong>Email:</strong> {{ email }}
       </div>
+      <div class="info-item">
+        <strong>Following:</strong> {{ followingNumber }}
+      </div>
+      <div class="info-item">
+        <strong>Follwer:</strong> {{ followerNumber }}
+      </div>
       <div v-if="changePasswordMode">
         <form @submit.prevent="changePassword">
         <div class="info-item">
@@ -81,9 +87,12 @@ import 'sweetalert2/dist/sweetalert2.min.css';
       editedEmail: '',
       posts: [],
       photoData: {},
+      followingNumber: null,
+      followerNumber: null,
       };
     },
     async mounted() {
+                await this.fetchData();
                 await this.fetchPosts();
             for (const post of this.posts) {
                 if (post.photo_id !== null) {
@@ -142,7 +151,7 @@ else{
 
       return dateB - dateA;
     });
-        console.log(this.$store.state.logged_user_id)
+        console.log("User_ID: " + this.$store.state.logged_user_id)
         console.log(response.data)
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -168,8 +177,13 @@ else{
       async fetchData(){
         try {
         const response = await axios.get(this.$store.state.API + `/users/${this.$store.state.logged_user_id}`);
+        const response2 = await axios.get(this.$store.state.API + `/readFollowers/${this.$store.state.logged_user_id}`);
+        const response3 = await axios.get(this.$store.state.API + `/readFollowees/${this.$store.state.logged_user_id}`);
 
+        console.log("FOLLOWERS:  " + response2.data + " FOLLOWEES: " + response3.data)
         console.log(this.$store.state.API,this.$store.state.logged_user_id, response.data.email)
+        this.followerNumber = response2.data
+        this.followingNumber = response3.data
         this.email = response.data.email
         return response.data.email
       } catch(error) {
