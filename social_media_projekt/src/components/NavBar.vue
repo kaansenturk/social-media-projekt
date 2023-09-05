@@ -1,10 +1,10 @@
 <template>
     <nav class="navbar">
       <ul class="nav-links">
-        <li><router-link to="/">Home</router-link></li>
+        <!--<li><router-link to="/">Home</router-link></li>
         <li><router-link to="/account">Account Info</router-link></li>
         <li><router-link to="/messenger">Messenger</router-link></li>
-        <button type="submit" @click="logout">Logout</button>
+        <button type="submit" @click="logout"></button>-->
       </ul>
     </nav>
   </template>
@@ -30,31 +30,32 @@
   <style scoped>
   .navbar {
     background-color: transparent;
-    color: blue;
+    color: purple;
     display: flex;
     justify-content: center;
-    max-height: 100px;
+    max-height: 200px;
+    height: 85px;
     width: 100%;
   }
   
   .nav-links {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 550px;
   }
   
   .nav-links li {
-    padding: 15px;
+    padding: 520px;
   }
   
   .nav-links li a {
     text-decoration: none;
-    color: blue;
+    color: purple;
   }
   button {
     padding: 10px;
     background-color: transparent;
-    color: blue;
+    color: purple;
     border: none;
     border-radius: 4px;
     cursor: pointer;
