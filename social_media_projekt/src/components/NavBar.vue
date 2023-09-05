@@ -29,7 +29,7 @@
 </script>
   <style scoped>
   .navbar {
-    background-color: transparent;
+    background-color: white;
     color: purple;
     display: flex;
     justify-content: center;
