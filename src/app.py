@@ -59,8 +59,9 @@ def delete_users(db: Session = Depends(get_db)):
 @app.post("/deleteUser/{username}")
 def delete_user(username: str, db: Session = Depends(get_db)):
     db_delete_user = crud.delete_user(db, username)
-    if db_delete_user:
-        raise HTTPException(status_code=400, detail="Not Found")
+    if db_delete_user is None:
+        raise HTTPException(status_code=400, detail="User not found")
+    return {"message": "User deleted successfully", "status_code": 200}
 
 # post method to create a user into table "users"
 @app.post("/createUser/", response_model=schemas.User)
