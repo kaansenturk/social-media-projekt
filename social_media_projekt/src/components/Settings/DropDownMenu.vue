@@ -4,17 +4,19 @@
       <div v-if="isDropdownOpen" class="overlay">
         <button @click="toggleDropdown" class="dropdown-button2">☰</button>
         <img class="app_icon" alt="App Logo" src="@/assets/hacker.png">
-        <button @click="goToAccount" class="menu-item">Mein Account</button>
-        <button @click="goToGeneralSettings" class="menu-item">Allgemeine Einstellungen</button>
-        <button @click="goToNews" class="menu-item">Benachrichtigungen</button>
-        <button @click="goToPrivacy" class="menu-item">Datenschutz</button>
-        <button @click="goToProfile" class="menu-item">Konto</button>
-        <button @click="goToLanguage" class="menu-item">Sprache und Region</button>
-        <button @click="goToThemes" class="menu-item">Themes und Erscheinungsbild</button>
-        <button @click="goToSafety" class="menu-item">Sicherheit</button>
-        <button @click="goToSupport" class="menu-item">Hilfe und Support</button>
-        <button type="submit" @click="logout" class="menu-item">Abmelden</button>
-        <button @click="goToPolicy" class="menu-item">Nutzungsbedingungen und Datenschutzrichtlinien</button>
+        <button @click="goToHome" class="menu-item">Home</button>
+        <button @click="goToAccount" class="menu-item">Account Info</button>
+        <button @click="goToMessenger" class="menu-item">Messenger</button>
+        <!--<button @click="goToGeneralSettings" class="menu-item">Settings</button>-->
+        <!--<button @click="goToNews" class="menu-item">Benachrichtigungen</button>-->
+        <!--<button @click="goToPrivacy" class="menu-item">Datenschutz</button>-->
+        <!--<button @click="goToProfile" class="menu-item">Konto</button>-->
+        <!--<button @click="goToLanguage" class="menu-item">Sprache und Region</button>-->
+        <!--<button @click="goToThemes" class="menu-item">Themes und Erscheinungsbild</button>-->
+        <!--<button @click="goToSafety" class="menu-item">Sicherheit</button>-->
+        <!--<button @click="goToSupport" class="menu-item">Hilfe und Support</button>-->
+        <button type="submit" @click="logout" class="menu-item">Logout</button>
+        <!--<button @click="goToPolicy" class="menu-item">Nutzungsbedingungen und Datenschutzrichtlinien</button>-->
       </div>
       <div v-if="isDropdownOpen" class="background" @click="closeDropdown"></div>
     </div>
@@ -36,6 +38,14 @@ export default {
     goToAccount() {
       this.closeDropdown();
       this.$router.push('/account');
+    },
+    goToHome() {
+      this.closeDropdown();
+      this.$router.push('/');
+    },
+    goToMessenger() {
+      this.closeDropdown();
+      this.$router.push('/messenger');
     },
     goToGeneralSettings() {
       this.closeDropdown();
@@ -101,6 +111,7 @@ export default {
   border: none;
   font-size: 24px;
   cursor: pointer;
+  color:purple;
 }
 
 .dropdown-button2 {
@@ -112,7 +123,7 @@ export default {
   display: inline-block;
   top: 19px; 
   left: 9px; 
-
+  color:purple;
 }
 
 
@@ -128,10 +139,11 @@ export default {
   padding: 15px 15px;
   width: 100%;
   text-align: left;
+  color:purple;
 }
 
 .menu-item:hover {
-  background-color: #f0f0f0;
+  background-color: #ECF0F1;
 }
 .background {
   position: fixed;
@@ -148,7 +160,7 @@ export default {
   position: absolute;
   top: -20px;
   left: -10px;
-  background-color: #fff;
+  background-color:#F8F9F9;
   border: 1px solid #ccc;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 40px;
