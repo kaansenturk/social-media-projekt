@@ -22,11 +22,6 @@ export default {
   },
   data() {
     return {
-        friends12: [
-        { id: 1, name: "Daniel" },
-        { id: 2, name: "Johann" },
-        { id: 3, name: "Kaan" },
-      ],
       friendsList: [],
       API: this.$store.state.API,
     }},
@@ -63,6 +58,9 @@ async  getFriendsLocation(userId) {
         followee: query
       }
     });
+    if (response.status == 200) {
+      this.$store.commit('setFriendsList', []);
+    }
     let List = [];
     for (const follower of response.data) {
       let userLocation = null;

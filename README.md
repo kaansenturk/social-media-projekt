@@ -2,7 +2,12 @@
 
 Dokumentation: 
 
-
+Setup über Makefile:
+    in root-directory:
+        ````
+        make init # ausführen für komplettes Setup inklusive neuer DB.
+        make start # ausführen um backend und frontend lokal hochzufahren
+        ```
 
 ## Frontend mit Vue.js:
 Frontend aufsetzen:

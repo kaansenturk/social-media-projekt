@@ -112,8 +112,7 @@ else{
 }
 .form-control {
   border-radius: 10px 0 0 10px;
-  height: 15vh; 
-  line-height: 1.5;
+  line-height: 1;
 }
 .search-container {
   position: absolute;
