@@ -16,6 +16,7 @@
         :key="friend.id"
         :lat-lng="friend.latlng"
         :title="friend.name"
+        @click="visitFriend(friend)"
       >
       </LMarker>
 
@@ -36,6 +37,7 @@
   import L from 'leaflet';
   import { ref, computed, watchEffect } from 'vue';
   import 'leaflet/dist/leaflet.css';
+  import { useRouter } from 'vue-router';
 
   
   export default {
@@ -59,6 +61,7 @@
 
     // Setup function for the map to be initialized
     setup(props) {
+      
       // VUE passes a proxy object so to handle it we convert it into a regular object
       const plainFriendsList = ref([]);
       watchEffect(() => {
@@ -66,6 +69,7 @@
       return JSON.parse(JSON.stringify(friend));
     });
   });
+  console.log(plainFriendsList)
       const mapOptions = {
         zoom: 12,
         center: [53.5587, 9.9276], 
@@ -113,7 +117,10 @@ if (friend.location.location.lat && friend.location.location.lng) {
       return {
         id: idx,
         latlng: [friend.location.location.lat, friend.location.location.lng],
-        name: friend.username 
+        name: friend.username,
+        email: friend.email,
+        userId: friend.userId
+
       };
     });
     // setting the location for the user based on the prop
@@ -140,6 +147,14 @@ const centerOnUser = () => {
       mapRef.value.setView(userLatLng);
     }
 };
+const router = useRouter();
+const visitFriend = (friend) => {
+  console.log(friend)
+  const friendId = friend.userId
+  const username = friend.name
+  const email = friend.email
+  router.push({ name: 'friend', query: { friendId , username, email } });
+};
     return {
       toggleMapMode,
       isPopupMode,
@@ -152,6 +167,7 @@ const centerOnUser = () => {
       zoomOut,
       centerOnUser,
       userLatLng,
+      visitFriend,
     };
   
     },

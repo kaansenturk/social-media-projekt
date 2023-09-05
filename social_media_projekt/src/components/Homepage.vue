@@ -10,12 +10,14 @@
     <FriendsList class="col-md-2" :friends="friendsList"/>
   </div>
   <FriendsMap v-if="userLocation && userLocation.length ===  2 && friendsList.length > 0" :user="userLocation" :friendsList="this.$store.state.friendsList" class="map-container"></FriendsMap>
+  <UserFeed v-if="friendsList.length > 0"></UserFeed>
 </template>
 <script>
 import axios from 'axios';
 import FriendsList from "./Friendslist.vue";
 import PostCreator from "./postCreator.vue";
 import FriendsMap from "./map.vue";
+import UserFeed from './UserFeed.vue';
 import { watch } from 'vue';
 
 export default {
@@ -24,6 +26,7 @@ export default {
     FriendsList,
     PostCreator,
     FriendsMap,
+    UserFeed,
   },
   data() {
     return {

@@ -50,12 +50,20 @@ export default {
               username: this.username,
               password: this.password,   
     })
-    console.log(response.data)
+    console.log(response.status)
     this.showSuccess();
             }
             catch
             {
-              return
+              Swal.fire({
+      title: 'Fehler beim Registrieren',
+      text: 'Bitte versuche es noch einmal und gib zweimal das gleiche Passwort ein :)',
+       icon: 'info',
+      iconColor: '#d0342c',
+      showCloseButton: false,
+      confirmButtonText: 'Schließen',
+      confirmButtonColor: '#d0342c',
+    })
             }
           }
       },
@@ -67,16 +75,22 @@ export default {
             password: this.password,
         });
         if (response.data) {
-          console.log(response.data.id)
             this.getUser(response.data.username);
             this.$store.dispatch('login', { user: response.data.username, user_id: response.data.id });
             localStorage.setItem('logged_user', response.data.username)
             localStorage.setItem('logged_user_id', response.data.id)
             this.$router.push('/');
-            console.log(this.$store.state.logged_user,this.$store.state.logged_user_id)
         }
     } catch (error) {
-      console.log(this.username, this.password)
+      Swal.fire({
+      title: 'Fehler beim Login',
+      text: 'Falsche Logindaten eingegeben',
+       icon: 'info',
+      iconColor: '#d0342c',
+      showCloseButton: false,
+      confirmButtonText: 'Schließen',
+      confirmButtonColor: '#d0342c',
+    })
         if (error.response && error.response.data && error.response.data.detail) {
             console.log(error.response.data.detail); 
         } else {
