@@ -69,8 +69,8 @@ async  getFriendsLocation(userId) {
         const userId = followee.followee_id;
         const user =  await this.getUserById(userId);
         
-         userLocation = await this.getFriendsLocation(userId);
         if (user) {
+          userLocation = await this.getFriendsLocation(userId);
           List.push({
             userId: userId,
             username: user.username,
