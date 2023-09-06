@@ -36,8 +36,9 @@ export default {
       password: "",
       repeat_password:"",
       email: "",
-      API: "http://localhost:8000",
+      API: this.$store.state.API,
       showRegister: false,
+      userLocation: { lat: null, lng: null },
     }},
     methods: {
       // method to call api route to create a new user in the database
@@ -67,12 +68,32 @@ export default {
             }
           }
       },
-      // method to create a Login for a user that exists in the db, also sets items in the vuex state management and localstorage
+      // method to initialize the login and ask user for permission for their location
       async login_try(){
+        if ("geolocation" in navigator) {
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      this.userLocation.lat = position.coords.latitude;
+      this.userLocation.lng = position.coords.longitude;
+      this.sendLoginRequest();
+    },
+    (error) => {
+      console.warn('Could not get geolocation:', error.message);
+      this.sendLoginRequest(); 
+    }
+  );
+} else {
+  console.warn('Geolocation is not supported by this browser.');
+  this.sendLoginRequest(); 
+}
+      },
+      // method to create a Login for a user that exists in the db, also sets items in the vuex state management and localstorage
+      async sendLoginRequest(){
     try {
         const response = await axios.post(this.$store.state.API + "/login", {
             user: this.username,
             password: this.password,
+            location: this.userLocation,
         });
         if (response.data) {
             this.getUser(response.data.username);
