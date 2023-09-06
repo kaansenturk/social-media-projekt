@@ -101,3 +101,6 @@ Statistiken/Analytics: Wenn es sich um eine Seite für Unternehmen oder öffentl
     Grünes Icon <a href="https://www.flaticon.com/free-icons/placeholder" title="placeholder icons">Placeholder icons created by Freepik - Flaticon</a>
 
     Hacker Icon: <a href="https://www.flaticon.com/de/kostenlose-icons/hacker" title="hacker Icons">Hacker Icons erstellt von Talha Dogar - Flaticon</a>
+
+    Blank Profile Pic: 
+    https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png

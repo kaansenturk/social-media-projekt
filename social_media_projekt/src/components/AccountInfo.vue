@@ -1,7 +1,18 @@
 <template>
   <div class="row">
+    <div v-if="profilePicId !== null"><img  class="profile-picture" :src="profilePicData"><i class="fa-solid fa-pencil" @click="showDialog = true"></i></div>
+    <div v-else><img src="../assets/blank_profile_pic.webp" alt="Profilbild" class="profile-picture" /><i class="fa-solid fa-pencil" @click="showDialog = true"></i></div>
     <div class="col-md-6 account-info">
       <h2 class="title">Account Information</h2>
+      <dialog :open="showDialog">
+      <h2>Choose a new profile picture</h2>
+      <input type="file" ref="fileInput" @change="previewImage" />
+      <img v-if="preview" :src="preview" alt="Profile preview" width="200" />
+      <menu>
+        <button @click="uploadImage">Upload</button>
+        <button @click="closeDialog">Cancel</button>
+      </menu>
+    </dialog>
       <form @submit.prevent="saveChanges" v-if="editMode">
         <div class="info-item">
           <label for="username">Username:</label>
@@ -25,7 +36,7 @@
         <strong>Following:</strong> {{ followingNumber }}
       </div>
       <div class="info-item">
-        <strong>Follwer:</strong> {{ followerNumber }}
+        <strong>Follower:</strong> {{ followerNumber }}
       </div>
       <div v-if="changePasswordMode">
         <form @submit.prevent="changePassword">
@@ -89,18 +100,92 @@ import 'sweetalert2/dist/sweetalert2.min.css';
       photoData: {},
       followingNumber: null,
       followerNumber: null,
+      profilePicId: null,
+      profilePicData: {},
+      showDialog: false,
+      preview: null,
+      selectedFile: null,
       };
     },
     async mounted() {
                 await this.fetchData();
                 await this.fetchPosts();
+                
             for (const post of this.posts) {
                 if (post.photo_id !== null) {
                     this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
                 }
             }
+            if (this.profilePicId != null) {
+             this. profilePicData = await this.getPhoto(this.profilePicId)
+            }
     },
+    watch: {
+    async profilePicId(newProfilePicId, oldProfilePicId) {
+      if (newProfilePicId !== oldProfilePicId) {
+        this.profilePicData = await this.getPhoto(newProfilePicId);
+      }
+    },
+  },
     methods: {
+      closeDialog() {
+      this.showDialog = false;
+    },
+    previewImage(event) {
+      const file = event.target.files[0];
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.preview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+    async uploadImage() {
+      if (!this.selectedFile) return;
+
+const formData = new FormData();
+formData.append('image_data', this.selectedFile);
+
+const userId = this.$store.state.logged_user_id; 
+const title = 'Profile Picture'; 
+
+try {
+
+  const uploadResponse = await axios.post(
+    `${this.$store.state.API}/upload_photo/?title=${title}&user_id=${userId}`, 
+    formData, 
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  );
+    const photo_id = uploadResponse.data; 
+    this.profilePicId =  uploadResponse.data;
+
+    const username = this.$store.state.logged_user;
+    const setUserPicResponse = await axios.post(`${this.$store.state.API}/set_profile_picture/?username=${username}&photo_id=${photo_id}`, {
+      params: {
+      username: username,
+      photo_id: photo_id,
+      }
+    });
+    if (setUserPicResponse.status === 200) {
+      Swal.fire({
+      title: 'Erfolgreich geändert',
+      text: 'Schickes Bild! ;)',
+       icon: 'info',
+      iconColor: '#2200cd',
+      showCloseButton: false,
+      confirmButtonText: 'Schließen',
+      confirmButtonColor: '#2200cd',
+    })
+    }
+    this.closeDialog();
+  } catch (error) {
+    console.error('An error occurred while uploading the image:', error);
+  }
+},
       async changePassword() {
         if (this.newPassword == this.passwordRepeat){
         const username = this.username
@@ -181,10 +266,11 @@ else{
         const response3 = await axios.get(this.$store.state.API + `/readFollowees/${this.$store.state.logged_user_id}`);
 
         console.log("FOLLOWERS:  " + response2.data + " FOLLOWEES: " + response3.data)
-        console.log(this.$store.state.API,this.$store.state.logged_user_id, response.data.email)
+        console.log(this.$store.state.API,this.$store.state.logged_user_id, response.data)
         this.followerNumber = response2.data
         this.followingNumber = response3.data
         this.email = response.data.email
+        this.profilePicId = response.data.photo_id;
         return response.data.email
       } catch(error) {
         console.log(error)
@@ -258,5 +344,11 @@ else{
       display: block;
       margin: 0 auto;
     }
+    .profile-picture {
+  width: 70px; 
+  height: 70px; 
+  border-radius: 50%;
+  margin-bottom: 10px; 
+}
   </style>
   

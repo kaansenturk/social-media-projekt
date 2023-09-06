@@ -39,9 +39,8 @@ router.beforeEach((to, from, next) => {
       next();
     }
   });
-
+  // for refresh of page, if user hasn't logged out, the important info gets reloaded into the store
   if (localStorage.getItem('logged_user') && localStorage.getItem('logged_user_id')) {
-    console.log(localStorage.getItem('tables'))
     const user = localStorage.getItem('logged_user')
     const user_id = localStorage.getItem('logged_user_id')
     store.commit('setUser', user)

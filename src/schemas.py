@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 
@@ -39,6 +40,7 @@ class User(UserBase):
     id: int
     is_active: bool
     items: list[Item] = []
+    photo_id: Optional[int]
     # posts: list[Post] = []
     class Config:
         orm_mode = True

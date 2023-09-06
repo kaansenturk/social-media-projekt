@@ -281,45 +281,7 @@ def update_password(username: str, password_update: schemas.PasswordUpdate = Bod
         return crud.update_user_password(db, username, password_update.current_password, password_update.new_password)
     except HTTPException as e:
         return {"error": e.detail}
-# @app.get("/user_data")
-# def get_all_users():
-#     conn = sqlite3.connect(DBNAME)
-#     c = conn.cursor()
-
-#     c.execute('''CREATE TABLE IF NOT EXISTS testTable (name TEXT, number IINTEGER)''')
-#     c.execute('''INSERT INTO testTable (name, number) VALUES ("John", 3)''')
-#     c.execute('''SELECT * FROM testTable;''')
-#     results = c.fetchall()
-
-#     print(results)
     
-#     conn.commit()
-#     conn.close()
-
-#     return results   
-
-# @app.post("/dbTest")
-# def testDB():
-#     conn = sqlite3.connect(DBNAME)
-#     c = conn.cursor()
-
-#     c.execute('''CREATE TABLE IF NOT EXISTS testTable (name TEXT, number IINTEGER)''')
-#     c.execute('''INSERT INTO testTable (name, number) VALUES ("John", 3)''')
-#     c.execute('''SELECT * FROM testTable;''')
-#     results = c.fetchall()
-    
-#     conn.commit()
-#     conn.close()
-
-#     return results
-
-# @app.post("/createUser")
-# def createUser(first_name, last_name , email, birthday, username):
-#     conn = sqlite3.connect(DBNAME)
-#     c = conn.cursor()
-
-#     c.execute('''INSERT INTO users (first_name, last_name, email, birthday, username) VALUES ()''')
-
-#     conn.commit()
-#     conn.close()
-
+@app.post("/set_profile_picture/")
+def set_profile_picture(username: str, photo_id: int, db: Session = Depends(get_db)):
+    return crud.set_user_profile_picture(db, username, photo_id)
