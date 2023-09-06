@@ -4,14 +4,13 @@
       <textarea  id="post_text" placeholder="What's on your mind..." required v-model="caption" />
       <div class="file-list">
       <div class="file-item" v-for="(file, index) in droppedFiles" :key="index">
-        {{ file.name }}
         <img v-if="isImage(file)" :src="file.preview" alt="Preview" class="image-preview"/>
         <video v-else-if="isVideo(file)" controls>
           <source :src="file.preview" type="video/mp4" />
         </video>
       </div>
       </div>
-      <div class="file-uploader">
+      <div v-if="droppedFiles.length == 0" class="file-uploader">
     <div
       class="drop-area"
       @dragover.prevent="handleDragOver"
@@ -89,8 +88,9 @@ export default {
     },
 
     isImage(file) {
-      return file.type.startsWith('image/');
-    },
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  return allowedTypes.includes(file.type);
+},
 
     isVideo(file) {
       return file.type.startsWith('video/');
@@ -130,7 +130,7 @@ export default {
       }
     },
     isValidFileType(file) {
-      const allowedTypes = ['image/jpeg', 'image/png', 'video/mp4'];
+      const allowedTypes = ['image/gif','image/jpeg', 'image/png', 'video/mp4'];
       return allowedTypes.includes(file.type);
     },
   getUser(name){
