@@ -62,6 +62,7 @@ class Login(LoginBase):
 class LoginRequest(BaseModel):
     user: str
     password: str
+    location: Optional[dict]
     
 class FollowBase(BaseModel):
     login_time: str

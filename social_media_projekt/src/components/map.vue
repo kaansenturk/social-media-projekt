@@ -7,6 +7,7 @@
   :zoom-control="true">
       <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <LMarker  
+          v-if="userLatLng[0] !== null"
         :lat-lng="userLatLng"
         title="You"
       >
@@ -113,17 +114,19 @@ if (friend.location.location.lat && friend.location.location.lng) {
     }
   };
   // converting friends to the objecttype we call in the map itself
-    const processedFriends = plainFriendsList.value.map((friend, idx) => {
-      return {
-        id: idx,
-        latlng: [friend.location.location.lat, friend.location.location.lng],
-        name: friend.username,
-        email: friend.email,
-        userId: friend.userId
-
-      };
-    });
+  const processedFriends = plainFriendsList.value
+  .filter(friend => friend.location.location.lat !== null && friend.location.location.lng !== null)
+  .map((friend, idx) => {
+    return {
+      id: idx,
+      latlng: [friend.location.location.lat, friend.location.location.lng],
+      name: friend.username,
+      email: friend.email,
+      userId: friend.userId
+    };
+  });
     // setting the location for the user based on the prop
+    console.log(props.user)
     const userLatLng = [props.user[0], props.user[1]]
     const toggleMapMode = () => {
     isPopupMode.value = !isPopupMode.value;

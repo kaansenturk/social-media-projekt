@@ -88,13 +88,16 @@ def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
     return db_item
 
 # method to create a login entry into table "login"
-def create_login(db: Session, login: schemas.LoginCreate, owner_id: int):
+def create_login(db: Session, login: schemas.LoginCreate, owner_id: int, location: dict):
     now = datetime.now()
     current_date = now
     hostname=socket.gethostname() 
     IPAddr=socket.gethostbyname(hostname)
-    g = geocoder.ip('me')
-    db_login = models.Login(login_time=current_date, location= {"lat": g.lat, "lng": g.lng}, user_id=owner_id, ip=hostname + " " + IPAddr)
+    db_login = models.Login(
+        login_time=current_date, 
+        location=location,
+        user_id=owner_id
+    )
     db.add(db_login)
     db.commit()
     db.refresh(db_login)

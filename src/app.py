@@ -28,7 +28,7 @@ app = FastAPI()
 
 origins = ["*"]
 
-#
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -115,9 +115,9 @@ def user_login(login_request: schemas.LoginRequest, db: Session = Depends(get_db
 
     if not bcrypt.checkpw(login_request.password.encode('utf-8'), user.password):
         raise HTTPException(status_code=400, detail="Incorrect password")
-
+    print(login_request.location)
     # Creating a login record after successful authentication
-    login_record = crud.create_login(db, user.id, user.id)  # Removed schemas.LoginCreate()
+    login_record = crud.create_login(db, user.id, user.id, login_request.location)  # Removed schemas.LoginCreate()
 
     if not login_record:
         raise HTTPException(status_code=500, detail="Could not create login record")
@@ -148,21 +148,6 @@ def check_login(email: str, password: str, db: Session = Depends(get_db)):
     if user:
         raise HTTPException(status_code=400, detail="Email does not exist")
 
-
-@app.post('/login_try')
-async def login_try(request: Request):
- 
-    login_data = await request.json()
-    username = login_data.get('username')
-    password = login_data.get('password')
-
-    if username.lower() == '' and password == '':
-
-        return JSONResponse(content={'success': True}, status_code=200)
-    else:
-
-        raise HTTPException(status_code=401, detail='Authentication failed')
-    
 @app.post('/createFollower')
 def create_follow(follower_data: schemas.CreateFollower, db: Session = Depends(get_db)):
     try:
