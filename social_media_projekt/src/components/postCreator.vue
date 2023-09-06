@@ -46,7 +46,7 @@ export default {
   },
   data() {
     return {
-      API: "http://localhost:8000",
+      API: this.$store.state.API,
       isDragging: false,
       droppedFiles: [],
       caption: "",
@@ -60,7 +60,7 @@ export default {
         formData.append("image_data", this.droppedFiles[0]);
       console.log("Bild versuchen")
       try {
-        const response = await axios.post("http://localhost:8000/create_post/", formData, {
+        const response = await axios.post(this.API + "/create_post/", formData, {
           params: {
             caption: this.caption,
             user_id: this.$store.state.logged_user_id
@@ -74,7 +74,7 @@ export default {
         console.error("An error occurred while submitting the post:", error);
       }} else {
         try {
-        const response = await axios.post("http://localhost:8000/create_post/", null, {
+        const response = await axios.post(this.API + "/create_post/", null, {
           params: {
             caption: this.caption,
             user_id: this.$store.state.logged_user_id

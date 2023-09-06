@@ -33,6 +33,7 @@ export default {
     return {
       user: this.$store.state.logged_user_id,
       username: this.$store.state.logged_user,
+      API: this.$store.state.API,
       email: 'fredmetzler@battlenet.com',
       role: 'CEO',
       userLocation: [],
@@ -91,7 +92,7 @@ export default {
     async fetchUserLocation() {
       const userId = this.$store.state.logged_user_id;
       try {
-        const response = await axios.get(`http://localhost:8000/get_user_location/${userId}`);
+        const response = await axios.get(this.API + `/get_user_location/${userId}`);
         this.userLocation = [response.data.location.lat, response.data.location.lng];
         this.friendsList = this.$store.getters.getFriends
       } catch (error) {
