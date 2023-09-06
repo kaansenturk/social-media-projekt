@@ -13,7 +13,7 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     password = Column(String)
     is_active = Column(Boolean, default=True)
-
+    photo_id = Column(Integer, ForeignKey("photos.id"))
     items = relationship("Item", back_populates="owner")
     # posts = relationship("Post", back_populates="owner")
 
