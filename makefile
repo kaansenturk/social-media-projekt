@@ -1,6 +1,6 @@
-.PHONY: all install-requirements clean-db init-db start-backend install-frontend start-frontend
+.PHONY: all install-requirements delete-db init-db start-backend install-frontend start-frontend
 
-init: install-requirements clean-db init-db start-backend install-frontend start-frontend
+init: install-requirements delete-db init-db start-backend install-frontend start-frontend
 start:  start-backend install-frontend start-frontend
 setup-server:
 	@echo "Updating package lists..."
@@ -21,7 +21,7 @@ delete-db:
 
 init-db:
 	@echo "Initializing database..."
-	cd src && python database.py
+	cd src && python3 database.py
 
 
 start-backend:

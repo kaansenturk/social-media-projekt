@@ -2,7 +2,8 @@
   <div class="row">
     <div class="col-md-2 account-info">
       <div class="title">
-        <img :src="profileImageUrl" alt="Profilbild" class="profile-picture" />
+        <img v-if="this.profileImageUrl == null" src="../assets/blank_profile_pic.webp" alt="Kein Profilbild" class="profile-picture" />
+        <img v-else :src="this.profileImageUrl" alt="Profilbild" class="profile-picture">
         <div>{{ username }}</div>
       </div>
     </div>
@@ -36,13 +37,15 @@ export default {
       role: 'CEO',
       userLocation: [],
       friendsList: [],
-      profileImageUrl: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png', 
+      profileImageUrl: null, 
+      userObject: null,
     };
   },
   // in the mounted lifecycle we prevent the global drop event so that users don't get annoying behaviour when importing images
   async mounted() {
     document.addEventListener('drop', this.preventGlobalDrop, false);
     await this.fetchUserLocation(); 
+    await this.fetchUserData();
     watch(() => this.$store.state.friendsList, (newVal) => {
       if (newVal.length > 0) {
         this.friendsList = newVal;
@@ -60,7 +63,30 @@ export default {
       }
     },
   },
+  // watch: {
+  //   async profileImageUrl(newProfilePicId, oldProfilePicId) {
+  //     if (newProfilePicId !== oldProfilePicId) {
+  //       this.profileImageUrl = newProfilePicId
+  //     }
+  //   },
+  // },
   methods: {
+    // method to get initial Userdata
+    async fetchUserData(){
+      try {
+        const response = await axios.get(this.$store.state.API + `/users/${this.$store.state.logged_user_id}`);
+        this.userObject = response.data
+        if (this.userObject.photo_id != null) {
+        try {
+          this.profileImageUrl = await this.getPhoto(this.userObject.photo_id)
+        } catch (error){
+          console.log(error)
+        }
+      }
+      } catch (error){
+        console.log(error)
+      }
+    },
     // method to get the location of the logged user based on his login
     async fetchUserLocation() {
       const userId = this.$store.state.logged_user_id;
@@ -70,6 +96,21 @@ export default {
         this.friendsList = this.$store.getters.getFriends
       } catch (error) {
         console.log("An error occurred:", error);
+      }
+    },
+    async getPhoto(photoId) {
+      try {
+        const response = await axios.get(this.$store.state.API + `/getPhoto`, {params: {id: photoId}, responseType: 'arraybuffer'});
+        const base64 = btoa(
+        new Uint8Array(response.data).reduce(
+          (data, byte) => data + String.fromCharCode(byte),
+          '',
+        ),
+      );
+      const imageSrc = `data:image/png;base64,${base64}`;
+        return imageSrc
+      } catch (error) {
+        console.error("Error fetching posts:", error);
       }
     },
   },

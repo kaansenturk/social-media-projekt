@@ -9,6 +9,7 @@ import models, schemas, database
 import geocoder
 import bcrypt
 from typing import Optional
+
 # method to delete the table "users"
 def delete_users(db: Session):
     metadata = MetaData()
@@ -21,9 +22,20 @@ def delete_user(db: Session, username: str):
     user = get_user_by_username(db, username)
     if not user:
         return None
+    # Delete all follow relationships where the user is a follower or a followee 
+    follow_entries_follower = db.query(models.Follows).filter(models.Follows.user_id == user.id).all()
+    follow_entries_followee = db.query(models.Follows).filter(models.Follows.followee_id == user.id).all()
+
+    for entry in follow_entries_follower:
+        db.delete(entry)
+
+    for entry in follow_entries_followee:
+        db.delete(entry)
+
     db.delete(user)
     db.commit()
-    return "User deleted Succesfully"
+    return "User and associated follow relationships deleted successfully"
+
 # method to get a user from table "users" by id
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
@@ -56,7 +68,6 @@ def update_user_by_username(db: Session, username: str, updated_data: schemas.Us
             db_user.username = updated_data.username
         if updated_data.email:
             db_user.email = updated_data.email
-        # No need to check for password or is_active as they are not in UserUpdate
 
         db.commit()
         db.refresh(db_user)
@@ -289,3 +300,23 @@ def update_user_password(db: Session, username: str, current_password: str, new_
         return {"message": "Password updated successfully"}
     else:
         raise HTTPException(status_code=400, detail="Incorrect current password")
+# Method to set the profile picture of a user, set the relationship between foto and user
+def set_user_profile_picture(db: Session, username: str, photo_id: int):
+
+    db_user = db.query(models.User).filter(models.User.username == username).first()
+    
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    db_photo = db.query(models.Photos).filter(models.Photos.id == photo_id).first()
+
+    if not db_photo:
+        raise HTTPException(status_code=404, detail="Photo not found")
+
+    db_user.photo_id = photo_id
+
+    db.commit()
+
+    db.refresh(db_user)
+    
+    return db_user
