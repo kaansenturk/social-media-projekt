@@ -62,8 +62,8 @@ export default {
             query: this.text,
           },
         });
-        console.log(response);
-        this.searchResults = response.data;
+
+        this.searchResults = response.data.filter(user => user.id !== this.$store.state.logged_user_id);
       } catch (error) {
         console.error("Search error:", error);
       }
