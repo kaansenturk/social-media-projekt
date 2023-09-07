@@ -221,13 +221,17 @@ def is_post_liked(post_id: int, user_id: int, db: Session = Depends(get_db)):
 def unlike_post(post_id: int, user_id: int, db: Session = Depends(get_db)):
     return crud.unlike_post(db=db, post_id=post_id, user_id=user_id)
 
-@app.post('/createComment')
+@app.post('/createComment/{user_id}/{post_id}/{comment_text}')
 def create_comment(user_id: int, post_id: int, comment_text: str, db: Session = Depends(get_db)):
     return crud.create_comment(db=db, post_id=post_id, user_id=user_id, comment_text=comment_text)
 
-@app.get('/getCommentsOfPost')
+@app.get('/getCommentsOfPost/{post_id}')
 def get_comments_of_post(post_id: int, db: Session = Depends(get_db)):
     return crud.get_comments_of_post(post_id=post_id, db=db)
+
+@app.get('/getCommentsOfPostAmount/{post_id}')
+def get_comments_of_post(post_id: int, db: Session = Depends(get_db)):
+    return crud.get_comments_of_post_amount(post_id=post_id, db=db)
 
 @app.post('/createCommentLike')
 def create_comment_like(comment_id: int, user_id: int, db: Session = Depends(get_db)):

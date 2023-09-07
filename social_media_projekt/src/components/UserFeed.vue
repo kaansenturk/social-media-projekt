@@ -11,10 +11,12 @@
         </div>
         <div class="post-text">{{ post.caption }}</div>
         <p class="post-date">{{ post.created_at }}</p>
-        <button class="btn" id="green"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true" @click="likePost(post.id, userId)"></i></button>
-        <a class="post-likes">{{ postLikes }}</a>
+
+        <button class="btn"><img id="myImage" :src="changeLikeButton(post.id, userId)" @click="likePost(post.id, userId)"></button>
+        <a href="" class="post-likes">{{ postLikes }}</a>
         <button class="btn"><img src="../assets/comment.png"></button>
-        <a class="comment-amount">{{ commentAmount }}</a>
+        <a href="" class="comment-amount">{{ commentAmount }}</a>
+
         <!--
         <div v-for="comment in this.posts" :key="comment.id" class="comment-item">
           <div class="comment-header">
@@ -42,6 +44,7 @@ export default {
         photoData: {},
         userId: this.$store.state.logged_user_id,
         postLikes: null,
+        commentAmount: null,
     }},
     async mounted() {
     this.friendsList = this.$store.state.friendsList
@@ -53,8 +56,10 @@ export default {
             this.feed = this.feed.flat();
             for (const post of this.feed) {
               console.log(post)
-              this.postLikes = this.getPostLikes(post.id)
-              console.log(post.photo_id)           
+              //this.changeLikeButton(post.id, this.userId)
+              this.postLikes = await this.getPostLikes(post.id)
+              this.commentAmount = await this.getCommentAmount(post.id)
+              console.log("Photo_ID: " + post.photo_id)           
                 if (post.photo_id !== null) {
                     this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
                 }
@@ -109,22 +114,14 @@ export default {
   getAdPosts(){
     // Vielleicht irgendwie alle 5 Posts oder so eine fake Werbung einbauen
   },
+
   async likePost(post_id, user_id) {
-
-    var btn1 = document.querySelector('#green');
-    btn1.addEventListener('click', function() {
-
-        if (btn1.classList.contains('green')) {
-        btn1.classList.remove('green');
-      } 
-    //this.classList.toggle('green');
-  
-});
-
     const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
     if(response.data == true){
+      document.getElementById("toChange").src == "../assets/full_heart.png"
       await axios.post(this.$store.state.API + `/unlikePost/${post_id}/${user_id}`);
     } else if(response.data == false) {
+      document.getElementById("toChange").src == "../assets/empty_heart.png"
       await axios.post(this.$store.state.API + `/createPostLike/${post_id}/${user_id}`);
     }
     window.location.reload()
@@ -132,8 +129,30 @@ export default {
 
   async getPostLikes(post_id) {
     const response = await axios.get(this.$store.state.API + `/getPostLikeAmount/${post_id}`);
-    console.log("POST LIKES für POST_ID: " + post_id + " ANzahl PostLikes: " + response.data)
+    console.log("POST LIKES für POST_ID: " + post_id + " Anzahl PostLikes: " + response.data)
     return response.data
+  },
+  
+  async getCommentAmount(post_id) {
+    const response = await axios.get(this.$store.state.API + `/getCommentsOfPostAmount/${post_id}`);
+    //console.log("POST COMMENTS für POST_ID: " + post_id + " ANzahl Comments: " + response.data)
+    return response.data
+  },
+
+  changeLikeButton(post_id, user_id) {
+    //const image = document.getElementById("myImage")
+    //const newId = post_id + "_" + user_id;
+    //image.id = newId;
+
+    const response = axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
+    //console.log(response.data)
+    if(response.data) {
+      //console.log(response.data)
+      return "../assets/full_heart.png";
+      //console.log(document.getElementById(newId))
+    } else {
+      return "../assets/empty_heart.png.";
+    }
   }
 },
 
