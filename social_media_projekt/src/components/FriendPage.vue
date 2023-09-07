@@ -20,6 +20,8 @@
         </div>
     </div>
     <div class="col-md-7 post-list">
+      <img v-if="this.profileImageUrl == null" src="../assets/blank_profile_pic.webp" alt="Kein Profilbild" class="profile-picture" />
+        <img v-else :src="this.profileImageUrl" alt="Profilbild" class="profile-picture">
       <h2 class="title">Friend's Posts</h2>
       <div v-for="post in this.posts" :key="post.id" class="post-item">
         <div class="post-header">
@@ -52,6 +54,8 @@
           photoData: {},
           followeeNumber: null,
           followerNumber: null,
+          profileImageUrl: null,
+          userObject: null,
         };
       },
       watch: {
@@ -67,6 +71,7 @@
             console.log(this.$route.query.friend)
             if (userId) {
                 await this.fetchPosts(userId);
+                await this.fetchUserData(userId);
                 }
             for (const post of this.posts) {
                 if (post.photo_id !== null) {
@@ -82,6 +87,22 @@
             this.email = this.$route.query.email
     },
       methods: {
+        // method to get initial Userdata
+        async fetchUserData(userId){
+      try {
+        const response = await axios.get(this.$store.state.API + `/users/${userId}`);
+        this.userObject = response.data
+        if (this.userObject.photo_id != null) {
+        try {
+          this.profileImageUrl = await this.getPhoto(this.userObject.photo_id)
+        } catch (error){
+          console.log(error)
+        }
+      }
+      } catch (error){
+        console.log(error)
+      }
+    },
         // duplicate method to allow switching the user from within this page and circumvent the mounted lifecycle
         async fetchData() {
       const userId = this.$route.query.friendId;
@@ -177,7 +198,7 @@
       color: white;
       padding: 35px;
       margin-left: 15px;
-      max-height: 270px;
+      max-height: 350px;
       overflow-y: auto; 
     }
     
@@ -214,5 +235,11 @@
       display: block;
       margin: 0 auto;
     }
+    .profile-picture {
+  width: 70px; 
+  height: 70px; 
+  border-radius: 50%;
+  margin-bottom: 10px; 
+}
     </style>
     
