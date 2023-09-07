@@ -7,16 +7,8 @@
         <button @click="goToHome" class="menu-item">Home</button>
         <button @click="goToAccount" class="menu-item">Account Info</button>
         <button @click="goToMessenger" class="menu-item">Messenger</button>
-        <!--<button @click="goToGeneralSettings" class="menu-item">Settings</button>-->
-        <!--<button @click="goToNews" class="menu-item">Benachrichtigungen</button>-->
-        <!--<button @click="goToPrivacy" class="menu-item">Datenschutz</button>-->
-        <!--<button @click="goToProfile" class="menu-item">Konto</button>-->
-        <!--<button @click="goToLanguage" class="menu-item">Sprache und Region</button>-->
-        <!--<button @click="goToThemes" class="menu-item">Themes und Erscheinungsbild</button>-->
-        <!--<button @click="goToSafety" class="menu-item">Sicherheit</button>-->
-        <!--<button @click="goToSupport" class="menu-item">Hilfe und Support</button>-->
+        <button @click="goToFollowers" class="menu-item">Deine Follower</button>
         <button type="submit" @click="logout" class="menu-item">Logout</button>
-        <!--<button @click="goToPolicy" class="menu-item">Nutzungsbedingungen und Datenschutzrichtlinien</button>-->
       </div>
       <div v-if="isDropdownOpen" class="background" @click="closeDropdown"></div>
     </div>
@@ -47,37 +39,9 @@ export default {
       this.closeDropdown();
       this.$router.push('/messenger');
     },
-    goToGeneralSettings() {
+    goToFollowers() {
       this.closeDropdown();
-      this.$router.push('/general-settings');
-    },
-    goToNews() {
-      this.closeDropdown();
-      this.$router.push('/news');
-    },
-    goToPrivacy() {
-      this.closeDropdown();
-      this.$router.push('/privacy');
-    },
-    goToProfile() {
-      this.closeDropdown();
-      this.$router.push('/profile');
-    },
-    goToLanguage() {
-      this.closeDropdown();
-      this.$router.push('/language');
-    },
-    goToThemes() {
-      this.closeDropdown();
-      this.$router.push('/themes');
-    },
-    goToSafety() {
-      this.closeDropdown();
-      this.$router.push('/safety');
-    },
-    goToSupport() {
-      this.closeDropdown();
-      this.$router.push('/support');
+      this.$router.push('/follower');
     },
     logout() {
       localStorage.removeItem('logegd_user_id');
@@ -85,11 +49,8 @@ export default {
       this.$store.commit('setUser', null)
       this.$store.commit('setUserId', null)
       this.$router.push('/login')
-},
-    goToPolicy() {
-      this.closeDropdown();
-      this.$router.push('/policy');
     },
+
     closeDropdown() {
       this.isDropdownOpen = false;
     },
