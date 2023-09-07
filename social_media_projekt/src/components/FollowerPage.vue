@@ -38,7 +38,6 @@ export default {
     return {
       username: this.$store.state.logged_user,
       email: "",
-      posts: [],
       followerList: [],
       profilePicId: null,
       followerNumber: null,
@@ -63,7 +62,7 @@ export default {
     async fetchData() {
       try {
         const response = await axios.get(this.$store.state.API + `/users/${this.$store.state.logged_user_id}`);
-        const response2 = await axios.get(this.$store.state.API + `/getAllFollowers?followee=${this.$store.state.logged_user_id}`);
+        const response2 = await axios.get(this.$store.state.API + `/getAllFollowers/${this.$store.state.logged_user_id}`);
         const response3 = await axios.get(this.$store.state.API + `/readFollowers/${this.$store.state.logged_user_id}`);
 
         console.log("API response:", response2.data);
