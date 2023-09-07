@@ -156,8 +156,8 @@ def create_follow(follower_data: schemas.CreateFollower, db: Session = Depends(g
         return JSONResponse(status_code=e.status_code, content={"detail": e.detail})
 
 @app.get('/getAllFollowers/{user_id}')
-def get_all_followers(followee: int, db: Session = Depends(get_db)):
-    return crud.get_all_followers(db=db, id=followee)
+def get_all_followers(user_id: int, db: Session = Depends(get_db)):
+    return crud.get_all_followers(db=db, id=user_id)
 
 @app.get('/readFollowers/{user_id}')
 def number_of_followers(user_id: int, db: Session = Depends(get_db)):

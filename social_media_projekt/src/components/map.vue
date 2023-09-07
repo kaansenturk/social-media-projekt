@@ -22,7 +22,7 @@
       </LMarker>
 
     </LMap>
-    <button class="map-button" @click="centerOnUser">Find me</button>
+    <button v-if="userLatLng[0] !== null" class="map-button" @click="centerOnUser">Find me</button>
     <button class="map-button" @click="zoomIn"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
 <button class="map-button" @click="zoomOut"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
     <button class="map-button" @click="toggleMapMode">

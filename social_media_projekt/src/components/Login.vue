@@ -68,25 +68,42 @@ export default {
             }
           }
       },
-      // method to initialize the login and ask user for permission for their location
+      // method to initialize the login and ask user for permission for their location if the dialog doesn't show or the user blocks this, the login gets executed without the users geodata
       async login_try(){
-        if ("geolocation" in navigator) {
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      this.userLocation.lat = position.coords.latitude;
-      this.userLocation.lng = position.coords.longitude;
-      this.sendLoginRequest();
-    },
-    (error) => {
-      console.warn('Could not get geolocation:', error.message);
-      this.sendLoginRequest(); 
+    if ("geolocation" in navigator) {
+
+        let isCallbackCalled = false;
+
+        const timeoutId = setTimeout(() => {
+            if (!isCallbackCalled) {
+                console.warn('Geolocation request timed out or was blocked.');
+                this.sendLoginRequest();
+            }
+        }, 5000);
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                isCallbackCalled = true; 
+                clearTimeout(timeoutId); 
+
+                this.userLocation.lat = position.coords.latitude;
+                this.userLocation.lng = position.coords.longitude;
+                this.sendLoginRequest();
+            },
+            (error) => {
+                isCallbackCalled = true; 
+                clearTimeout(timeoutId); 
+
+                console.warn('Could not get geolocation:', error.message);
+                this.sendLoginRequest();
+            }
+        );
+    } else {
+        console.warn('Geolocation is not supported by this browser.');
+        this.sendLoginRequest();
     }
-  );
-} else {
-  console.warn('Geolocation is not supported by this browser.');
-  this.sendLoginRequest(); 
-}
-      },
+},
+
       // method to create a Login for a user that exists in the db, also sets items in the vuex state management and localstorage
       async sendLoginRequest(){
     try {
