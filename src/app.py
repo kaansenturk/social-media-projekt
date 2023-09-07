@@ -155,7 +155,7 @@ def create_follow(follower_data: schemas.CreateFollower, db: Session = Depends(g
     except HTTPException as e:
         return JSONResponse(status_code=e.status_code, content={"detail": e.detail})
 
-@app.get('/getAllFollowers')
+@app.get('/getAllFollowers/{user_id}')
 def get_all_followers(followee: int, db: Session = Depends(get_db)):
     return crud.get_all_followers(db=db, id=followee)
 
@@ -163,7 +163,7 @@ def get_all_followers(followee: int, db: Session = Depends(get_db)):
 def number_of_followers(user_id: int, db: Session = Depends(get_db)):
     return crud.get_number_of_followers(db=db, id=user_id)
 
-@app.get('/getAllFollowees')
+@app.get('/getAllFollowees/{user_id}')
 def get_all_followees(user_id: int, db: Session = Depends(get_db)):
     return crud.get_all_followees(db=db, id=user_id)
 
@@ -196,6 +196,7 @@ async def create_post_endpoint(
     post =   crud.create_post(db, user_id, caption, photo_id, video_id)
     
     return {"message": "Post created", "post": post}
+
 @app.get('/getPosts')
 def get_posts(user_id: int, db: Session = Depends(get_db)):
     return crud.get_all_posts(db=db, id=user_id)
@@ -204,13 +205,21 @@ def get_posts(user_id: int, db: Session = Depends(get_db)):
 def delete_post(post_id: int, db: Session = Depends(get_db)):
     return crud.delete_post(post_id=post_id, db=db)
 
-@app.post('/createPostLike')
+@app.post('/createPostLike/{post_id}/{user_id}')
 def create_post_like(user_id: int, post_id: int, db: Session = Depends(get_db)):
     return crud.create_post_like(user_id=user_id, post_id=post_id, db=db)
 
-@app.get('/getPostLikeAmount')
+@app.get('/getPostLikeAmount/{post_id}')
 def get_post_like_amount(post_id: int, db: Session = Depends(get_db)):
     return crud.get_post_like_amount(db=db, post_id=post_id)
+
+@app.get('/isPostLiked/{post_id}/{user_id}')
+def is_post_liked(post_id: int, user_id: int, db: Session = Depends(get_db)):
+    return crud.is_post_liked(db=db, post_id=post_id, user_id=user_id)
+
+@app.post('/unlikePost/{post_id}/{user_id}')
+def unlike_post(post_id: int, user_id: int, db: Session = Depends(get_db)):
+    return crud.unlike_post(db=db, post_id=post_id, user_id=user_id)
 
 @app.post('/createComment')
 def create_comment(user_id: int, post_id: int, comment_text: str, db: Session = Depends(get_db)):

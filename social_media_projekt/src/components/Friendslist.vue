@@ -51,13 +51,9 @@ async  getFriendsLocation(userId) {
           }
         },
   async getFriends(){
-    const query = this.$store.state.logged_user_id
       try {
-    const response =  await axios.get(this.API + '/getAllFollowees', {
-      params: {
-        user_id: query
-      }
-    });
+        const user_id = this.$store.state.logged_user_id
+        const response =  await axios.get(this.API + `/getAllFollowees/${user_id}`);
     
     if (response.status == 200) {
       this.$store.commit('setFriendsList', []);

@@ -193,6 +193,7 @@ def create_post(db: Session, user_id: int, caption: str, photo_id: Optional[int]
     db.refresh(db_post)
     
     return db_post
+
 # method to return all posts from a user
 def get_all_posts(db: Session, id: int):
     return db.query(models.Post).filter(models.Post.user_id == id).all()
@@ -222,6 +223,23 @@ def create_post_like(db: Session, user_id: int, post_id: int):
 # method to get post_like amount
 def get_post_like_amount(db: Session, post_id: int):
     return len(db.query(models.Post_Likes).filter(models.Post_Likes.post_id == post_id).all())
+
+def is_post_liked(db: Session, post_id: int, user_id: int):
+    response = db.query(models.Post_Likes).filter(models.Post_Likes.post_id == post_id, models.Post_Likes.user_id == user_id).first()
+    if(response):
+        return True
+    else:
+        return False
+
+def unlike_post(db: Session, post_id: int, user_id: int):
+    response = db.query(models.Post_Likes).filter(models.Post_Likes.post_id == post_id, models.Post_Likes.user_id == user_id).first()
+    if response:
+        db.delete(response)
+        db.commit()
+        print("Unliked Post successfully.")
+    else:
+        print("Post Like not found.")
+    db.close()
 
 # method to create a comment
 def create_comment(db: Session, post_id: int, user_id: int, comment_text: str):
