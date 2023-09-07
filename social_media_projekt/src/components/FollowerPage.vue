@@ -39,7 +39,6 @@ export default {
       username: this.$store.state.logged_user,
       email: "",
       posts: [],
-      photoData: {},
       followerList: [],
       profilePicId: null,
       followerNumber: null,
@@ -47,17 +46,12 @@ export default {
     };
   },
   async mounted() {
-                await this.fetchData();
+    await this.fetchData();
                 
-            for (const post of this.posts) {
-                if (post.photo_id !== null) {
-                    this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
-                }
-            }
-            if (this.profilePicId != null) {
-             this. profilePicData = await this.getPhoto(this.profilePicId)
-            }
-    },
+    if (this.profilePicId != null) {
+      this. profilePicData = await this.getPhoto(this.profilePicId)
+    }
+  },
   watch: {
     async profilePicId(newProfilePicId, oldProfilePicId) {
       if (newProfilePicId !== oldProfilePicId) {
