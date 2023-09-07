@@ -19,7 +19,7 @@
 import SearchModule from './SearchModule.vue';
 import NavBar from './NavBar.vue';
 import { mapState } from 'vuex';
-import DropDownMenu from "./Settings/DropDownMenu.vue";
+import DropDownMenu from "./DropDownMenu.vue";
 export default {
   name: 'HeaderPart',
   components: {
