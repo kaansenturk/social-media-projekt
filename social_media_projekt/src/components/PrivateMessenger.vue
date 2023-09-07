@@ -71,9 +71,7 @@ export default {
     async fetchFollowers() {
       try {
         const followee_id = this.$store.state.logged_user_id 
-        const response = await axios.get(this.API + "/getAllFollowers", {
-          params: { followee: followee_id }
-        });
+        const response = await axios.get(this.API + `/getAllFollowers/${followee_id}`);
         this.friends = response.data;
       } catch (error) {
         console.error('Error fetching followers:', error);
@@ -81,7 +79,6 @@ export default {
     },
     async onFriendSelected(id, friendsname) {
       this.friendName = friendsname
-      //this.selectedUser = friend;
       this.friendId = id;
       try {
         const response = await axios.get(this.$store.state.API + `/get_messages/${this.currentUserId}/${id}`);
@@ -89,7 +86,7 @@ export default {
           id: msg.id,
           sender: msg.sender_id,
           content: msg.content,
-          created_at: msg.created_at // We include this field now for sorting
+          created_at: msg.created_at
         }));
        this.sortMessagesByDate();
       } catch (error) {
