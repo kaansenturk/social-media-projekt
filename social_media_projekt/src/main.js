@@ -6,6 +6,7 @@ import AccountInfo from "./components/AccountInfo.vue"
 import PrivateMessenger from "./components/PrivateMessenger.vue"
 import store from "./store"
 import HomePage from "./components/Homepage"
+import PostComments from "./components/PostComments"
 
 import BootstrapVue3 from 'bootstrap-vue-3'
 
@@ -21,7 +22,8 @@ const routes = [
     {path:"/login", component: LoginPage},
     {path:"/account", component: AccountInfo, meta: { requiresAuth: true }},
     {path:"/messenger", component: PrivateMessenger, meta: { requiresAuth: true }},
-    {path: "/friend", component: FriendPage, meta: {requiresAuth: true}, name: "friend"}
+    {path: "/friend", component: FriendPage, meta: {requiresAuth: true}, name: "friend"},
+    {path: "/postComments", component: PostComments, meta: {requiresAuth: true}, name: "postComments"}
 ]
 const router = createRouter(
     {

@@ -201,6 +201,10 @@ async def create_post_endpoint(
 def get_posts(user_id: int, db: Session = Depends(get_db)):
     return crud.get_all_posts(db=db, id=user_id)
 
+@app.get('/getPost/{post_id}')
+def get_posts(post_id: int, db: Session = Depends(get_db)):
+    return crud.get_post(db=db, id=post_id)
+
 @app.post('/deletePost')
 def delete_post(post_id: int, db: Session = Depends(get_db)):
     return crud.delete_post(post_id=post_id, db=db)

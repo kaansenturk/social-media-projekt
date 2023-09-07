@@ -120,6 +120,7 @@ async  getFriendsLocation(userId) {
   transform: translateY(-50%);
   border: solid 2px blue;
   border-radius: 2px;
+  background-color: #ECF0F1;
 }
   
 </style>

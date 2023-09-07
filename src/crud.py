@@ -198,6 +198,10 @@ def create_post(db: Session, user_id: int, caption: str, photo_id: Optional[int]
 def get_all_posts(db: Session, id: int):
     return db.query(models.Post).filter(models.Post.user_id == id).all()
 
+# method to return all posts from a user
+def get_post(db: Session, id: int):
+    return db.query(models.Post).filter(models.Post.id == id).first()
+
 # method to delete a post
 def delete_post(db: Session, post_id):
     post_entry = db.query(models.Post).filter(models.Post.id == post_id).first()
