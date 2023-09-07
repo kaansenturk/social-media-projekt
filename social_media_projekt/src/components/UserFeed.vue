@@ -11,10 +11,13 @@
         </div>
         <div class="post-text">{{ post.caption }}</div>
         <p class="post-date">{{ post.created_at }}</p>
+        <button @click="likePost(post.id, userId)" class="btn">
+        <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
+        <i v-else class="fa-regular fa-heart"></i>
+        </button>
 
-        <button class="btn"><img id="myImage" :src="changeLikeButton(post.id, userId)" @click="likePost(post.id, userId)"></button>
-        <a href="" class="post-likes">{{ postLikes }}</a>
-        <button class="btn"><img src="../assets/comment.png"></button>
+        <a href="" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
+        <button class="btn"><i class="fa-solid fa-message"></i></button>
         <a href="" class="comment-amount">{{ commentAmount }}</a>
 
         <!--
@@ -43,35 +46,51 @@ export default {
         friendsList: [],
         photoData: {},
         userId: this.$store.state.logged_user_id,
-        postLikes: null,
+        postLikes: {},
         commentAmount: null,
+        likedPosts: {},
+        likedPostsCount: {},
     }},
+    // initializes the page with friends, posts, likes etc.
     async mounted() {
+      let newLikedPostsCount = { ...this.likedPostsCount };
     this.friendsList = this.$store.state.friendsList
             console.log(this.friendsList)
               for (let friend of this.friendsList) {
                 console.log(friend)
-                await this.fetchPosts(friend.userId, friend.username);
+                await this.fetchPosts(friend.userId, friend.username);    
               }
             this.feed = this.feed.flat();
             for (const post of this.feed) {
               console.log(post)
-              //this.changeLikeButton(post.id, this.userId)
               this.postLikes = await this.getPostLikes(post.id)
               this.commentAmount = await this.getCommentAmount(post.id)
               console.log("Photo_ID: " + post.photo_id)           
                 if (post.photo_id !== null) {
                     this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
                 }
-            
+                this.likedPosts[post.id] = await this.isPostLiked(post.id, this.userId);
+                const response = await this.getPostLikes(post.id);
+                newLikedPostsCount[post.id] = response;
+                this.likedPostsCount = newLikedPostsCount;
           }
     },
+    // watcher to always get the accurate ammount of likes on a post
+    watch: {
+  async likedPosts(newVal) {
+    let newLikedPostsCount = { ...this.likedPostsCount };
+    for (const postId in newVal) {
+      const response = await this.getPostLikes(postId);
+      newLikedPostsCount[postId] = response;
+    }
+    this.likedPostsCount = newLikedPostsCount;
+  }
+},
     methods: {
     // method to get the posts of each friend of a user 
       async fetchPosts(userId, username) {
   try {
     const response = await axios.get(this.$store.state.API + `/getPosts?user_id=${userId}`);
-
     // Add the username to each post in the response
     const responseDataWithUsername = response.data.map(post => {
       return {
@@ -93,7 +112,6 @@ export default {
     console.error("Error fetching posts:", error);
   }
 },
-
      // method to get the image appended to a post
      async getPhoto(photoId) {
       try {
@@ -116,17 +134,17 @@ export default {
   },
 
   async likePost(post_id, user_id) {
-    const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
-    if(response.data == true){
-      document.getElementById("toChange").src == "../assets/full_heart.png"
-      await axios.post(this.$store.state.API + `/unlikePost/${post_id}/${user_id}`);
-    } else if(response.data == false) {
-      document.getElementById("toChange").src == "../assets/empty_heart.png"
-      await axios.post(this.$store.state.API + `/createPostLike/${post_id}/${user_id}`);
-    }
-    window.location.reload()
-  },
-
+  const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
+  let newLikedPosts = { ...this.likedPosts }; // Create a shallow copy
+  if(response.data == true){
+    await axios.post(this.$store.state.API + `/unlikePost/${post_id}/${user_id}`);
+    newLikedPosts[post_id] = false;
+  } else if(response.data == false) {
+    await axios.post(this.$store.state.API + `/createPostLike/${post_id}/${user_id}`);
+    newLikedPosts[post_id] = true;
+  }
+  this.likedPosts = newLikedPosts; // Replace the entire object to force reactivity
+},
   async getPostLikes(post_id) {
     const response = await axios.get(this.$store.state.API + `/getPostLikeAmount/${post_id}`);
     console.log("POST LIKES für POST_ID: " + post_id + " Anzahl PostLikes: " + response.data)
@@ -139,27 +157,26 @@ export default {
     return response.data
   },
 
-  changeLikeButton(post_id, user_id) {
-    //const image = document.getElementById("myImage")
-    //const newId = post_id + "_" + user_id;
-    //image.id = newId;
+  async changeLikeButton(post_id, user_id) {
+    const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
+    console.log(typeof(response.data))
+    if(response.data === true) {
 
-    const response = axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
-    //console.log(response.data)
-    if(response.data) {
-      //console.log(response.data)
-      return "../assets/full_heart.png";
-      //console.log(document.getElementById(newId))
+      console.log(response.data)
+      return true;
     } else {
-      return "../assets/empty_heart.png.";
+      console.log("No IF")
+      return false;
     }
-  }
+  },
+  async isPostLiked(post_id, user_id) {
+  const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
+  return response.data;
+}
 },
 
 }
-
 </script>
-
 <style>
 .post-text {
   font-family: 'Times New Roman', Times, serif;
