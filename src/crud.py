@@ -255,6 +255,10 @@ def create_comment(db: Session, post_id: int, user_id: int, comment_text: str):
 def get_comments_of_post(db: Session, post_id: int):
     return db.query(models.Comments).filter(models.Comments.post_id == post_id).all()
 
+# method to get comments of post amount
+def get_comments_of_post_amount(db: Session, post_id: int):
+    return len(db.query(models.Comments).filter(models.Comments.post_id == post_id).all())
+
 # method to create a comment like
 def create_comment_like(db: Session, comment_id: int, user_id):
     now = datetime.now()
