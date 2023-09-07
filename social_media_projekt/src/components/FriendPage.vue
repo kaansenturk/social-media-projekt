@@ -70,12 +70,6 @@
             const userId = this.$route.query.friendId;
             console.log(this.$route.query.friend)
             if (userId) {
-                const response1 = axios.get(this.$store.state.API + `/readFollowees/${userId}`);
-                this.followeeNumber = (await response1).data
-                console.log("FOLLOWEES: " + (await response1).data)
-                const response2 = axios.get(this.$store.state.API + `/readFollowers/${userId}`);
-                this.followerNumber = (await response2).data
-                console.log("FOLLOWERS: " + (await response2).data)
                 await this.fetchPosts(userId);
                 await this.fetchUserData(userId);
                 }
@@ -121,6 +115,12 @@
           this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
         }
       }
+      const response1 = axios.get(this.$store.state.API + `/readFollowees/${userId}`);
+      this.followeeNumber = (await response1).data
+      
+      const response2 = axios.get(this.$store.state.API + `/readFollowers/${userId}`);
+      this.followerNumber = (await response2).data
+
       this.username = this.$route.query.username;
       this.email = this.$route.query.email;
     },

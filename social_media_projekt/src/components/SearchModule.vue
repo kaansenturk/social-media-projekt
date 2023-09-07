@@ -92,6 +92,7 @@ export default {
 else{
   console.log("ciao")
 }
+window.location.reload();
 })
       }
     } catch (error) {

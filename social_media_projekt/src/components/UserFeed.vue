@@ -11,7 +11,19 @@
         </div>
         <div class="post-text">{{ post.caption }}</div>
         <p class="post-date">{{ post.created_at }}</p>
-      </div></div>
+        <button class="btn" id="green"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true" @click="likePost(post.id, userId)"></i></button>
+        <a class="post-likes">{{ postLikes }}</a>
+        <button class="btn"><img src="../assets/comment.png"></button>
+        <a class="comment-amount">{{ commentAmount }}</a>
+        <!--
+        <div v-for="comment in this.posts" :key="comment.id" class="comment-item">
+          <div class="comment-header">
+            <p>{{ comment.username }}:</p>
+          </div>
+        </div>
+      -->
+      </div>
+    </div>
   </div>
 </template>
 
@@ -25,8 +37,11 @@ export default {
   data() {
     return {
         feed: [],
+        posts: [],
         friendsList: [],
         photoData: {},
+        userId: this.$store.state.logged_user_id,
+        postLikes: null,
     }},
     async mounted() {
     this.friendsList = this.$store.state.friendsList
@@ -38,7 +53,8 @@ export default {
             this.feed = this.feed.flat();
             for (const post of this.feed) {
               console.log(post)
-              console.log(post.photo_id)
+              this.postLikes = this.getPostLikes(post.id)
+              console.log(post.photo_id)           
                 if (post.photo_id !== null) {
                     this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
                 }
@@ -93,6 +109,32 @@ export default {
   getAdPosts(){
     // Vielleicht irgendwie alle 5 Posts oder so eine fake Werbung einbauen
   },
+  async likePost(post_id, user_id) {
+
+    var btn1 = document.querySelector('#green');
+    btn1.addEventListener('click', function() {
+
+        if (btn1.classList.contains('green')) {
+        btn1.classList.remove('green');
+      } 
+    //this.classList.toggle('green');
+  
+});
+
+    const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
+    if(response.data == true){
+      await axios.post(this.$store.state.API + `/unlikePost/${post_id}/${user_id}`);
+    } else if(response.data == false) {
+      await axios.post(this.$store.state.API + `/createPostLike/${post_id}/${user_id}`);
+    }
+    window.location.reload()
+  },
+
+  async getPostLikes(post_id) {
+    const response = await axios.get(this.$store.state.API + `/getPostLikeAmount/${post_id}`);
+    console.log("POST LIKES für POST_ID: " + post_id + " ANzahl PostLikes: " + response.data)
+    return response.data
+  }
 },
 
 }
@@ -131,4 +173,19 @@ export default {
       display: block;
       margin: 0 auto;
     }
+
+button{
+  cursor: pointer;
+  outline: 0;
+  color: #AAA;
+
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.green{
+  color: green;
+}
 </style>
