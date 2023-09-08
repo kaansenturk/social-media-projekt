@@ -2,7 +2,7 @@
   <div class="friends-container">
     <div v-for="friend in friendsList" :key="friend.userId" class="friend-item">
       {{ friend.username }}
-      <button v-if="fromMessenger" @click="$emit('userSelected', friend.userId, friend.username)"><i class="fa-solid fa-message"></i></button>
+      <button  @click="$emit('userSelected', friend.userId, friend.username)"><i class="fa-solid fa-message"></i></button>
       <button @click="visitUserProfile(friend.userId, friend.username, friend.email)"><i class="fa-solid fa-user"></i></button>
     </div>
   </div>
@@ -18,7 +18,6 @@ export default {
       required: false,
     },
     userId: Number,
-    fromMessenger: Boolean,
   },
   data() {
     return {
