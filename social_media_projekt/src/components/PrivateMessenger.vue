@@ -1,7 +1,7 @@
 <template>
   <div class="private-messenger">
     <div v-if="selectedUser">
-      <h2>Nachrichten mit {{ this.friendName }}</h2>
+      <h2>Messages with {{ this.friendName }}</h2>
       <div class="message-list" ref="messageList">
         <div v-for="(message) in selectedUser.messages" :key="message.id">
           <div :class="getMessageContainerClass(message.sender)">
@@ -16,12 +16,12 @@
         </div>
       </div>
       <div class="message-input">
-    <input v-model="newMessage" placeholder="Nachricht eingeben..." />
+    <input v-model="newMessage" placeholder="Type a message..." />
     <button @click="sendMessage">Send</button>
   </div>
     </div>
     <div v-else>
-      <p>Wähle einen Nutzer aus, um Nachrichten anzuzeigen.</p>
+      <p>Choose a user to chat with</p>
     </div>
       <Friendslist :fromMessenger="true" @userSelected="onFriendSelected"></Friendslist>
   </div>
