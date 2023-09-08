@@ -5,7 +5,7 @@
       <div v-for="comment in this.feed" :key="comment.id" class="comment-item">
         <div class="comment-header">
           <p>{{ comment.username }}:</p>
-          <div class="comment-text">{{ comment.caption }}</div>
+          <div class="comment-text">{{ comment.comment_text }}</div>
           <p class="comment-date">{{ comment.created_at }}</p>
           <button @click="likeComment(comment.id, userId)" class="btn">
             <i v-if="likedComments[comment.id]" class="fa-solid fa-heart"></i>
@@ -46,7 +46,7 @@ export default {
     await this.fetchComments(this.postId, this.username);
     this.feed = this.feed.flat();
     for (const comment of this.feed) {
-      console.log(comment)
+      console.log(comment.comment_text)
       //this.commentLikes = await this.getCommentLikes(comment.id)
       this.commentAmount[comment.id] = await this.getCommentAmount(comment.id)
 
