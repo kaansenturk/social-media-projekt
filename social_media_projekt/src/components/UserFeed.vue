@@ -12,21 +12,12 @@
         <div class="post-text">{{ post.caption }}</div>
         <p class="post-date">{{ post.created_at }}</p>
         <button @click="likePost(post.id, userId)" class="btn">
-        <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
-        <i v-else class="fa-regular fa-heart"></i>
+          <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
+          <i v-else class="fa-regular fa-heart"></i>
         </button>
-
         <a href="" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
-        <button class="btn"><i class="fa-solid fa-message"></i></button>
-        <a href="" class="comment-amount">{{ commentAmount }}</a>
-
-        <!--
-        <div v-for="comment in this.posts" :key="comment.id" class="comment-item">
-          <div class="comment-header">
-            <p>{{ comment.username }}:</p>
-          </div>
-        </div>
-      -->
+        <button @click="visitPostProfile(post.id)" class="btn"><i class="fa-solid fa-message"></i></button>
+        <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
       </div>
     </div>
   </div>
@@ -46,59 +37,62 @@ export default {
         friendsList: [],
         photoData: {},
         userId: this.$store.state.logged_user_id,
+        username: this.$store.state.logged_user,
         postLikes: {},
-        commentAmount: null,
+        commentAmount: {},
         likedPosts: {},
         likedPostsCount: {},
     }},
     // initializes the page with friends, posts, likes etc.
     async mounted() {
       let newLikedPostsCount = { ...this.likedPostsCount };
-    this.friendsList = this.$store.state.friendsList
+      this.friendsList = this.$store.state.friendsList
             console.log(this.friendsList)
               for (let friend of this.friendsList) {
                 console.log(friend)
                 await this.fetchPosts(friend.userId, friend.username);    
               }
+              await this.fetchPosts(this.userId, this.username); 
             this.feed = this.feed.flat();
             for (const post of this.feed) {
               console.log(post)
               this.postLikes = await this.getPostLikes(post.id)
-              this.commentAmount = await this.getCommentAmount(post.id)
-              console.log("Photo_ID: " + post.photo_id)           
-                if (post.photo_id !== null) {
-                    this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
-                }
-                this.likedPosts[post.id] = await this.isPostLiked(post.id, this.userId);
-                const response = await this.getPostLikes(post.id);
-                newLikedPostsCount[post.id] = response;
-                this.likedPostsCount = newLikedPostsCount;
-          }
+              this.commentAmount[post.id] = await this.getCommentAmount(post.id)        
+
+              this.likedPosts[post.id] = await this.isPostLiked(post.id, this.userId);
+
+              const response = await this.getPostLikes(post.id);
+              newLikedPostsCount[post.id] = response;
+              this.likedPostsCount = newLikedPostsCount;
+
+              if (post.photo_id !== null) {
+                this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
+              }
+            }
     },
     // watcher to always get the accurate ammount of likes on a post
     watch: {
-  async likedPosts(newVal) {
-    let newLikedPostsCount = { ...this.likedPostsCount };
-    for (const postId in newVal) {
-      const response = await this.getPostLikes(postId);
-      newLikedPostsCount[postId] = response;
-    }
-    this.likedPostsCount = newLikedPostsCount;
-  }
+      async likedPosts(newVal) {
+        let newLikedPostsCount = { ...this.likedPostsCount };
+        for (const postId in newVal) {
+          const response = await this.getPostLikes(postId);
+          newLikedPostsCount[postId] = response;
+        }
+      this.likedPostsCount = newLikedPostsCount;
+  },
 },
     methods: {
     // method to get the posts of each friend of a user 
       async fetchPosts(userId, username) {
-  try {
-    const response = await axios.get(this.$store.state.API + `/getPosts?user_id=${userId}`);
-    // Add the username to each post in the response
-    const responseDataWithUsername = response.data.map(post => {
-      return {
-        ...post,
-        username: username
-      };
-    });
-
+        try {
+          const response = await axios.get(this.$store.state.API + `/getPosts?user_id=${userId}`);
+          // Add the username to each post in the response
+          const responseDataWithUsername = response.data.map(post => {
+          return {
+            ...post,
+            username: username
+          };
+          });
     this.feed.push(responseDataWithUsername);
     this.feed = this.feed.flat();
 
@@ -147,13 +141,14 @@ export default {
 },
   async getPostLikes(post_id) {
     const response = await axios.get(this.$store.state.API + `/getPostLikeAmount/${post_id}`);
-    console.log("POST LIKES für POST_ID: " + post_id + " Anzahl PostLikes: " + response.data)
+    //console.log("POST LIKES für POST_ID: " + post_id + " Anzahl PostLikes: " + response.data)
     return response.data
   },
   
   async getCommentAmount(post_id) {
     const response = await axios.get(this.$store.state.API + `/getCommentsOfPostAmount/${post_id}`);
-    //console.log("POST COMMENTS für POST_ID: " + post_id + " ANzahl Comments: " + response.data)
+    //console.log("POST COMMENTS für POST_ID: " + post_id + " Anzahl Comments: " + response.data)
+    console.log("POST KOMMENTARE FÜR " + post_id + ", " + response.data)
     return response.data
   },
 
@@ -172,7 +167,10 @@ export default {
   async isPostLiked(post_id, user_id) {
   const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
   return response.data;
-}
+},
+visitPostProfile(postId){
+        this.$router.push({ name: 'postComments', query: { postId } });
+      },
 },
 
 }
@@ -185,7 +183,7 @@ export default {
       border: 1px solid blue;
       padding: 20px;
       margin-bottom: 20px;
-      background-color: #f5f5f5;
+      background-color: #ECF0F1;
       border-radius: 5px;
       max-width: 90%;
       overflow: hidden;

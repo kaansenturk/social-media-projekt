@@ -2,7 +2,7 @@
   <div class="Header sticky-top">
     <div class="row align-items-center">
       <div>
-        <NavBar v-if="isUserLoggedIn"></NavBar>
+        <NavBar v-if="isUserLoggedIn" id="navbar"></NavBar>
         <img id="app_icon" alt="App Logo" src="../assets/hacker.png">
       </div>
       <div class="d-flex justify-content-end">
@@ -19,7 +19,7 @@
 import SearchModule from './SearchModule.vue';
 import NavBar from './NavBar.vue';
 import { mapState } from 'vuex';
-import DropDownMenu from "./Settings/DropDownMenu.vue";
+import DropDownMenu from "./DropDownMenu.vue";
 export default {
   name: 'HeaderPart',
   components: {
@@ -46,6 +46,9 @@ NavBar,
 </script>
 
 <style>
+#navbar {
+  background-color: #F8F9F9;
+}
 
 #app_icon {
   width: 70px;
@@ -57,7 +60,6 @@ NavBar,
 
 /* Overriding Bootstrap's sticky-top styles to make sure it sticks to the top */
 .sticky-top {
-
   position: sticky;
   z-index: 1020; /* Ensure it appears above other elements */
 }

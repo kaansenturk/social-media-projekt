@@ -198,6 +198,10 @@ def create_post(db: Session, user_id: int, caption: str, photo_id: Optional[int]
 def get_all_posts(db: Session, id: int):
     return db.query(models.Post).filter(models.Post.user_id == id).all()
 
+# method to return all posts from a user
+def get_post(db: Session, id: int):
+    return db.query(models.Post).filter(models.Post.id == id).first()
+
 # method to delete a post
 def delete_post(db: Session, post_id):
     post_entry = db.query(models.Post).filter(models.Post.id == post_id).first()
@@ -268,6 +272,27 @@ def create_comment_like(db: Session, comment_id: int, user_id):
     db.commit()
     db.refresh(db_comment_like)
     return db_comment_like
+
+# method to get comment_like amount
+def get_comment_like_amount(db: Session, comment_id: int):
+    return len(db.query(models.Comment_Likes).filter(models.Comment_Likes.comment_id == comment_id).all())
+
+def is_comment_liked(db: Session, comment_id: int, user_id: int):
+    response = db.query(models.Comment_Likes).filter(models.Comment_Likes.comment_id == comment_id, models.Comment_Likes.user_id == user_id).first()
+    if(response):
+        return True
+    else:
+        return False
+
+def unlike_comment(db: Session, comment_id: int, user_id: int):
+    response = db.query(models.Comment_Likes).filter(models.Comment_Likes.comment_id == comment_id, models.Comment_Likes.user_id == user_id).first()
+    if response:
+        db.delete(response)
+        db.commit()
+        print("Unliked Comment successfully.")
+    else:
+        print("Comment Like not found.")
+    db.close()
 
 # method to upload a phtoto
 async def upload_photo(db: Session, title: str, image_data: UploadFile, user_id: int):

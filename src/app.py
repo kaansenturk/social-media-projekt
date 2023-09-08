@@ -201,6 +201,10 @@ async def create_post_endpoint(
 def get_posts(user_id: int, db: Session = Depends(get_db)):
     return crud.get_all_posts(db=db, id=user_id)
 
+@app.get('/getPost/{post_id}')
+def get_posts(post_id: int, db: Session = Depends(get_db)):
+    return crud.get_post(db=db, id=post_id)
+
 @app.post('/deletePost')
 def delete_post(post_id: int, db: Session = Depends(get_db)):
     return crud.delete_post(post_id=post_id, db=db)
@@ -233,9 +237,21 @@ def get_comments_of_post(post_id: int, db: Session = Depends(get_db)):
 def get_comments_of_post(post_id: int, db: Session = Depends(get_db)):
     return crud.get_comments_of_post_amount(post_id=post_id, db=db)
 
-@app.post('/createCommentLike')
+@app.post('/createCommentLike/{comment_id}/{user_id}')
 def create_comment_like(comment_id: int, user_id: int, db: Session = Depends(get_db)):
     return crud.create_comment_like(comment_id=comment_id, db=db, user_id=user_id)
+
+@app.get('/getCommentLikeAmount/{comment_id}')
+def get_post_like_amount(comment_id: int, db: Session = Depends(get_db)):
+    return crud.get_comment_like_amount(db=db, comment_id=comment_id)
+
+@app.get('/isCommentLiked/{comment_id}/{user_id}')
+def is_post_liked(comment_id: int, user_id: int, db: Session = Depends(get_db)):
+    return crud.is_comment_liked(db=db, comment_id=comment_id, user_id=user_id)
+
+@app.post('/unlikeComment/{comment_id}/{user_id}')
+def unlike_comment(comment_id: int, user_id: int, db: Session = Depends(get_db)):
+    return crud.unlike_comment(db=db, comment_id=comment_id, user_id=user_id)
 
 @app.post("/upload_photo/")
 async def upload_photo_endpoint(title: str, image_data: UploadFile, user_id: int, db: Session = Depends(get_db)):
