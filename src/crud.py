@@ -246,7 +246,7 @@ def unlike_post(db: Session, post_id: int, user_id: int):
     db.close()
 
 # method to create a comment
-def create_comment(db: Session, comment_id: int, user_id: int, comment_text: str):
+def create_comment(db: Session, post_id: int, user_id: int, comment_text: str):
     now = datetime.now()
     current_date = now.strftime("%D %H:%M:%S")
     db_comment = models.Comments(comment_text=comment_text, user_id=user_id, created_at=current_date, post_id=post_id)
