@@ -2,89 +2,163 @@
   <div class="row">
     <div class="col-md-2 account-info">
       <div class="title">
-        <img v-if="this.profileImageUrl == null" src="../assets/blank_profile_pic.webp" alt="Kein Profilbild" class="profile-picture" />
+        <img v-if="this.profileImageUrl == null" src="../assets/blank_profile_pic.webp" alt="Kein Profilbild"
+          class="profile-picture" />
         <img v-else :src="this.profileImageUrl" alt="Profilbild" class="profile-picture">
-        <div>{{ username }}</div>
+        <div>{{ ownUsername }}</div>
       </div>
     </div>
-    <CommentCreator class="col-md-7" :postId="postId"/>
-    <PostFeed :postId="postId"/>
-    <FriendsList class="col-md-2" :friends="friendsList"/>
+    <CommentCreator class="col-md-7" :postId="postId" />
+    <div class="col-md-0" id="post-item">
+      <div class="post-header">
+        <p>{{ username }}:</p>
+      </div>
+      <div v-if="post.photo_id !== null" class="post-photo">
+        <img :src="photoData[post.photo_id]" alt="Photo" />
+      </div>
+      <div class="post-text">{{ post.caption }}</div>
+      <p class="post-date">{{ post.created_at }}</p>
+      <button @click="likePost(post.id, post.user_id)" class="btn">
+        <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
+        <i v-else class="fa-regular fa-heart"></i>
+      </button>
+      <a href="" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
+      <button class="btn"><i class="fa-solid fa-message"></i></button>
+      <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
+    </div>
+    <PostFeed :postId="postId" />
+    <FriendsList class="col-md-2" :friends="friendsList" />
   </div>
 </template>
-    <script>
+<script>
 import FriendsList from "./Friendslist.vue"
 import CommentCreator from "./commentCreator.vue";
 import PostFeed from "./PostFeed.vue"
 import axios from "axios";
 //import { watch } from 'vue';
 export default {
-    name: 'PostComments',
-    components: {
+  name: 'PostComments',
+  components: {
     FriendsList,
     CommentCreator,
     PostFeed,
-    },
-    data() {
-      return {
-        API: this.$store.state.API,
-        post: {},
-        photoData: {},
-        postId: null,
-        username: null
-      };
-    },
-    created() {
-        this.postId = this.$route.query.postId;
-    },
-    async mounted() {
-        await this.fetchPost();
-        await this.fetchData();
+  },
+  data() {
+    return {
+      API: this.$store.state.API,
+      post: {},
+      photoData: {},
+      postId: null,
+      username: null,
+      ownUsername: this.$store.state.logged_user,
+      postLikes: {},
+      commentAmount: {},
+      likedPosts: {},
+      likedPostsCount: {},
+    };
+  },
+  created() {
+    this.postId = this.$route.query.postId;
+  },
+  async mounted() {
+    let newLikedPostsCount = { ...this.likedPostsCount };
+    await this.fetchPost();
+    await this.fetchData();
 
-        if (this.post.photo_id !== null) {
-            this.photoData[this.post.photo_id] = await this.getPhoto(this.post.photo_id);
-        }
+
+    console.log("POST: POST: POST: " + this.post)
+    this.postLikes = await this.getPostLikes(this.post.id)
+    this.commentAmount[this.post.id] = await this.getCommentAmount(this.post.id)
+
+    this.likedPosts[this.post.id] = await this.isPostLiked(this.post.id, this.post.user_id);
+
+    const response = await this.getPostLikes(this.post.id);
+    newLikedPostsCount[this.post.id] = response;
+    this.likedPostsCount = newLikedPostsCount;
+
+    if (this.post.photo_id !== null) {
+      this.photoData[this.post.photo_id] = await this.getPhoto(this.post.photo_id);
+    }
+  },
+  // watcher to always get the accurate ammount of likes on a post
+  watch: {
+    async likedPosts(newVal) {
+      let newLikedPostsCount = { ...this.likedPostsCount };
+      for (const postId in newVal) {
+        const response = await this.getPostLikes(postId);
+        newLikedPostsCount[postId] = response;
+      }
+      this.likedPostsCount = newLikedPostsCount;
     },
-    methods: {
-        // method to get the image appended to a post
-        async getPhoto(photoId) {
-        try {
-            const response = await axios.get(this.API + `/getPhoto`, {params: {id: photoId}, responseType: 'arraybuffer'});
-            const base64 = btoa(
-            new Uint8Array(response.data).reduce(
+  },
+  methods: {
+    // method to get the image appended to a post
+    async getPhoto(photoId) {
+      try {
+        const response = await axios.get(this.API + `/getPhoto`, { params: { id: photoId }, responseType: 'arraybuffer' });
+        const base64 = btoa(
+          new Uint8Array(response.data).reduce(
             (data, byte) => data + String.fromCharCode(byte),
             '',
-            ),
+          ),
         );
-            const imageSrc = `data:image/png;base64,${base64}`;
-            return imageSrc
-            } catch (error) {
-                console.error("Error fetching photo:", error);
-            }
-        },
-        async fetchPost() {
-            try {
-                const response = await axios.get(this.API + `/getPost/${this.postId}`);
-                this.post = response.data;
-                } catch (error) {
-                console.error("Error fetching post:", error);
-            }
-        },
-        async fetchData() {
-            try {
-                const response = await axios.get(this.API + `/users/${this.post.user_id}`);
-                this.username = response.data.username;
-                } catch (error) {
-                console.error("Error fetching user:", error);
-            }
-        },
-    }
+        const imageSrc = `data:image/png;base64,${base64}`;
+        return imageSrc
+      } catch (error) {
+        console.error("Error fetching photo:", error);
+      }
+    },
+    async fetchPost() {
+      try {
+        const response = await axios.get(this.API + `/getPost/${this.postId}`);
+        console.log(response.data)
+        this.post = response.data;
+      } catch (error) {
+        console.error("Error fetching post:", error);
+      }
+    },
+    async fetchData() {
+      try {
+        const response = await axios.get(this.API + `/users/${this.post.user_id}`);
+        this.username = response.data.username;
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    },
+    async likePost(post_id, user_id) {
+      const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
+      let newLikedPosts = { ...this.likedPosts }; // Create a shallow copy
+      if (response.data == true) {
+        await axios.post(this.$store.state.API + `/unlikePost/${post_id}/${user_id}`);
+        newLikedPosts[post_id] = false;
+      } else if (response.data == false) {
+        await axios.post(this.$store.state.API + `/createPostLike/${post_id}/${user_id}`);
+        newLikedPosts[post_id] = true;
+      }
+      this.likedPosts = newLikedPosts; // Replace the entire object to force reactivity
+    },
+    async getPostLikes(post_id) {
+      const response = await axios.get(this.$store.state.API + `/getPostLikeAmount/${post_id}`);
+      //console.log("POST LIKES für POST_ID: " + post_id + " Anzahl PostLikes: " + response.data)
+      return response.data
+    },
+    async getCommentAmount(post_id) {
+      const response = await axios.get(this.$store.state.API + `/getCommentsOfPostAmount/${post_id}`);
+      //console.log("POST COMMENTS für POST_ID: " + post_id + " Anzahl Comments: " + response.data)
+      console.log("POST KOMMENTARE FÜR " + post_id + ", " + response.data)
+      return response.data
+    },
+    async isPostLiked(post_id, user_id) {
+      const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
+      return response.data;
+    },
+  }
 }
 
 
-    </script>
+</script>
     
-    <style scoped>
+<style scoped>
 .account-info {
   background-color: #2200cd;
   color: white;
@@ -104,11 +178,15 @@ export default {
 
 
 .profile-picture {
-  width: 70px; 
-  height: 70px; 
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
-    </style>
+#post-item {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+</style>
     
