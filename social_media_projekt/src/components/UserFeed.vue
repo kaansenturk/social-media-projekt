@@ -57,7 +57,7 @@ export default {
             for (const post of this.feed) {
               console.log(post)
               this.postLikes = await this.getPostLikes(post.id)
-              this.commentAmount = await this.getCommentAmount(post.id)        
+              this.commentAmount[post.id] = await this.getCommentAmount(post.id)        
 
               this.likedPosts[post.id] = await this.isPostLiked(post.id, this.userId);
 

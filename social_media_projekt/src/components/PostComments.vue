@@ -8,12 +8,14 @@
       </div>
     </div>
     <CommentCreator class="col-md-7" :postId="postId"/>
+    <PostFeed :postId="postId"/>
     <FriendsList class="col-md-2" :friends="friendsList"/>
   </div>
 </template>
     <script>
 import FriendsList from "./Friendslist.vue"
 import CommentCreator from "./commentCreator.vue";
+import PostFeed from "./PostFeed.vue"
 import axios from "axios";
 //import { watch } from 'vue';
 export default {
@@ -21,6 +23,7 @@ export default {
     components: {
     FriendsList,
     CommentCreator,
+    PostFeed,
     },
     data() {
       return {

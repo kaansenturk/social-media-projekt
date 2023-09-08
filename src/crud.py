@@ -246,7 +246,7 @@ def unlike_post(db: Session, post_id: int, user_id: int):
     db.close()
 
 # method to create a comment
-def create_comment(db: Session, post_id: int, user_id: int, comment_text: str):
+def create_comment(db: Session, comment_id: int, user_id: int, comment_text: str):
     now = datetime.now()
     current_date = now.strftime("%D %H:%M:%S")
     db_comment = models.Comments(comment_text=comment_text, user_id=user_id, created_at=current_date, post_id=post_id)
@@ -272,6 +272,27 @@ def create_comment_like(db: Session, comment_id: int, user_id):
     db.commit()
     db.refresh(db_comment_like)
     return db_comment_like
+
+# method to get comment_like amount
+def get_comment_like_amount(db: Session, comment_id: int):
+    return len(db.query(models.Comment_Likes).filter(models.Comment_Likes.comment_id == comment_id).all())
+
+def is_comment_liked(db: Session, comment_id: int, user_id: int):
+    response = db.query(models.Comment_Likes).filter(models.Comment_Likes.comment_id == comment_id, models.Comment_Likes.user_id == user_id).first()
+    if(response):
+        return True
+    else:
+        return False
+
+def unlike_comment(db: Session, comment_id: int, user_id: int):
+    response = db.query(models.Comment_Likes).filter(models.Comment_Likes.comment_id == comment_id, models.Comment_Likes.user_id == user_id).first()
+    if response:
+        db.delete(response)
+        db.commit()
+        print("Unliked Comment successfully.")
+    else:
+        print("Comment Like not found.")
+    db.close()
 
 # method to upload a phtoto
 async def upload_photo(db: Session, title: str, image_data: UploadFile, user_id: int):

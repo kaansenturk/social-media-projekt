@@ -35,7 +35,9 @@ export default {
         console.log(response.data);
       } catch (error) {
         console.error("An error occurred while submitting the comment:", error);
-      }} 
+      }
+      window.location.reload();
+    } 
     },
     getUser(name){
         this.username = name

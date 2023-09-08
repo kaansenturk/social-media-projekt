@@ -11,7 +11,7 @@
     <FriendsList class="col-md-2" :friends="friendsList"/>
   </div>
   <FriendsMap v-if="userLocation && userLocation.length ===  2 && friendsList.length > 0" :user="userLocation" :friendsList="this.$store.state.friendsList" class="map-container"></FriendsMap>
-  <UserFeed v-if="friendsList.length > 0"></UserFeed>
+  <UserFeed v-if="friendsList.length >= 0"></UserFeed>
 </template>
 <script>
 import axios from 'axios';
