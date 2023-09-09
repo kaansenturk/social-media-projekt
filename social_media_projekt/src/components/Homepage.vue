@@ -51,7 +51,6 @@ export default {
       if (newVal.length > 0) {
         this.friendsList = newVal;
       }
-      console.log(this.friendsList)
     }, { immediate: true });
   },
   beforeUnmount() {
@@ -88,10 +87,9 @@ export default {
       try {
         const response = await axios.get(this.API + `/get_user_location/${userId}`);
         this.userLocation = [response.data.location.lat, response.data.location.lng];
-        console.log(this.userLocation)
         this.friendsList = this.$store.getters.getFriends
       } catch (error) {
-        console.log("An error occurred:", error);
+        console.log(error);
       }
     },
     async getPhoto(photoId) {

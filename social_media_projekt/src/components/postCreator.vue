@@ -57,7 +57,6 @@ export default {
       if (this.droppedFiles.length > 0) {
         const formData = new FormData();
         formData.append("image_data", this.droppedFiles[0]);
-      console.log("Bild versuchen")
       try {
         const response = await axios.post(this.API + "/create_post/", formData, {
           params: {

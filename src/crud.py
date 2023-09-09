@@ -224,6 +224,10 @@ def create_post_like(db: Session, user_id: int, post_id: int):
     db.refresh(db_post_like)
     return db_post_like
 
+# method to get post_likes
+def get_post_likes(db: Session, post_id: int):
+    return db.query(models.Post_Likes).filter(models.Post_Likes.post_id == post_id).all()
+
 # method to get post_like amount
 def get_post_like_amount(db: Session, post_id: int):
     return len(db.query(models.Post_Likes).filter(models.Post_Likes.post_id == post_id).all())
@@ -255,6 +259,10 @@ def create_comment(db: Session, post_id: int, user_id: int, comment_text: str):
     db.refresh(db_comment)
     return db_comment
 
+# method to return all posts from a user
+def get_comment(db: Session, id: int):
+    return db.query(models.Comments).filter(models.Comments.id == id).first()
+
 # method to get comments of post
 def get_comments_of_post(db: Session, post_id: int):
     return db.query(models.Comments).filter(models.Comments.post_id == post_id).all()
@@ -272,6 +280,10 @@ def create_comment_like(db: Session, comment_id: int, user_id):
     db.commit()
     db.refresh(db_comment_like)
     return db_comment_like
+
+# method to get comment_likes
+def get_comment_likes(db: Session, comment_id: int):
+    return db.query(models.Comment_Likes).filter(models.Comment_Likes.comment_id == comment_id).all()
 
 # method to get comment_like amount
 def get_comment_like_amount(db: Session, comment_id: int):

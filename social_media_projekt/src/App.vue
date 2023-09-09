@@ -10,7 +10,7 @@ import HeaderPart from './components/Header.vue';
 export default {
   name: 'App',
   components: {
-HeaderPart
+HeaderPart,
 },
 
 }

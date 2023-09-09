@@ -202,7 +202,7 @@ def get_posts(user_id: int, db: Session = Depends(get_db)):
     return crud.get_all_posts(db=db, id=user_id)
 
 @app.get('/getPost/{post_id}')
-def get_posts(post_id: int, db: Session = Depends(get_db)):
+def get_post(post_id: int, db: Session = Depends(get_db)):
     return crud.get_post(db=db, id=post_id)
 
 @app.post('/deletePost')
@@ -212,6 +212,10 @@ def delete_post(post_id: int, db: Session = Depends(get_db)):
 @app.post('/createPostLike/{post_id}/{user_id}')
 def create_post_like(user_id: int, post_id: int, db: Session = Depends(get_db)):
     return crud.create_post_like(user_id=user_id, post_id=post_id, db=db)
+
+@app.get('/getPostLikes/{post_id}')
+def get_post_likes(post_id: int, db: Session = Depends(get_db)):
+    return crud.get_post_likes(db=db, post_id=post_id)
 
 @app.get('/getPostLikeAmount/{post_id}')
 def get_post_like_amount(post_id: int, db: Session = Depends(get_db)):
@@ -229,6 +233,10 @@ def unlike_post(post_id: int, user_id: int, db: Session = Depends(get_db)):
 def create_comment(user_id: int, post_id: int, comment_text: str, db: Session = Depends(get_db)):
     return crud.create_comment(db=db, post_id=post_id, user_id=user_id, comment_text=comment_text)
 
+@app.get('/getComment/{comment_id}')
+def get_comment(comment_id: int, db: Session = Depends(get_db)):
+    return crud.get_comment(db=db, id=comment_id)
+
 @app.get('/getCommentsOfPost/{post_id}')
 def get_comments_of_post(post_id: int, db: Session = Depends(get_db)):
     return crud.get_comments_of_post(post_id=post_id, db=db)
@@ -240,6 +248,10 @@ def get_comments_of_post(post_id: int, db: Session = Depends(get_db)):
 @app.post('/createCommentLike/{comment_id}/{user_id}')
 def create_comment_like(comment_id: int, user_id: int, db: Session = Depends(get_db)):
     return crud.create_comment_like(comment_id=comment_id, db=db, user_id=user_id)
+
+@app.get('/getCommentLikes/{comment_id}')
+def get_post_likes(comment_id: int, db: Session = Depends(get_db)):
+    return crud.get_comment_likes(db=db, comment_id=comment_id)
 
 @app.get('/getCommentLikeAmount/{comment_id}')
 def get_post_like_amount(comment_id: int, db: Session = Depends(get_db)):

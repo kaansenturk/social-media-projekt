@@ -48,6 +48,7 @@ export default {
       localStorage.removeItem('logged_user');
       this.$store.commit('setUser', null)
       this.$store.commit('setUserId', null)
+      this.$store.dispatch('logout');
       this.$router.push('/login')
     },
 
