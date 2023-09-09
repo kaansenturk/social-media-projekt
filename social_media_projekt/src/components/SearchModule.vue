@@ -69,12 +69,12 @@ export default {
     },
     async followUser(followee_id, username) {
     try {
-
-      const follower_id = this.$store.state.logged_user_id;
+      console.log("TEST")
       const response = await axios.post(this.API + "/createFollower", {
         followee: followee_id,
-        owner_id: follower_id
+        owner_id: this.$store.state.logged_user_id
       });
+      console.log(response.data)
       if (response.data) {
         Swal.fire({
       title: 'Folgen erfolgreich',
