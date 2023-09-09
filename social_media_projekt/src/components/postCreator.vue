@@ -21,6 +21,7 @@
       <p v-if="isDragging">Drop files here</p>
       <p v-else>Drag and drop files here</p>
     </div>
+    <button type="button" @click="openFilePicker">Upload from Files</button>
     <input type="file" ref="fileInput" @change="handleFileChange" style="display: none" />
     <div class="file-list">
       <div class="file-item" v-for="(file, index) in droppedFiles" :key="index">
@@ -52,6 +53,9 @@ export default {
     }},
    
     methods: {
+      openFilePicker() {
+            this.$refs.fileInput.click();
+        },
       async submitPost() {
       // if there is an Image or Video store the data as formData to append to post
       if (this.droppedFiles.length > 0) {
