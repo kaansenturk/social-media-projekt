@@ -1,6 +1,6 @@
 <template>
     <div class="feedContainer">
-      <div class="col-md-8 post-list mx-auto">
+      <div class="col-md-6 post-list mx-auto">
         <h2 class="title">Posts: </h2>
         <div v-for="post in this.feed" :key="post.id" class="post-item">
           <div class="post-header">

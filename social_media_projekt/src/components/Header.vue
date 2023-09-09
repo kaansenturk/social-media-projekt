@@ -2,7 +2,7 @@
   <div class="Header sticky-top">
     <div class="row align-items-center">
       <div>
-        <NavBar v-if="isUserLoggedIn" id="navbar"></NavBar>
+        <div v-if="isUserLoggedIn" id="headerBar"></div>
         <img id="app_icon" alt="App Logo" src="../assets/hacker.png">
           <div class="logo-container">
               Social Media Projekt
@@ -20,7 +20,6 @@
 
 <script>
 import SearchModule from './SearchModule.vue';
-import NavBar from './NavBar.vue';
 import { mapState } from 'vuex';
 import DropDownMenu from "./DropDownMenu.vue";
 export default {
@@ -28,7 +27,6 @@ export default {
   components: {
 SearchModule,
 DropDownMenu,
-NavBar,
   },
   props: {
   },
@@ -81,5 +79,10 @@ NavBar,
 .sticky-top {
   position: sticky;
   z-index: 1020; /* Ensure it appears above other elements */
+}
+
+#headerBar {
+  height: 100px;
+  background-color: #DAF7A6;
 }
 </style>

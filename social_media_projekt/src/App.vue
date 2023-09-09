@@ -1,8 +1,8 @@
 <template>
   <div>
     <HeaderPart class="header"></HeaderPart>
-  <router-view></router-view>
-</div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
@@ -10,8 +10,8 @@ import HeaderPart from './components/Header.vue';
 export default {
   name: 'App',
   components: {
-HeaderPart,
-},
+    HeaderPart,
+  },
 
 }
 </script>
@@ -25,5 +25,4 @@ HeaderPart,
   color: #2c3e50;
   background-color: #F8F9F9;
 }
-
 </style>
