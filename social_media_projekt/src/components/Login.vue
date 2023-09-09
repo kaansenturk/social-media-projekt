@@ -31,9 +31,6 @@
   import 'sweetalert2/dist/sweetalert2.min.css';
   export default {
     name: 'LoginPage',
-    props: {
-      
-    },
     data() {
       return {
         username: "",
@@ -111,7 +108,8 @@
         // method to create a Login for a user that exists in the db, also sets items in the vuex state management and localstorage
         async sendLoginRequest(){
       try {
-          const response = await axios.post(this.$store.state.API + "/login", {
+        console.log(this.username, this.password, this.userLocation)
+          const response = await axios.post(this.$store.state.API + "/login/", {
               user: this.username,
               password: this.password,
               location: this.userLocation,
