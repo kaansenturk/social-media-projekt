@@ -23,7 +23,7 @@
     <div v-else>
       <p>Choose a user to chat with</p>
     </div>
-      <Friendslist :fromMessenger="true" @userSelected="onFriendSelected"></Friendslist>
+      <Friendslist @userSelected="onFriendSelected"></Friendslist>
   </div>
 </template>
 <script>
