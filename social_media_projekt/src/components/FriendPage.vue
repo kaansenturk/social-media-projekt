@@ -63,8 +63,6 @@ export default {
   },
   async mounted() {
     const userId = this.$route.query.friendId;
-    console.log(this.$route.query.friend)
-    console.log(this.userId)
     if (userId) {
       await this.fetchPosts(userId);
       await this.fetchUserData(userId);
@@ -126,8 +124,8 @@ export default {
       try {
         const response = await axios.post(this.$store.state.API + "/unfollowUser", null, {
           params: {
-            followee_id: this.$store.state.logged_user_id,
-            user_id: this.userId
+            followee_id: this.userId,
+            user_id: this.$store.state.logged_user_id
           }
         })
         if (response.status == 200) {
@@ -141,9 +139,6 @@ export default {
           }).then((result) => {
             if (result.value) {
               this.$router.push("/")
-            }
-            else {
-              console.log("ciao")
             }
           })
         }

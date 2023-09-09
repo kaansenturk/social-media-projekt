@@ -26,6 +26,7 @@ export default {
   },
   methods: {
     goToCredits(){
+      this.closeDropdown();
       this.$router.push('/credits')
     },
     toggleDropdown() {
