@@ -8,6 +8,7 @@
         </div>
         <div class="friend-actions">
           <button v-if="fromMessenger" @click="$emit('userSelected', friend.userId, friend.username)"><i class="fa-solid fa-message"></i></button>
+          <button v-else @click="goToMessenger"><i class="fa-solid fa-message"></i></button>
           <button @click="visitUserProfile(friend.userId, friend.username, friend.email)"><i class="fa-solid fa-user"></i></button>
         </div>
       </div>
