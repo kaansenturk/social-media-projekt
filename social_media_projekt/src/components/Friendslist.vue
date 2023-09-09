@@ -29,7 +29,9 @@ export default {
   },
     methods: {
       visitUserProfile(friendId, username,  email){
-        this.$router.push({ name: 'friend', query: { friendId, username, email } });
+        this.$router.push({ name: 'friend', query: { friendId, username, email } }).then(() => {
+          window.location.reload();
+        });
       },
   async getUserById (userId)  {
   try {

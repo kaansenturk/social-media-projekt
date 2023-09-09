@@ -15,6 +15,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import FriendPage from "./components/FriendPage"
+import PostLikeList from "./components/PostLikeList"
+import CommentLikeList from "./components/CommentLikeList"
 
 const app = createApp(App)
 createApp(App)
@@ -25,8 +27,9 @@ const routes = [
     {path:"/messenger", component: PrivateMessenger, meta: { requiresAuth: true }},
     {path: "/friend", component: FriendPage, meta: {requiresAuth: true}, name: "friend"},
     {path: "/follower", component: FollowerPage, meta: {requiresAuth: true}},
-    {path: "/friend", component: FriendPage, meta: {requiresAuth: true}, name: "friend"},
-    {path: "/postComments", component: PostComments, meta: {requiresAuth: true}, name: "postComments"}
+    {path: "/postComments", component: PostComments, meta: {requiresAuth: true}, name: "postComments"},
+    {path: "/postLikeList", component: PostLikeList, meta: {requiresAuth: true}, name: "postLikeList"},
+    {path: "/commentLikeList", component: CommentLikeList, meta: {requiresAuth: true}, name: "commentLikeList"}
 ]
 const router = createRouter(
     {

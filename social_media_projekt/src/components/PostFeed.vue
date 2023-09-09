@@ -4,16 +4,14 @@
       <h2 class="title">Comments:</h2>
       <div v-for="comment in this.feed" :key="comment.id" class="comment-item">
         <div class="comment-header">
-          <p>{{ comment.username }}:</p>
+          <p>{{ comment.user_id }}:</p>
           <div class="comment-text">{{ comment.comment_text }}</div>
           <p class="comment-date">{{ comment.created_at }}</p>
           <button @click="likeComment(comment.id, userId)" class="btn">
             <i v-if="likedComments[comment.id]" class="fa-solid fa-heart"></i>
             <i v-else class="fa-regular fa-heart"></i>
           </button>
-          <a href="" class="comment-likes">{{ likedCommentsCount[comment.id] || 0 }}</a>
-          <button @click="visitCommentProfile(comment.id)" class="btn"><i class="fa-solid fa-message"></i></button>
-          <span class="comment-amount">{{ commentAmount[comment.id] || 0 }}</span>
+          <a @click="visitLikeProfile(comment.id)" class="comment-likes">{{ likedCommentsCount[comment.id] || 0 }}</a>
         </div>
       </div>
     </div>
@@ -33,9 +31,7 @@ export default {
       feed: [],
       comments: [],
       userId: this.$store.state.logged_user_id,
-      username: this.$store.state.logged_user,
       commentLikes: {},
-      commentAmount: {},
       likedComments: {},
       likedCommentsCount: {},
     }
@@ -43,12 +39,11 @@ export default {
   // initializes the page with friends, comments, likes etc.
   async mounted() {
     let newLikedCommentsCount = { ...this.likedCommentsCount };
-    await this.fetchComments(this.postId, this.username);
+    await this.fetchComments(this.postId);
     this.feed = this.feed.flat();
     for (const comment of this.feed) {
-      console.log(comment.comment_text)
+      console.log(comment)
       //this.commentLikes = await this.getCommentLikes(comment.id)
-      this.commentAmount[comment.id] = await this.getCommentAmount(comment.id)
 
       this.likedComments[comment.id] = await this.isCommentLiked(comment.id, this.userId);
 
@@ -109,17 +104,9 @@ export default {
     },
     async getCommentLikes(comment_id) {
       const response = await axios.get(this.$store.state.API + `/getCommentLikeAmount/${comment_id}`);
-      //console.log("POST LIKES für POST_ID: " + comment_id + " Anzahl CommentLikes: " + response.data)
+      console.log("COMMENT LIKES für COMMENT_ID: " + comment_id + " Anzahl CommentLikes: " + response.data)
       return response.data
     },
-
-    async getCommentAmount(comment_id) {
-      const response = await axios.get(this.$store.state.API + `/getCommentsOfPostAmount/${comment_id}`);
-      //console.log("POST COMMENTS für POST_ID: " + comment_id + " Anzahl Comments: " + response.data)
-      console.log("POST KOMMENTARE FÜR " + comment_id + ", " + response.data)
-      return response.data
-    },
-
     async changeLikeButton(comment_id, user_id) {
       const response = await axios.get(this.$store.state.API + `/isCommentLiked/${comment_id}/${user_id}`);
       console.log(typeof (response.data))
@@ -135,10 +122,10 @@ export default {
     async isCommentLiked(comment_id, user_id) {
       const response = await axios.get(this.$store.state.API + `/isCommentLiked/${comment_id}/${user_id}`);
       return response.data;
-    },/*
-    visitCommentProfile(commentId) {
-      this.$router.push({ name: 'commentComments', query: { commentId } });
-    },*/
+    },
+    visitLikeProfile(commentId) {
+      this.$router.push({ name: 'commentLikeList', query: { commentId } });
+    },
   },
 
 }
