@@ -8,6 +8,7 @@
         <button @click="goToAccount" class="menu-item">Account Info</button>
         <button @click="goToMessenger" class="menu-item">Messenger</button>
         <button @click="goToFollowers" class="menu-item">Your Followers</button>
+        <button @click="goToCredits" class="menu-item">Credits</button>
         <button type="submit" @click="logout" class="menu-item">Logout</button>
       </div>
       <div v-if="isDropdownOpen" class="background" @click="closeDropdown"></div>
@@ -24,6 +25,9 @@ export default {
     };
   },
   methods: {
+    goToCredits(){
+      this.$router.push('/credits')
+    },
     toggleDropdown() {
       this.isDropdownOpen = !this.isDropdownOpen;
     },

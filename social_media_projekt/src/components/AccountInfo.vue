@@ -128,7 +128,7 @@ export default {
     async deleteProfile(){
       Swal.fire({
               title: 'Möchtest du dein Profil wirklich löschen??!',
-              icon: 'alert',
+              icon: 'warning',
               iconColor: '#2200cd',
               showCancelButton: true,
               cancelButtonText: "close",

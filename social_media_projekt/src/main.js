@@ -8,6 +8,7 @@ import store from "./store"
 import HomePage from "./components/Homepage"
 import FollowerPage from "./components/FollowerPage"
 import PostComments from "./components/PostComments"
+import CreditPage from "./components/CreditPage"
 
 import BootstrapVue3 from 'bootstrap-vue-3'
 
@@ -29,7 +30,9 @@ const routes = [
     {path: "/follower", component: FollowerPage, meta: {requiresAuth: true}},
     {path: "/postComments", component: PostComments, meta: {requiresAuth: true}, name: "postComments"},
     {path: "/postLikeList", component: PostLikeList, meta: {requiresAuth: true}, name: "postLikeList"},
-    {path: "/commentLikeList", component: CommentLikeList, meta: {requiresAuth: true}, name: "commentLikeList"}
+    {path: "/commentLikeList", component: CommentLikeList, meta: {requiresAuth: true}, name: "commentLikeList"},
+    {path: "/credits", component: CreditPage, meta: {requiresAuth: true}},
+
 ]
 const router = createRouter(
     {
@@ -40,7 +43,6 @@ const router = createRouter(
 )
 // always check if user is logged in before allowing routes other then login
 router.beforeEach((to, from, next) => {
-    console.log("Logged in?")
     if (to.meta.requiresAuth && !store.getters.isLoggedIn) {
       next('/login');
     } else {
