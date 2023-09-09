@@ -23,7 +23,7 @@
     <div v-else>
       <p>Choose a user to chat with</p>
     </div>
-      <Friendslist @userSelected="onFriendSelected"></Friendslist>
+      <Friendslist :fromMessenger="true" @userSelected="onFriendSelected"></Friendslist>
   </div>
 </template>
 <script>
@@ -45,6 +45,13 @@ export default {
       this.onFriendSelected(friend);
     }
   },
+  mounted(){
+    this.messageRefreshInterval = setInterval(() => {
+        if (this.friendId) {
+            this.onFriendSelected(this.friendId, this.friendName);
+        }
+    }, 10000);
+  },
   data() {
     return {
       API: this.$store.state.API,
@@ -56,8 +63,13 @@ export default {
       friendId: null,
       friendName: null,
       friends: [],
+      messageRefreshInterval: null,
     };
   },
+  beforeUnmount() {
+    // Clear the interval when the component is destroyed
+    clearInterval(this.messageRefreshInterval);
+},
   computed: {
     selectedUserMessages() {
       return this.selectedUser ? this.selectedUser.messages : [];
@@ -104,7 +116,7 @@ export default {
           content: this.newMessage,
         }});
         setTimeout(() => {
-      this.onFriendSelected(this.friendId);
+      this.onFriendSelected(this.friendId, this.friendName);
     }, 1000);
     console.log(response.data)
 

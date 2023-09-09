@@ -1,19 +1,16 @@
 <template>
   <div>
     <HeaderPart class="header"></HeaderPart>
-    <FriendsList class="col-md-2" :friends="friendsList" />
   <router-view></router-view>
 </div>
 </template>
 
 <script>
 import HeaderPart from './components/Header.vue';
-import FriendsList from './components/Friendslist.vue';
 export default {
   name: 'App',
   components: {
 HeaderPart,
-FriendsList
 },
 
 }

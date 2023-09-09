@@ -6,7 +6,12 @@
         <div class="post-header">
           <p>{{ post.username }}:</p>
         </div>
-        <div v-if="post.photo_id !== null" class="post-photo">
+        <div v-if="post.isAd" class="post-photo">
+          <a href="http://www.hs-flensburg.de" target="_blank">
+           <img src="../assets/HS_logo.png" alt="Advertisement" />
+            </a>
+        </div>
+        <div v-else-if="post.photo_id !== null" class="post-photo">
           <img :src="photoData[post.photo_id]" alt="Photo" />
         </div>
         <div class="post-text">{{ post.caption }}</div>
@@ -50,7 +55,6 @@ export default {
     console.log(this.friendsList)
     await this.fetchPostsLoop(this.friendsList)
 
-    console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
     this.feed = this.feed.flat();
     for (const post of this.feed) {
       console.log(post)
@@ -69,6 +73,7 @@ export default {
         this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
       }
     }
+    this.getAdPosts()
   },
   // watcher to always get the accurate ammount of likes on a post
   watch: {
@@ -86,7 +91,7 @@ export default {
       for (let friend of friendsList) {
         await this.fetchPosts(friend.userId, friend.username);
       }
-      await this.fetchPosts(this.userId, this.username);
+      //await this.fetchPosts(this.userId, this.username);
     },
     // method to get the posts of each friend of a user 
     async fetchPosts(userId, username) {
@@ -130,8 +135,29 @@ export default {
     },
 
     getAdPosts() {
-      // Vielleicht irgendwie alle 5 Posts oder so eine fake Werbung einbauen
-    },
+  const adPost = {
+    id: 'ad', 
+    username: 'Ad', 
+    photo_id: null,
+    caption: '#NoFreeAds',
+    created_at: new Date().toDateString(), 
+    isAd: true, 
+  };
+
+  const newFeed = [];
+  for (let i = 0; i < this.feed.length; i++) {
+    newFeed.push(this.feed[i]);
+    if ((i + 1) % 5 === 0) {
+      newFeed.push(adPost);
+    }
+  }
+  // If there are less than 5 posts add the ad at the end
+  if (this.feed.length < 5) {
+    newFeed.push(adPost);
+  }
+
+  this.feed = newFeed;
+},
 
     async likePost(post_id, user_id) {
       const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
@@ -154,7 +180,7 @@ export default {
     async getCommentAmount(post_id) {
       const response = await axios.get(this.$store.state.API + `/getCommentsOfPostAmount/${post_id}`);
       //console.log("POST COMMENTS für POST_ID: " + post_id + " Anzahl Comments: " + response.data)
-      console.log("POST KOMMENTARE FÜR " + post_id + ", " + response.data)
+      //console.log("POST KOMMENTARE FÜR " + post_id + ", " + response.data)
       return response.data
     },
 
@@ -166,7 +192,6 @@ export default {
         console.log(response.data)
         return true;
       } else {
-        console.log("No IF")
         return false;
       }
     },

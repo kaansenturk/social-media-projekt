@@ -136,7 +136,6 @@ export default {
         const response4 = await axios.get(this.$store.state.API + `/getAllFollowees/${this.$store.state.logged_user_id}`);
         const response5 = await axios.get(this.$store.state.API + `/readFollowees/${this.$store.state.logged_user_id}`);
 
-        console.log("API response:", response2.data);
         this.followerList = response2.data;
         this.followerNumber = response3.data;
         this.followeeNumber = response5.data;
