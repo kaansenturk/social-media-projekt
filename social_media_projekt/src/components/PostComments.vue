@@ -2,9 +2,9 @@
   <div class="row">
     <div class="col-md-2 account-info">
       <div class="title">
-        <img v-if="this.profileImageUrl == null" src="../assets/blank_profile_pic.webp" alt="Kein Profilbild"
+        <img v-if="this.profilePicData == null" src="../assets/blank_profile_pic.webp" alt="Kein Profilbild"
           class="profile-picture" />
-        <img v-else :src="this.profileImageUrl" alt="Profilbild" class="profile-picture">
+        <img v-else :src="this.profilePicData" alt="Profilbild" class="profile-picture">
         <div>{{ ownUsername }}</div>
       </div>
     </div>
@@ -18,11 +18,11 @@
       </div>
       <div class="post-text">{{ post.caption }}</div>
       <p class="post-date">{{ post.created_at }}</p>
-      <button @click="likePost(post.id, post.user_id)" class="btn">
+      <button @click="likePost(post.id, this.$store.state.logged_user_id)" class="btn">
         <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
         <i v-else class="fa-regular fa-heart"></i>
       </button>
-      <a href="" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
+      <a @click="visitPostLikeProfile(post.id)" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
       <button class="btn"><i class="fa-solid fa-message"></i></button>
       <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
     </div>
@@ -65,20 +65,18 @@ export default {
     await this.fetchPost();
     await this.fetchData();
 
+    if (this.profilePicId != null) {
+      this.profilePicData = await this.getPhoto(this.profilePicId);
+    }
 
-    console.log("POST: POST: POST: " + this.post)
     this.postLikes = await this.getPostLikes(this.post.id)
     this.commentAmount[this.post.id] = await this.getCommentAmount(this.post.id)
 
-    this.likedPosts[this.post.id] = await this.isPostLiked(this.post.id, this.post.user_id);
+    this.likedPosts[this.post.id] = await this.isPostLiked(this.post.id, this.$store.state.logged_user_id);
 
     const response = await this.getPostLikes(this.post.id);
     newLikedPostsCount[this.post.id] = response;
     this.likedPostsCount = newLikedPostsCount;
-
-    if (this.post.photo_id !== null) {
-      this.photoData[this.post.photo_id] = await this.getPhoto(this.post.photo_id);
-    }
   },
   // watcher to always get the accurate ammount of likes on a post
   watch: {
@@ -121,6 +119,11 @@ export default {
       try {
         const response = await axios.get(this.API + `/users/${this.post.user_id}`);
         this.username = response.data.username;
+
+        const response1 = await axios.get(this.API + `/users/${this.$store.state.logged_user}`);
+        if (response1.data.photo_id) {
+          this.profilePicId = response1.data.photo_id
+        }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -128,6 +131,7 @@ export default {
     async likePost(post_id, user_id) {
       const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
       let newLikedPosts = { ...this.likedPosts }; // Create a shallow copy
+      console.log(response.data)
       if (response.data == true) {
         await axios.post(this.$store.state.API + `/unlikePost/${post_id}/${user_id}`);
         newLikedPosts[post_id] = false;
@@ -151,6 +155,9 @@ export default {
     async isPostLiked(post_id, user_id) {
       const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
       return response.data;
+    },
+    visitPostLikeProfile(postId) {
+      this.$router.push({ name: 'postLikeList', query: { postId } });
     },
   }
 }

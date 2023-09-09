@@ -11,7 +11,7 @@
             <i v-if="likedComments[comment.id]" class="fa-solid fa-heart"></i>
             <i v-else class="fa-regular fa-heart"></i>
           </button>
-          <a href="" class="comment-likes">{{ likedCommentsCount[comment.id] || 0 }}</a>
+          <a @click="visitLikeProfile(comment.id)" class="comment-likes">{{ likedCommentsCount[comment.id] || 0 }}</a>
         </div>
       </div>
     </div>
@@ -122,6 +122,9 @@ export default {
     async isCommentLiked(comment_id, user_id) {
       const response = await axios.get(this.$store.state.API + `/isCommentLiked/${comment_id}/${user_id}`);
       return response.data;
+    },
+    visitLikeProfile(commentId) {
+      this.$router.push({ name: 'commentLikeList', query: { commentId } });
     },
   },
 
