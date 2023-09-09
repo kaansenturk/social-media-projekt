@@ -1,6 +1,6 @@
 <template>
-        <div :class="{'popup-mode': isPopupMode}" id="map">
-    <LMap :zoom="mapOptions.zoom" 
+  <div :class="{'popup-mode': isPopupMode, 'animate': isPopupMode}" id="map">
+  <LMap :zoom="mapOptions.zoom" 
   :center="mapOptions.center"
   ref="mapRef"
   @ready="fitBounds"
@@ -22,12 +22,13 @@
       </LMarker>
 
     </LMap>
+
     <button v-if="userLatLng[0] !== null" class="map-button" @click="centerOnUser">Find me</button>
     <button class="map-button" @click="zoomIn"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
 <button class="map-button" @click="zoomOut"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
     <button class="map-button" @click="toggleMapMode">
-            {{ isPopupMode ? 'Minimieren' : 'Maximieren' }}
-        </button>  
+            {{ isPopupMode ? 'Minimize' : 'Maximize' }}
+        </button>
   </div>
 
 </template>
@@ -183,17 +184,34 @@ const visitFriend = (friend) => {
     height: 25%;
     margin-right: 3px;
   }
+
   #map.popup-mode {
     position: fixed;
-    top: 10%;
+    top: 10.8%;
     left: 10%;
     right: 10%;
     bottom: 10%;
     width: 80vw; 
     height: 80vh; 
     z-index: 1000; 
-    background-color: rgba(255, 255, 255, 0.9); 
+  }
+
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
 }
+
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)} 
+  to {-webkit-transform: scale(1)}
+}
+  
+@keyframes animatezoom {
+  from {transform: scale(0)} 
+  to {transform: scale(1)}
+}
+
+
 .map-button {
   border-radius: 7px;
   background-color: #2200cd;

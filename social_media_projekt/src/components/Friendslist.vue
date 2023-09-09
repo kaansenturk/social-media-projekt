@@ -1,10 +1,16 @@
 <template>
-  <div class="friends-container">
-    <div v-for="friend in friendsList" :key="friend.userId" class="friend-item">
-      {{ friend.username }}
-      <button v-if="fromMessenger" @click="$emit('userSelected', friend.userId, friend.username)"><i class="fa-solid fa-message"></i></button>
-      <button v-else @click="goToMessenger"><i class="fa-solid fa-message"></i></button>
-      <button @click="visitUserProfile(friend.userId, friend.username, friend.email)"><i class="fa-solid fa-user"></i></button>
+<div class="friends-title">Your Friends:</div>
+  <div class="friends-container" v-if="friendsList.length > 0">
+    <div class="friend-list">
+      <div v-for="friend in friendsList" :key="friend.userId" class="friend-item">
+        <div class="friend-details">
+          <div class="friend-username">{{ friend.username }}</div>
+        </div>
+        <div class="friend-actions">
+          <button v-if="fromMessenger" @click="$emit('userSelected', friend.userId, friend.username)"><i class="fa-solid fa-message"></i></button>
+          <button @click="visitUserProfile(friend.userId, friend.username, friend.email)"><i class="fa-solid fa-user"></i></button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -97,31 +103,60 @@ async  getFriendsLocation(userId) {
 
 </script>
 
-<style>
-  button {
-    color: white;
-    background-color: blue;
-    border-radius: 10px;
-  }
-  .friends-container {
+<style scoped>
+.friends-container {
   display: flex;
   flex-direction: column;
-}
-
-.friend-item {
-  margin: 0px 5px 0px 5px;
-}
-
-.friends-container {
-    width: 12%;
+  width: 16%;
   position: fixed;
-  right: 20px; 
-  top: 40%; 
-  height: 40%;
-  transform: translateY(-50%);
-  border: solid 2px blue;
-  border-radius: 2px;
-  background-color: #ECF0F1;
+  top: 40%;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 }
-  
+
+.friends-title {
+  position: fixed; top: 10vh;
+  top: 320px;
+  left: 0;
+  display: flex;
+  width: 16%;
+  justify-content: center;
+  align-items: center;
+  height: 5%;
+  background-color: #142957;
+  color: #fff;
+  font-weight: bold;
+  z-index: 4;
+  }
+
+.friend-list {
+  overflow-y: auto;
+}
+
+.friend-item {  
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.friend-details {
+  flex-grow: 1;
+}
+
+.friend-username {
+  font-weight: bold;
+}
+
+.friend-actions button {
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  cursor: pointer;
+}
+
+.friend-actions button:hover {
+  background-color: #0056b3;
+}
 </style>

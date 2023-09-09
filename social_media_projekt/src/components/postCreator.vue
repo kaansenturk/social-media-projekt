@@ -1,6 +1,6 @@
 <template>
     <div class="post-container">  
-    <form>
+    <form class="post-form">
       <textarea  id="post_text" placeholder="What's on your mind..." required v-model="caption" />
       <div class="file-list">
       <div class="file-item" v-for="(file, index) in droppedFiles" :key="index">
@@ -142,11 +142,30 @@ export default {
 </script>
 
 <style>
+
+#post_text {
+  background-color: white;
+}
+
+.post-form {
+  width: 100%;
+}
+
+.post-container {
+  height: 15%;
+  margin-left: 20%;
+  padding: 10px;
+  background-color: #9ca5b8;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 10%;
+}
+
 .image-preview {
   max-width: 100%;
   max-height: 200px;
   object-fit: contain; 
 }
+
 .active {
   border: 2px dashed #0066ff;
 }
@@ -158,6 +177,7 @@ export default {
 .file-item {
   margin: 5px 0;
 }
+
 .file-uploader {
   display: flex;
   flex-direction: column;
@@ -172,18 +192,29 @@ export default {
   text-align: center;
   cursor: pointer;
 }
+
 #post_text {
   width: 100%;
   height: 100px;
+  padding: 10px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
 }
-  
-  .post-container {
-    height: 20%;
-    padding: 30px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
+
+.post-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #142957;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.post-container button:hover {
+  background-color: #17008a;
+}
   .login-container h1 {
     text-align: center;
   }
