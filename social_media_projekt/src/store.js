@@ -2,13 +2,10 @@ import { createStore } from 'vuex';
 
 // Initial state function
 const initialState = () => ({
-  count: 1, // Example initial state
   logged_user: null,
   logged_user_id: null,
-  API: "",
   friendsList: [],
 });
-
 export default createStore({
   state: initialState(),
   mutations: {
