@@ -4,29 +4,30 @@
       <h2 class="titleFeed" style="margin-left: 20px;">Your Feed: </h2>
       <div v-for="post in this.feed" :key="post.id" class="post-item">
         <div class="post-header">
-          <p>{{ post.username }}:</p>
+          <p class="username">{{ post.username }}:</p>
         </div>
         <div v-if="post.isAd" class="post-photo">
           <a href="http://www.hs-flensburg.de" target="_blank">
-           <img src="../assets/HS_logo.png" alt="Advertisement" />
-            </a>
+            <img src="../assets/HS_logo.png" alt="Advertisement" />
+          </a>
         </div>
         <div v-else-if="post.photo_id !== null" class="post-photo">
           <img :src="photoData[post.photo_id]" alt="Photo" />
         </div>
         <div class="post-text">{{ post.caption }}</div>
         <p class="post-date">{{ post.created_at }}</p>
-        <button @click="likePost(post.id, userId)" class="btn">
-          <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
-          <i v-else class="fa-regular fa-heart"></i>
-        </button>
-        <a @click="visitLikeProfile(post.id)" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
-        <button @click="visitPostProfile(post.id)" class="btn"><i class="fa-solid fa-message"></i></button>
-        <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
+        <div v-if="post.id !== 'ad'">
+          <button @click="likePost(post.id, userId)" class="btn">
+            <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
+            <i v-else class="fa-regular fa-heart"></i>
+          </button>
+          <a @click="visitLikeProfile(post.id)" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
+          <button @click="visitPostProfile(post.id)" class="btn"><i class="fa-solid fa-message"></i></button>
+          <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
+        </div>
       </div>
     </div>
   </div>
-  
 </template>
 
 <script>
@@ -53,7 +54,7 @@ export default {
   // initializes the page with friends, posts, likes etc.
   async mounted() {
     let newLikedPostsCount = { ...this.likedPostsCount };
-    console.log(this.friendsList)
+    console.log(this.$store.state.friendsList)
     await this.fetchPostsLoop(this.friendsList)
 
     this.feed = this.feed.flat();
@@ -136,29 +137,29 @@ export default {
     },
 
     getAdPosts() {
-  const adPost = {
-    id: 'ad', 
-    username: 'Ad', 
-    photo_id: null,
-    caption: '#NoFreeAds',
-    created_at: new Date().toDateString(), 
-    isAd: true, 
-  };
+      const adPost = {
+        id: 'ad',
+        username: 'Ad',
+        photo_id: null,
+        caption: '#NoFreeAds',
+        created_at: new Date().toDateString(),
+        isAd: true,
+      };
 
-  const newFeed = [];
-  for (let i = 0; i < this.feed.length; i++) {
-    newFeed.push(this.feed[i]);
-    if ((i + 1) % 5 === 0) {
-      newFeed.push(adPost);
-    }
-  }
-  // If there are less than 5 posts add the ad at the end
-  if (this.feed.length < 5) {
-    newFeed.push(adPost);
-  }
+      const newFeed = [];
+      for (let i = 0; i < this.feed.length; i++) {
+        newFeed.push(this.feed[i]);
+        if ((i + 1) % 5 === 0) {
+          newFeed.push(adPost);
+        }
+      }
+      // If there are less than 5 posts add the ad at the end
+      if (this.feed.length < 5) {
+        newFeed.push(adPost);
+      }
 
-  this.feed = newFeed;
-},
+      this.feed = newFeed;
+    },
 
     async likePost(post_id, user_id) {
       const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
@@ -212,10 +213,11 @@ export default {
 }
 </script>
 <style>
-
 .titleFeed {
-  margin-right: 18%; /* Hier den Abstand nach Bedarf anpassen */
-  font-size: 34px; /* Sie können auch die Schriftgröße anpassen */
+  margin-right: 18%;
+  /* Hier den Abstand nach Bedarf anpassen */
+  font-size: 34px;
+  /* Sie können auch die Schriftgröße anpassen */
 }
 
 .feedContainer {
@@ -228,7 +230,8 @@ export default {
 }
 
 .post-text {
-  font-family: 'Trebuchet MS', sans-serif
+  font-family: 'Trebuchet MS', sans-serif;
+  color: #333;
 }
 
 .post-item {
@@ -254,6 +257,11 @@ export default {
   margin-bottom: 10px;
 }
 
+.post-likes {
+  color: #333;
+  /* Set your desired text color here */
+}
+
 .post-photo img {
   max-width: 60%;
   height: auto;
@@ -265,11 +273,18 @@ button {
   cursor: pointer;
   outline: 0;
   color: #AAA;
-
 }
 
 .btn:focus {
   outline: none;
 }
 
+.comment-amount {
+  color: #333;
+}
+
+.username {
+  color: #333;
+  font-size: 150%;
+}
 </style>
