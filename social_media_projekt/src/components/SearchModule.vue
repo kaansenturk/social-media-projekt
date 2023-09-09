@@ -89,9 +89,6 @@ export default {
       if (result.value) {
         this.clearSearchResults()
  } 
-else{
-  console.log("ciao")
-}
 window.location.reload();
 })
       }

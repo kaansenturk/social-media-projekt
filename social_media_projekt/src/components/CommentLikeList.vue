@@ -101,7 +101,6 @@ export default {
         async fetchComment() {
             try {
                 const response = await axios.get(this.API + `/getComment/${this.commentId}`);
-                console.log(response.data)
                 this.comment = response.data;
             } catch (error) {
                 console.error("Error fetching comment:", error);
@@ -123,7 +122,6 @@ export default {
         async likeComment(comment_id, user_id) {
             const response = await axios.get(this.$store.state.API + `/isCommentLiked/${comment_id}/${user_id}`);
             let newLikedComments = { ...this.likedComments }; // Create a shallow copy
-            console.log(response.data)
             if (response.data == true) {
                 await axios.post(this.$store.state.API + `/unlikeComment/${comment_id}/${user_id}`);
                 newLikedComments[comment_id] = false;

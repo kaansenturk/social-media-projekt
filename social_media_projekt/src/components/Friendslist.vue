@@ -2,7 +2,8 @@
   <div class="friends-container">
     <div v-for="friend in friendsList" :key="friend.userId" class="friend-item">
       {{ friend.username }}
-      <button  @click="$emit('userSelected', friend.userId, friend.username)"><i class="fa-solid fa-message"></i></button>
+      <button v-if="fromMessenger" @click="$emit('userSelected', friend.userId, friend.username)"><i class="fa-solid fa-message"></i></button>
+      <button v-else @click="goToMessenger"><i class="fa-solid fa-message"></i></button>
       <button @click="visitUserProfile(friend.userId, friend.username, friend.email)"><i class="fa-solid fa-user"></i></button>
     </div>
   </div>
@@ -18,6 +19,7 @@ export default {
       required: false,
     },
     userId: Number,
+    fromMessenger: Boolean,
   },
   data() {
     return {
@@ -28,10 +30,11 @@ export default {
     this.getFriends();
   },
     methods: {
+      goToMessenger(){
+        this.$router.push("/messenger")
+      },
       visitUserProfile(friendId, username,  email){
-        this.$router.push({ name: 'friend', query: { friendId, username, email } }).then(() => {
-          window.location.reload();
-        });
+        this.$router.push({ name: 'friend', query: { friendId, username, email } });
       },
   async getUserById (userId)  {
   try {
@@ -45,16 +48,15 @@ export default {
 async  getFriendsLocation(userId) {
           try {
             const response = await axios.get(this.API + `/get_user_location/${userId}`)
-              console.log(response.data)
               return response.data
-          } catch {
-            console.log("hallo")
+          } catch(error){
+            console.log(error)
           }
         },
   async getFriends(){
       try {
         const user_id = this.$store.state.logged_user_id
-        const response =  await axios.get(this.API + `/getAllFollowees/${user_id}`);
+        const response =  await axios.get(this.API + `/getAllFollowers/${user_id}`);
     
     if (response.status == 200) {
       this.$store.commit('setFriendsList', []);
@@ -63,7 +65,7 @@ async  getFriendsLocation(userId) {
     for (const followee of response.data) {
       let userLocation = null;
       try {
-        const userId = followee.followee_id;
+        const userId = followee.user_id;
         const user =  await this.getUserById(userId);
         
         if (user) {
@@ -76,14 +78,12 @@ async  getFriendsLocation(userId) {
           });
         }
       }  
-         catch {
-          console.log("Error")
+         catch (error){
+          console.log(error)
         }
       }
-      console.log(List)
       this.friendsList = List;
       this.$store.commit('setFriendsList', List);
-      console.log(this.$store.state.friendsList)
       return List;
     }catch (error){
 

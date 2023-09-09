@@ -62,6 +62,7 @@
           <button @click="editMode = true" v-if="!editMode" title="Userinfo ändern">Edit</button>
           <button><i class="fa fa-wrench" title="Passwort ändern"
               @click="changePasswordMode = !changePasswordMode"></i></button>
+              <button @click="deleteProfile" title="Profil löschen!" class="fa fa-trash "></button>
         </span>
       </div>
     </div>
@@ -124,6 +125,34 @@ export default {
     },
   },
   methods: {
+    async deleteProfile(){
+      Swal.fire({
+              title: 'Möchtest du dein Profil wirklich löschen??!',
+              icon: 'alert',
+              iconColor: '#2200cd',
+              showCancelButton: true,
+              cancelButtonText: "close",
+              confirmButtonText: "Delete Profile",
+              confirmButtonColor: '#2200cd',
+            }).then(async (result) => {
+              if (result.value) {
+                try {
+                const response = await axios.post(this.$store.state.API + `/deleteUser/${this.username}`)
+                if (response.status == 200){
+                  this.$store.dispatch('logout');
+                  this.$router.push("/login")
+                }
+                } catch (error){
+                  alert("Deleting did not work!")
+                }
+              }
+              else {
+                console.log("ciao")
+              }
+            })
+      
+    },
+    
     closeDialog() {
       this.showDialog = false;
     },
@@ -205,9 +234,6 @@ export default {
               if (result.value) {
                 this.$router.push("/login")
               }
-              else {
-                console.log("ciao")
-              }
             })
           }
         } catch (error) {
@@ -246,10 +272,10 @@ export default {
           username: this.editedUsername,
           email: this.editedEmail,
         });
-        console.log('User updated:', response.data);
+        if (response.status == 200){
         this.username = this.editedUsername;
         this.email = this.editedEmail;
-
+        }
         this.editMode = false;
         this.$store.dispatch('login', { user: this.username, user_id: this.$store.state.logged_user_id });
         localStorage.setItem('logged_user', this.username)
@@ -263,8 +289,6 @@ export default {
         const response2 = await axios.get(this.$store.state.API + `/readFollowers/${this.$store.state.logged_user_id}`);
         const response3 = await axios.get(this.$store.state.API + `/readFollowees/${this.$store.state.logged_user_id}`);
 
-        console.log("FOLLOWERS:  " + response2.data + " FOLLOWEES: " + response3.data)
-        console.log(this.$store.state.API, this.$store.state.logged_user_id, response.data)
         this.followerNumber = response2.data
         this.followingNumber = response3.data
         this.email = response.data.email

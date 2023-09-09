@@ -67,8 +67,6 @@ export default {
         if (this.profilePicId != null) {
             this.profilePicData = await this.getPhoto(this.profilePicId);
         }
-
-        console.log("POST: POST: POST: " + this.post)
         this.postLikes = await this.getPostLikes(this.post.id)
         this.commentAmount[this.post.id] = await this.getCommentAmount(this.post.id)
 

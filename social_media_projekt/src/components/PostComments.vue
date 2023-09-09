@@ -109,10 +109,10 @@ export default {
     async fetchPost() {
       try {
         const response = await axios.get(this.API + `/getPost/${this.postId}`);
-        console.log(response.data)
+  
         this.post = response.data;
       } catch (error) {
-        console.error("Error fetching post:", error);
+        console.error(error);
       }
     },
     async fetchData() {
@@ -149,7 +149,6 @@ export default {
     async getCommentAmount(post_id) {
       const response = await axios.get(this.$store.state.API + `/getCommentsOfPostAmount/${post_id}`);
       //console.log("POST COMMENTS für POST_ID: " + post_id + " Anzahl Comments: " + response.data)
-      console.log("POST KOMMENTARE FÜR " + post_id + ", " + response.data)
       return response.data
     },
     async isPostLiked(post_id, user_id) {

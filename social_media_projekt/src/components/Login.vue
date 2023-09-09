@@ -51,8 +51,9 @@ export default {
             username: this.username,
             password: this.password,
           })
-          console.log(response.status)
+          if (response.status == 200){
           this.showSuccess();
+          }
         }
         catch
         {
@@ -152,11 +153,7 @@ export default {
         confirmButtonColor: '#2200cd',
       }).then((result) => {
         if (result.value) {
-          console.log("Hi")
           this.showRegister = !this.showRegister
-        }
-        else {
-          console.log("ciao")
         }
       })
     },
