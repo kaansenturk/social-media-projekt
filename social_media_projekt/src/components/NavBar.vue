@@ -29,12 +29,12 @@
 </script>
   <style scoped>
   .navbar {
-    background-color: white;
+    background-color: transparent;
     color: purple;
     display: flex;
     justify-content: center;
     max-height: 200px;
-    height: 85px;
+    height: 100px;
     width: 100%;
   }
   

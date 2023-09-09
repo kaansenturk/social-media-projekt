@@ -1,7 +1,7 @@
 <template>
     <div class="feedContainer">
     <div class="col-md-7 post-list mx-auto">
-      <h2 class="title">Your Feed: </h2>
+      <h2 class="titleFeed" style="margin-left: 20px;">Your Feed: </h2>
       <div v-for="post in this.feed" :key="post.id" class="post-item">
         <div class="post-header">
           <p>{{ post.username }}:</p>
@@ -21,6 +21,7 @@
       </div>
     </div>
   </div>
+  
 </template>
 
 <script>
@@ -176,19 +177,35 @@ visitPostProfile(postId){
 }
 </script>
 <style>
+
+.titleFeed {
+  margin-right: 18%; /* Hier den Abstand nach Bedarf anpassen */
+  font-size: 34px; /* Sie können auch die Schriftgröße anpassen */
+}
+
+.feedContainer {
+  color: white;
+  font-family: 'Trebuchet MS', sans-serif;
+}
+
+.post-list {
+  z-index: 1;
+}
+
 .post-text {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Trebuchet MS', sans-serif
 }
   .post-item {
-      border: 1px solid blue;
+      border: 1px solid #17008a;
       padding: 20px;
       margin-bottom: 20px;
-      background-color: #ECF0F1;
+      background-color: #142957;
       border-radius: 5px;
       max-width: 90%;
       overflow: hidden;
       text-align: left;
       font-size: 20px;
+      margin-left: -40px;
     }
 
     .post-date {
@@ -219,7 +236,4 @@ button{
   outline: none;
 }
 
-.green{
-  color: green;
-}
 </style>

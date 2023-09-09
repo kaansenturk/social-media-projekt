@@ -4,6 +4,9 @@
       <div>
         <NavBar v-if="isUserLoggedIn" id="navbar"></NavBar>
         <img id="app_icon" alt="App Logo" src="../assets/hacker.png">
+          <div class="logo-container">
+              Social Media Projekt
+          </div>
       </div>
       <div class="d-flex justify-content-end">
         <div v-if="isUserLoggedIn">
@@ -47,15 +50,31 @@ NavBar,
 
 <style>
 #navbar {
-  background-color: #F8F9F9;
+  background-color: #3c4e74;
+}
+
+.Header {
+  background-color: transparent;
+}
+
+.logo-container {
+  position: absolute;
+  top: 30px;
+  right: 4%;
+  text-align: center;
+  width: 100%; 
+  height: 110px;
+  font-size: 24px;
+  font-family: 'Courier New', monospace;
+  color: #fff;
 }
 
 #app_icon {
   width: 70px;
   position: absolute;
   display: inline-block;
-  top: 10px; 
-  left: 80px; 
+  top: 10px;
+  left: 80px;
 }
 
 /* Overriding Bootstrap's sticky-top styles to make sure it sticks to the top */
@@ -63,5 +82,4 @@ NavBar,
   position: sticky;
   z-index: 1020; /* Ensure it appears above other elements */
 }
-  
 </style>

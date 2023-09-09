@@ -1,7 +1,7 @@
 <template>
   <div class="search-container">
     <div class="row">
-      <div class="col-md-9">
+      <div class="col-md-8 search">
         <input
           id="post_text"
           class="form-control"
@@ -14,6 +14,8 @@
         <button class="btn btn-primary btn-block search-button" @click.prevent="handleSearch">
           <i class="fa-solid fa-magnifying-glass" style="color: #f1dbff;"></i>
         </button>
+      </div>
+      <div class="col-md-2 button-group">
         <div v-if="searchResults.length"><i class="fa fa-square-xmark" @click="clearSearchResults" style=" cursor: pointer" title="Liste leeren"></i></div>
       </div>
     </div>
@@ -23,12 +25,9 @@
           {{ user.username }}
           <button class="btn btn-sm btn-secondary float-right" @click="followUser(user.id, user.username)">Follow</button>
           <button class="btn btn-sm btn-secondary float-right" @click="openChat"><i class="fa-regular fa-message"></i></button>
-
         </li>
       </ul>
-      
     </div>
-    
   </div>
 </template>
 
@@ -114,6 +113,7 @@ window.location.reload();
 .form-control {
   border-radius: 10px 0 0 10px;
   line-height: 1;
+  padding: 6px 12px;
 }
 .search-container {
   position: absolute;

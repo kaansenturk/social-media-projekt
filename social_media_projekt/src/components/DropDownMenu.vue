@@ -7,7 +7,7 @@
         <button @click="goToHome" class="menu-item">Home</button>
         <button @click="goToAccount" class="menu-item">Account Info</button>
         <button @click="goToMessenger" class="menu-item">Messenger</button>
-        <button @click="goToFollowers" class="menu-item">Deine Follower</button>
+        <button @click="goToFollowers" class="menu-item">Your Followers</button>
         <button type="submit" @click="logout" class="menu-item">Logout</button>
       </div>
       <div v-if="isDropdownOpen" class="background" @click="closeDropdown"></div>
@@ -72,7 +72,7 @@ export default {
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color:purple;
+  color:white;
 }
 
 .dropdown-button2 {
@@ -84,7 +84,7 @@ export default {
   display: inline-block;
   top: 19px; 
   left: 9px; 
-  color:purple;
+  color:white;
 }
 
 
@@ -100,12 +100,13 @@ export default {
   padding: 15px 15px;
   width: 100%;
   text-align: left;
-  color:purple;
+  color:white;
 }
 
 .menu-item:hover {
-  background-color: #ECF0F1;
+  background-color: #143687;
 }
+
 .background {
   position: fixed;
   top: 0;
@@ -121,9 +122,7 @@ export default {
   position: absolute;
   top: -20px;
   left: -10px;
-  background-color:#F8F9F9;
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #142957;
   padding: 40px;
   font-size: 18px;
   z-index: 1000;
