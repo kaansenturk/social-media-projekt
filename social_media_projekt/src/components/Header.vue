@@ -1,12 +1,12 @@
 <template>
   <div class="Header sticky-top">
-    <div class="row align-items-center">
-      <div>
-        <NavBar v-if="isUserLoggedIn" id="navbar"></NavBar>
+    <div class="row">
+      <div class="col-md-0">
+        <div v-if="isUserLoggedIn" id="headerBar"></div>
         <img id="app_icon" alt="App Logo" src="../assets/hacker.png">
-          <div class="logo-container">
-              Social Media Projekt
-          </div>
+        <div class="logo-container">
+          Social Media Projekt
+        </div>
       </div>
       <div class="d-flex justify-content-end">
         <div v-if="isUserLoggedIn">
@@ -20,15 +20,13 @@
 
 <script>
 import SearchModule from './SearchModule.vue';
-import NavBar from './NavBar.vue';
 import { mapState } from 'vuex';
 import DropDownMenu from "./DropDownMenu.vue";
 export default {
   name: 'HeaderPart',
   components: {
-SearchModule,
-DropDownMenu,
-NavBar,
+    SearchModule,
+    DropDownMenu,
   },
   props: {
   },
@@ -40,21 +38,28 @@ NavBar,
   },
   data() {
     return {
-    }},
-    methods: {
-},
+    }
+  },
+  methods: {
+  },
 
 }
 
 </script>
 
 <style>
+.row {
+  max-width: 100%;
+}
+
 #navbar {
   background-color: #3c4e74;
 }
 
 .Header {
-  background-color: transparent;
+  background-color: #DAF7A6;
+  height: 100px;
+  border-bottom: 1px solid;
 }
 
 .logo-container {
@@ -62,7 +67,7 @@ NavBar,
   top: 30px;
   right: 4%;
   text-align: center;
-  width: 100%; 
+  width: 100%;
   height: 110px;
   font-size: 24px;
   font-family: 'Courier New', monospace;
@@ -80,6 +85,8 @@ NavBar,
 /* Overriding Bootstrap's sticky-top styles to make sure it sticks to the top */
 .sticky-top {
   position: sticky;
-  z-index: 1020; /* Ensure it appears above other elements */
+  z-index: 1020;
+  /* Ensure it appears above other elements */
 }
+
 </style>

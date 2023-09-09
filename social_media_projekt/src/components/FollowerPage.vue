@@ -177,10 +177,11 @@ export default {
 }
 
 .account-info {
-  background-color: #2200cd;
-  color: white;
+  background-color: #DAF7A6;
+  color: #2C3E50;
   padding: 20px;
   margin: 15px;
+  max-height: 400px;
 }
 
 .title {
@@ -235,5 +236,6 @@ export default {
   height: 70px;
   border-radius: 50%;
   margin-bottom: 10px;
-}</style>
+}
+</style>
   

@@ -131,10 +131,11 @@ export default {
 }
 
 .user-item {
+    display: flex;
     border: 1px solid blue;
     padding: 20px;
     margin-bottom: 20px;
-    background-color: #ECF0F1;
+    background-color: #DAF7A6;
     border-radius: 5px;
     max-width: 90%;
     overflow: hidden;
@@ -142,6 +143,13 @@ export default {
     font-size: 20px;
     max-height: 200px;
     width: 200px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.user-name {
+    color: #555
 }
 
 .user-date {
