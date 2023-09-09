@@ -131,8 +131,10 @@ export default {
 }
 </script>
 <style>
+
 .comment-text {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Trebuchet MS', sans-serif;
+;
 }
 
 .comment-item {

@@ -1,17 +1,17 @@
 <template>
-  <div class="row">
-    <div class="col-md-2 account-info">
+    <div class="row mx-auto">
+      <div class="account-info">
       <div class="title">
         <img v-if="this.profileImageUrl == null" src="../assets/blank_profile_pic.webp" alt="Kein Profilbild" class="profile-picture" />
         <img v-else :src="this.profileImageUrl" alt="Profilbild" class="profile-picture">
         <div>{{ username }}</div>
       </div>
     </div>
-    <PostCreator class="col-md-7"/>
-    <FriendsList class="col-md-2" :friends="friendsList"/>
+    <PostCreator class="col-md-6"/>
+    <FriendsList class="col-md-2 mx-auto" :friends="friendsList"/>
   </div>
   <FriendsMap v-if="userLocation && userLocation.length ===  2 && friendsList.length > 0" :user="userLocation" :friendsList="this.$store.state.friendsList" class="map-container"></FriendsMap>
-  <UserFeed v-if="friendsList.length > 0"></UserFeed>
+  <UserFeed v-if="friendsList.length >= 0" class="userFeed"></UserFeed>
 </template>
 <script>
 import axios from 'axios';
@@ -64,13 +64,6 @@ export default {
       }
     },
   },
-  // watch: {
-  //   async profileImageUrl(newProfilePicId, oldProfilePicId) {
-  //     if (newProfilePicId !== oldProfilePicId) {
-  //       this.profileImageUrl = newProfilePicId
-  //     }
-  //   },
-  // },
   methods: {
     // method to get initial Userdata
     async fetchUserData(){
@@ -119,16 +112,29 @@ export default {
 </script>
     
 <style scoped>
+
+.row {
+  background-color: #3c4e74;
+}
+
 .map-container {
   position: fixed; right: 1vh; bottom: 4vh;
   width: 15%;
 }
+
 .account-info {
-  background-color: #2200cd;
+  position: fixed; top: 10vh;
+  background-color: #142957;
   color: white;
-  padding: 35px;
-  margin-left: 15px;
-  height: fit-content;
+  padding: 80px;
+  width: 16%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: top;
+  align-items: center;
+  border-radius: 8px;
 }
 
 .title {
@@ -147,4 +153,12 @@ export default {
   border-radius: 50%;
   margin-bottom: 10px; 
 }
+
+.userFeed {
+  z-index: 1;
+  background-color: #3c4e74;
+  padding: 40px;
+  min-height: 70vh;
+}
+    
 </style>
