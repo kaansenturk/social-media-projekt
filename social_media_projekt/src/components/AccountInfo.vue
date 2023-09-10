@@ -15,7 +15,7 @@
         title="Change profilepicture"
         @click="showDialog = true"></i>
     </div>
-    <div class="account-info mx-auto text-center">
+    <div class="account-info mx-auto">
       <h2 class="title">Account Information</h2>
       <dialog :open="showDialog">
         <h2>Choose a new profile picture</h2>
@@ -87,12 +87,12 @@
         </span>
       </div>
     </div>
-    <FriendsList class="col-md-2" />
+    
     <UserOnlyFeed 
-      class="mx-auto"
       :userId="this.$store.state.logged_user_id"
       :username="username" />
   </div>
+  <FriendsList />
 </template>
 <script>
 import FriendsList from "./Friendslist.vue";
@@ -390,6 +390,7 @@ export default {
   color: white;
   padding: 20px;
   border-radius: 10px;
+  max-width: 40%;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -443,6 +444,7 @@ button:hover {
   height: 70px;
   border-radius: 50%;
   margin-bottom: 20px;
+  margin-top:5px;
 }
 
 .profile-picture i.fa-pencil {

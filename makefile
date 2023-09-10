@@ -4,11 +4,15 @@ init: install-requirements delete-db init-db start-backend install-frontend star
 start:  start-backend install-frontend start-frontend
 setup-server:
 	@echo "Updating package lists..."
-	sudo apt-get update
+	sudo apt-get update	
 	@echo "Installing system dependencies..."
 	sudo apt-get install -y python3-pip
 	curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 	sudo apt-get install -y nodejs
+test:
+	@echo "Start testing"
+	cd src
+	pytest
 
 install-requirements:
 	@echo "Installing Python requirements..."

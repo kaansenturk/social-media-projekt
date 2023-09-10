@@ -80,7 +80,7 @@ export default {
       interval = setInterval(() => {
         currentLogoIndex.value = (currentLogoIndex.value + 1) % logos.length;
         currentLogo.value = logos[currentLogoIndex.value];
-      }, 4000);
+      }, 2000);
     });
 
     onUnmounted(() => {

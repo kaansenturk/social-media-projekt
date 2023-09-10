@@ -91,6 +91,11 @@ export default {
       this.post.id,
       this.$store.state.logged_user_id
     );
+    if (this.post.photo_id !== null) {
+      this.photoData[this.post.photo_id] = await this.getPhoto(
+        this.post.photo_id
+      );
+    }
 
     const response = await this.getPostLikes(this.post.id);
     newLikedPostsCount[this.post.id] = response;
@@ -221,7 +226,7 @@ export default {
   cursor: pointer;
 }
 .account-info {
-  background-color: #2200cd;
+  background-color: #284585;
   color: white;
   padding: 35px;
   height: fit-content;

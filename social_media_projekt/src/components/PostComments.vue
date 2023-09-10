@@ -224,7 +224,7 @@ export default {
   margin-bottom: 20px;
   background-color: #aaa;
   border-radius: 5px;
-  max-width: 70%;
+  max-width: 50%;
   overflow: hidden;
   text-align: left;
   font-size: 20px;
