@@ -3,6 +3,7 @@
     <div v-if="profilePicId !== null">
       <img class="profile-picture" :src="profilePicData" /><i
         class="fa-solid fa-pencil"
+        title="Change profilepicture"
         @click="showDialog = true"></i>
     </div>
     <div v-else>
@@ -11,6 +12,7 @@
         alt="Profilbild"
         class="profile-picture" /><i
         class="fa-solid fa-pencil"
+        title="Change profilepicture"
         @click="showDialog = true"></i>
     </div>
     <div class="col-md-5 account-info mx-auto text-center">
@@ -48,15 +50,15 @@
         <div v-if="changePasswordMode">
           <form @submit.prevent="changePassword">
             <div class="info-item">
-              <label for="username">Altes Passwort: </label>
+              <label for="username">Old password: </label>
               <input type="password" v-model="oldPassword" id="password" />
             </div>
             <div class="info-item">
-              <label for="email">Neues Passwort: </label>
+              <label for="email">New password: </label>
               <input type="password" v-model="newPassword" id="password" />
             </div>
             <div class="info-item">
-              <label for="email">Wiederholen: </label>
+              <label for="email">Repeat password: </label>
               <input type="password" v-model="passwordRepeat" id="password" />
             </div>
             <button type="submit">Save</button>
@@ -69,23 +71,23 @@
           <button
             @click="editMode = true"
             v-if="!editMode"
-            title="Userinfo ändern">
+            title="change userinfo">
             Edit
           </button>
           <button>
             <i
               class="fa fa-wrench"
-              title="Passwort ändern"
+              title="change password"
               @click="changePasswordMode = !changePasswordMode"></i>
           </button>
           <button
             @click="deleteProfile"
-            title="Profil löschen!"
+            title="Delete profile!"
             class="fa fa-trash"></button>
         </span>
       </div>
     </div>
-    <FriendsList class="col-md-2" :friends="friendsList" />
+    <FriendsList class="col-md-2" />
     <UserOnlyFeed
       :userId="this.$store.state.logged_user_id"
       :username="username" />
@@ -168,8 +170,6 @@ export default {
           } catch (error) {
             alert("Deleting did not work!");
           }
-        } else {
-          console.log("ciao");
         }
       });
     },
@@ -259,6 +259,7 @@ export default {
             }).then((result) => {
               if (result.value) {
                 this.$router.push("/login");
+                this.$store.dispatch("logout");
               }
             });
           }
@@ -301,10 +302,9 @@ export default {
     async saveChanges() {
       try {
         if (this.editedUsername == "") {
-          this.editedUsername = this.username
-        }
-        else if (this.editedEmail == ""){
-          this.editedEmail = this.email
+          this.editedUsername = this.username;
+        } else if (this.editedEmail == "") {
+          this.editedEmail = this.email;
         }
         const response = await axios.put(
           this.$store.state.API + `/update_user/${this.username}`,
@@ -373,10 +373,9 @@ export default {
 </script>
 
 <style scoped>
-
 .container-fluid {
   background-color: #3c4e74;
-  z-index:-2
+  z-index: -2;
 }
 
 .map-container {
@@ -386,7 +385,7 @@ export default {
 }
 
 .account-info {
-  background-color:  #142957;
+  background-color: #142957;
   color: white;
   padding: 20px;
   border-radius: 10px;
@@ -453,6 +452,8 @@ button:hover {
   color: white;
   border-radius: 50%;
   padding: 5px;
+}
+i.fa-pencil:hover {
   cursor: pointer;
 }
 
@@ -509,5 +510,4 @@ button:hover {
 .delete-profile-button:hover {
   background-color: #b32b27;
 }
-
 </style>

@@ -2,67 +2,118 @@
   <div class="row">
     <div class="col-md-3 account-info">
       <div v-if="profilePicId !== null">
-        <img class="profile-picture" :src="profilePicData"/>
+        <img class="profile-picture" :src="profilePicData" />
       </div>
       <div v-else>
         <img src="../assets/blank_profile_pic.webp" class="profile-picture" />
       </div>
       <h2 class="title">Account Information</h2>
       <div class="info">
+        <div class="info-item"><strong>Username:</strong> {{ username }}</div>
+        <div class="info-item"><strong>Email:</strong> {{ email }}</div>
         <div class="info-item">
-          <strong>Username:</strong> {{ username }}
-        </div>
-        <div class="info-item">
-          <strong>Email:</strong> {{ email }}
-        </div>
-        <div class="info-item">
-          <strong>{{ currentList }}:</strong> {{ currentList === 'Followers' ? followerNumber : followeeNumber }}
+          <strong>{{ currentList }}:</strong>
+          {{ currentList === "Followers" ? followerNumber : followeeNumber }}
         </div>
       </div>
     </div>
     <div class="col-md-9 follower-list">
       <div class="list-header">
-        <h2 :style="{ fontFamily: 'Trebuchet MS, sans-serif', color: 'white' }">Your {{ currentList === 'Followers' ? 'Follower' : 'Followees' }}</h2>
-        <button class="toggle-button" @click="toggleList">Switch to {{ currentList === 'Followers' ? 'Followees' : 'Followers' }}</button>
+        <h2 :style="{ fontFamily: 'Trebuchet MS, sans-serif', color: 'white' }">
+          Your {{ currentList === "Followers" ? "Follower" : "Followees" }}
+        </h2>
+        <button class="toggle-button" @click="toggleList">
+          Switch to
+          {{ currentList === "Followers" ? "Followees" : "Followers" }}
+        </button>
       </div>
-        <div v-if="currentList === 'Followers'">
-          <div v-if="followerList.length === 0" class="no-follower">
-            <p>Nobody's following you yet</p>
-          </div>
-          <div v-for="follower in followerList" :key="follower.id" class="follower-item">
-            <div class="profile-picture-container">
-              <img v-if="follower.profilePicData" :src="follower.profilePicData" class="profile-picture">
-              <img v-else src="../assets/blank_profile_pic.webp" alt="Default Profile Picture" class="profile-picture">
-            </div>
-            <div @click="visitUserProfile(follower.id, follower.username, follower.email)" class="follower-name" :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">{{ follower.username }}</div>
-            <div class="follower-email" :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">{{ follower.email }}</div>
-          </div>
+      <div v-if="currentList === 'Followers'">
+        <div v-if="followerList.length === 0" class="no-follower">
+          <p>Nobody's following you yet</p>
         </div>
+        <div
+          v-for="follower in followerList"
+          :key="follower.id"
+          class="follower-item">
+          <div class="profile-picture-container">
+            <img
+              v-if="follower.profilePicData"
+              :src="follower.profilePicData"
+              class="profile-picture" />
+            <img
+              v-else
+              src="../assets/blank_profile_pic.webp"
+              alt="Default Profile Picture"
+              class="profile-picture" />
+          </div>
+          <div
+            @click="
+              visitUserProfile(follower.id, follower.username, follower.email)
+            "
+            class="follower-name"
+            :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">
+            {{ follower.username }}
+          </div>
+          <div
+            class="follower-email"
+            :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">
+            {{ follower.email }}
+          </div>
+          <button
+            class="btn btn-sm btn-secondary float-right"
+            @click="followUser(follower.id, follower.username)"
+            :disabled="followerNotFollowed(follower.id)">
+            Follow
+          </button>
+        </div>
+      </div>
       <div v-if="currentList === 'Followees'">
         <div v-if="followeeList.length === 0" class="no-follower">
           <p>You're not following anybody yet.</p>
         </div>
-        <div v-for="followee in followeeList" :key="followee.id" class="follower-item">
+        <div
+          v-for="followee in followeeList"
+          :key="followee.id"
+          class="follower-item">
           <div class="profile-picture-container">
-            <img v-if="followee.profilePicData" :src="followee.profilePicData" alt="Followee Profile Picture" class="profile-picture">
-            <img v-else src="../assets/blank_profile_pic.webp" alt="Default Profile Picture" class="profile-picture">
+            <img
+              v-if="followee.profilePicData"
+              :src="followee.profilePicData"
+              alt="Followee Profile Picture"
+              class="profile-picture" />
+            <img
+              v-else
+              src="../assets/blank_profile_pic.webp"
+              alt="Default Profile Picture"
+              class="profile-picture" />
           </div>
-          <div @click="visitUserProfile(followee.id, followee.username, followee.email)" class="follower-name" :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">{{ followee.username }}</div>
-          <div class="follower-email" :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">{{ followee.email }}</div>
+          <div
+            @click="
+              visitUserProfile(followee.id, followee.username, followee.email)
+            "
+            class="follower-name"
+            :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">
+            {{ followee.username }}
+          </div>
+          <div
+            class="follower-email"
+            :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">
+            {{ followee.email }}
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-
 <script>
 import axios from "axios";
-import { toRaw } from 'vue';
+import { toRaw } from "vue";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import "sweetalert2/dist/sweetalert2.min.css";
 export default {
   name: "FollowerPage",
-  components: {
-  },
+  components: {},
   data() {
     return {
       username: this.$store.state.logged_user,
@@ -73,8 +124,7 @@ export default {
       followeeNumber: null,
       profilePicData: {},
       followeeList: [],
-      currentList: 'Followers',
-
+      currentList: "Followers",
     };
   },
   async mounted() {
@@ -88,21 +138,72 @@ export default {
     await this.loadFolloweeDetails();
   },
   methods: {
+    async followUser(followee_id, username) {
+      try {
+        const response = await axios.post(
+          this.$store.state.API + "/createFollower",
+          {
+            followee: followee_id,
+            owner_id: this.$store.state.logged_user_id,
+          }
+        );
+        console.log(response.data);
+        if (response.data) {
+          Swal.fire({
+            title: "Folgen erfolgreich",
+            text: `Du folgst jetzt ${username}`,
+            icon: "info",
+            iconColor: "#2200cd",
+            showCloseButton: false,
+            confirmButtonText: "Schließen",
+            confirmButtonColor: "#2200cd",
+          }).then((result) => {
+            if (result.value) {
+              window.location.reload();
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Error following user:", error);
+        if (error.code == "ERR_BAD_REQUEST") {
+          Swal.fire({
+            title: "Error",
+            text: "You already follow this user",
+            icon: "info",
+            iconColor: "#d0342c",
+            showCloseButton: false,
+            confirmButtonText: "Schließen",
+            confirmButtonColor: "#d0342c",
+          });
+        }
+      }
+    },
+    followerNotFollowed(followerId) {
+      return this.followeeList.some((followee) => followee.id === followerId);
+    },
     toggleList() {
-      this.currentList = this.currentList === 'Followers' ? 'Followees' : 'Followers';
+      this.currentList =
+        this.currentList === "Followers" ? "Followees" : "Followers";
     },
     visitUserProfile(friendId, username, email) {
-      this.$router.push({ name: 'friend', query: { friendId, username, email } });
+      this.$router.push({
+        name: "friend",
+        query: { friendId, username, email },
+      });
     },
     async loadFolloweeDetails() {
       try {
-        console.log(this.followeeList)
+        console.log(this.followeeList);
         const rawFolloweeList = toRaw(this.followeeList);
         const followeeDetailsPromises = rawFolloweeList.map(async (user_id) => {
-          const response = await axios.get(`${this.$store.state.API}/users/${user_id.followee_id}`);
+          const response = await axios.get(
+            `${this.$store.state.API}/users/${user_id.followee_id}`
+          );
           const followeeData = response.data;
           if (followeeData.photo_id) {
-            followeeData.profilePicData = await this.getPhoto(followeeData.photo_id);
+            followeeData.profilePicData = await this.getPhoto(
+              followeeData.photo_id
+            );
           }
           return followeeData;
         });
@@ -116,12 +217,16 @@ export default {
         const rawFollowerList = toRaw(this.followerList);
         const followerDetailsPromises = rawFollowerList.map(async (user_id) => {
           console.log(user_id);
-          const response = await axios.get(`${this.$store.state.API}/users/${user_id.user_id}`);
+          const response = await axios.get(
+            `${this.$store.state.API}/users/${user_id.user_id}`
+          );
           const followerData = response.data;
           followerData.profilePicData = null;
 
           if (followerData.photo_id) {
-            followerData.profilePicData = await this.getPhoto(followerData.photo_id);
+            followerData.profilePicData = await this.getPhoto(
+              followerData.photo_id
+            );
           }
           return followerData;
         });
@@ -132,11 +237,25 @@ export default {
     },
     async fetchData() {
       try {
-        const response = await axios.get(this.$store.state.API + `/users/${this.$store.state.logged_user_id}`);
-        const response2 = await axios.get(this.$store.state.API + `/getAllFollowers/${this.$store.state.logged_user_id}`);
-        const response3 = await axios.get(this.$store.state.API + `/readFollowers/${this.$store.state.logged_user_id}`);
-        const response4 = await axios.get(this.$store.state.API + `/getAllFollowees/${this.$store.state.logged_user_id}`);
-        const response5 = await axios.get(this.$store.state.API + `/readFollowees/${this.$store.state.logged_user_id}`);
+        const response = await axios.get(
+          this.$store.state.API + `/users/${this.$store.state.logged_user_id}`
+        );
+        const response2 = await axios.get(
+          this.$store.state.API +
+            `/getAllFollowers/${this.$store.state.logged_user_id}`
+        );
+        const response3 = await axios.get(
+          this.$store.state.API +
+            `/readFollowers/${this.$store.state.logged_user_id}`
+        );
+        const response4 = await axios.get(
+          this.$store.state.API +
+            `/getAllFollowees/${this.$store.state.logged_user_id}`
+        );
+        const response5 = await axios.get(
+          this.$store.state.API +
+            `/readFollowees/${this.$store.state.logged_user_id}`
+        );
 
         this.followerList = response2.data;
         this.followerNumber = response3.data;
@@ -151,9 +270,15 @@ export default {
     },
     async getPhoto(photoId) {
       try {
-        const response = await axios.get(this.$store.state.API + `/getPhoto`, { params: { id: photoId }, responseType: "arraybuffer" });
+        const response = await axios.get(this.$store.state.API + `/getPhoto`, {
+          params: { id: photoId },
+          responseType: "arraybuffer",
+        });
         const base64 = btoa(
-          new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), "")
+          new Uint8Array(response.data).reduce(
+            (data, byte) => data + String.fromCharCode(byte),
+            ""
+          )
         );
         const imageSrc = `data:image/png;base64,${base64}`;
         return imageSrc;
@@ -164,7 +289,7 @@ export default {
   },
 };
 </script>
-  
+
 <style scoped>
 .row {
   background-color: #3c4e74;
@@ -234,7 +359,6 @@ export default {
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
-  
 }
 
 .profile-picture-container {
@@ -261,5 +385,4 @@ export default {
   font-size: 20px;
   color: grey;
 }
-
 </style>

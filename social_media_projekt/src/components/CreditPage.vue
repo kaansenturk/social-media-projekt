@@ -1,5 +1,5 @@
 <template>
-<div class="animated-background"></div>
+  <div class="animated-background"></div>
   <div class="credits-container">
     <span class="contributors">Kaan Johann Frederik</span><br />
     <span>Our Techstack, thanks for the nice documentation:</span><br />
@@ -126,5 +126,4 @@ export default {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 </style>

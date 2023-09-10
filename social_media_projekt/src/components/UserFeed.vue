@@ -1,7 +1,7 @@
 <template>
   <div class="feedContainer">
     <div class="col-md-7 post-list mx-auto">
-      <h2 class="titleFeed" style="margin-left: 20px;">Your Feed: </h2>
+      <h2 class="titleFeed" style="margin-left: 20px">Your Feed:</h2>
       <div v-for="post in this.feed" :key="post.id" class="post-item">
         <div class="post-header">
           <p class="username">{{ post.username }}:</p>
@@ -21,8 +21,12 @@
             <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
             <i v-else class="fa-regular fa-heart"></i>
           </button>
-          <a @click="visitLikeProfile(post.id)" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
-          <button @click="visitPostProfile(post.id)" class="btn"><i class="fa-solid fa-message"></i></button>
+          <a @click="visitLikeProfile(post.id)" class="post-likes">{{
+            likedPostsCount[post.id] || 0
+          }}</a>
+          <button @click="visitPostProfile(post.id)" class="btn">
+            <i class="fa-solid fa-message"></i>
+          </button>
           <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
         </div>
       </div>
@@ -31,12 +35,10 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
-
-  name: 'UserFeed',
-  props: {
-  },
+  name: "UserFeed",
+  props: {},
   data() {
     return {
       feed: [],
@@ -49,35 +51,9 @@ export default {
       commentAmount: {},
       likedPosts: {},
       likedPostsCount: {},
-    }
+    };
   },
-  // initializes the page with friends, posts, likes etc.
-  async mounted() {
-    let newLikedPostsCount = { ...this.likedPostsCount };
-    console.log(this.$store.state.friendsList)
-    await this.fetchPostsLoop(this.friendsList)
-
-    this.feed = this.feed.flat();
-    for (const post of this.feed) {
-      console.log(post)
-      this.postLikes = await this.getPostLikes(post.id)
-      this.commentAmount[post.id] = await this.getCommentAmount(post.id)
-
-      this.likedPosts[post.id] = await this.isPostLiked(post.id, this.userId);
-
-      console.log(this.likedPosts[post.id]);
-
-      const response = await this.getPostLikes(post.id);
-      newLikedPostsCount[post.id] = response;
-      this.likedPostsCount = newLikedPostsCount;
-
-      if (post.photo_id !== null) {
-        this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
-      }
-    }
-    this.getAdPosts()
-  },
-  // watcher to always get the accurate ammount of likes on a post
+  // watcher to always get the friends posts after the friendslist has been set and get accurate ammount of likes on a post
   watch: {
     async likedPosts(newVal) {
       let newLikedPostsCount = { ...this.likedPostsCount };
@@ -87,26 +63,56 @@ export default {
       }
       this.likedPostsCount = newLikedPostsCount;
     },
+    "$store.state.friendsList": {
+      handler(newFriendsList) {
+        this.friendsList = newFriendsList;
+        this.fetchPostsLoop(this.friendsList);
+      },
+      immediate: true,
+    },
   },
+
   methods: {
+    setFriendsList() {
+      return this.$store.state.friendsList;
+    },
     async fetchPostsLoop(friendsList) {
       for (let friend of friendsList) {
+        console.log(friend);
         await this.fetchPosts(friend.userId, friend.username);
       }
-      //await this.fetchPosts(this.userId, this.username);
+      this.feed = this.feed.flat();
+      let newLikedPostsCount = { ...this.likedPostsCount };
+      for (const post of this.feed) {
+        this.postLikes = await this.getPostLikes(post.id);
+        this.commentAmount[post.id] = await this.getCommentAmount(post.id);
+
+        this.likedPosts[post.id] = await this.isPostLiked(post.id, this.userId);
+
+        const response = await this.getPostLikes(post.id);
+        newLikedPostsCount[post.id] = response;
+        this.likedPostsCount = newLikedPostsCount;
+
+        if (post.photo_id !== null) {
+          this.photoData[post.photo_id] = await this.getPhoto(post.photo_id);
+        }
+      }
+      this.getAdPosts();
     },
-    // method to get the posts of each friend of a user 
+    // method to get the posts of each friend of a user
     async fetchPosts(userId, username) {
       try {
-        const response = await axios.get(this.$store.state.API + `/getPosts?user_id=${userId}`);
+        const response = await axios.get(
+          this.$store.state.API + `/getPosts?user_id=${userId}`
+        );
         // Add the username to each post in the response
-        const responseDataWithUsername = response.data.map(post => {
+        const responseDataWithUsername = response.data.map((post) => {
           return {
             ...post,
-            username: username
+            username: username,
           };
         });
-        this.feed.push(responseDataWithUsername);
+        this.feed = [...this.feed, ...responseDataWithUsername];
         this.feed = this.feed.flat();
 
         this.feed.sort((a, b) => {
@@ -114,7 +120,6 @@ export default {
           const dateB = new Date(b.created_at);
           return dateB - dateA;
         });
-
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
@@ -122,15 +127,18 @@ export default {
     // method to get the image appended to a post
     async getPhoto(photoId) {
       try {
-        const response = await axios.get(this.$store.state.API + `/getPhoto`, { params: { id: photoId }, responseType: 'arraybuffer' });
+        const response = await axios.get(this.$store.state.API + `/getPhoto`, {
+          params: { id: photoId },
+          responseType: "arraybuffer",
+        });
         const base64 = btoa(
           new Uint8Array(response.data).reduce(
             (data, byte) => data + String.fromCharCode(byte),
-            '',
-          ),
+            ""
+          )
         );
         const imageSrc = `data:image/png;base64,${base64}`;
-        return imageSrc
+        return imageSrc;
       } catch (error) {
         console.error("Error fetching photos:", error);
       }
@@ -138,19 +146,20 @@ export default {
 
     getAdPosts() {
       const adPost = {
-        id: 'ad',
-        username: 'Ad',
+        id: -1,
+        username: "Ad",
         photo_id: null,
-        caption: '#NoFreeAds',
+        caption: "#NoFreeAds",
         created_at: new Date().toDateString(),
         isAd: true,
       };
+      this.feed = this.feed.filter((post) => !post.isAd);
 
-      const newFeed = [];
+      const newFeed = [...this.feed];
+      // Insert ad post every 5 posts
       for (let i = 0; i < this.feed.length; i++) {
-        newFeed.push(this.feed[i]);
         if ((i + 1) % 5 === 0) {
-          newFeed.push(adPost);
+          newFeed.splice(i + newFeed.length, 0, adPost);
         }
       }
       // If there are less than 5 posts add the ad at the end
@@ -162,55 +171,61 @@ export default {
     },
 
     async likePost(post_id, user_id) {
-      const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
+      const response = await axios.get(
+        this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`
+      );
       let newLikedPosts = { ...this.likedPosts }; // Create a shallow copy
       if (response.data == true) {
-        await axios.post(this.$store.state.API + `/unlikePost/${post_id}/${user_id}`);
+        await axios.post(
+          this.$store.state.API + `/unlikePost/${post_id}/${user_id}`
+        );
         newLikedPosts[post_id] = false;
       } else if (response.data == false) {
-        await axios.post(this.$store.state.API + `/createPostLike/${post_id}/${user_id}`);
+        await axios.post(
+          this.$store.state.API + `/createPostLike/${post_id}/${user_id}`
+        );
         newLikedPosts[post_id] = true;
       }
       this.likedPosts = newLikedPosts; // Replace the entire object to force reactivity
     },
     async getPostLikes(post_id) {
-      const response = await axios.get(this.$store.state.API + `/getPostLikeAmount/${post_id}`);
-      //console.log("POST LIKES für POST_ID: " + post_id + " Anzahl PostLikes: " + response.data)
-      return response.data
+      const response = await axios.get(
+        this.$store.state.API + `/getPostLikeAmount/${post_id}`
+      );
+      return response.data;
     },
 
     async getCommentAmount(post_id) {
-      const response = await axios.get(this.$store.state.API + `/getCommentsOfPostAmount/${post_id}`);
-      //console.log("POST COMMENTS für POST_ID: " + post_id + " Anzahl Comments: " + response.data)
-      //console.log("POST KOMMENTARE FÜR " + post_id + ", " + response.data)
-      return response.data
+      const response = await axios.get(
+        this.$store.state.API + `/getCommentsOfPostAmount/${post_id}`
+      );
+      return response.data;
     },
 
     async changeLikeButton(post_id, user_id) {
-      const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
-      console.log(typeof (response.data))
+      const response = await axios.get(
+        this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`
+      );
       if (response.data === true) {
-
-        console.log(response.data)
         return true;
       } else {
         return false;
       }
     },
     async isPostLiked(post_id, user_id) {
-      const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
-      console.log(response.data)
+      const response = await axios.get(
+        this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`
+      );
       return response.data;
     },
     visitPostProfile(postId) {
-      this.$router.push({ name: 'postComments', query: { postId } });
+      this.$router.push({ name: "postComments", query: { postId } });
     },
     visitLikeProfile(postId) {
-      this.$router.push({ name: 'postLikeList', query: { postId } });
+      this.$router.push({ name: "postLikeList", query: { postId } });
     },
   },
-
-}
+};
 </script>
 <style>
 .titleFeed {
@@ -220,7 +235,7 @@ export default {
 
 .feedContainer {
   color: white;
-  font-family: 'Trebuchet MS', sans-serif;
+  font-family: "Trebuchet MS", sans-serif;
 }
 
 .post-list {
@@ -228,7 +243,7 @@ export default {
 }
 
 .post-text {
-  font-family: 'Trebuchet MS', sans-serif;
+  font-family: "Trebuchet MS", sans-serif;
   word-wrap: break-word;
 }
 
@@ -270,7 +285,7 @@ export default {
 button {
   cursor: pointer;
   outline: 0;
-  color: #AAA;
+  color: #aaa;
 }
 
 .btn:focus {

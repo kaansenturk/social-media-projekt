@@ -3,10 +3,8 @@
     <div class="row">
       <div class="col-md-0">
         <div v-if="isUserLoggedIn" id="headerBar"></div>
-        <img id="app_icon" alt="App Logo" src="../assets/hacker.png">
-        <div class="logo-container">
-          Social Media Projekt
-        </div>
+        <img id="app_icon" alt="App Logo" src="../assets/hacker.png" />
+        <div class="logo-container">Social Media Projekt</div>
       </div>
       <div class="d-flex justify-content-end">
         <div v-if="isUserLoggedIn">
@@ -19,32 +17,25 @@
 </template>
 
 <script>
-import SearchModule from './SearchModule.vue';
-import { mapState } from 'vuex';
+import SearchModule from "./SearchModule.vue";
 import DropDownMenu from "./DropDownMenu.vue";
 export default {
-  name: 'HeaderPart',
+  name: "HeaderPart",
   components: {
     SearchModule,
     DropDownMenu,
   },
-  props: {
-  },
+  props: {},
   computed: {
-    ...mapState(['logged_user']),
     isUserLoggedIn() {
-      return this.logged_user !== null;
+      return this.$store.state.logged_user !== null;
     },
   },
   data() {
-    return {
-    }
+    return {};
   },
-  methods: {
-  },
-
-}
-
+  methods: {},
+};
 </script>
 
 <style>
@@ -69,7 +60,7 @@ export default {
   width: 100%;
   height: 110px;
   font-size: 24px;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   color: #fff;
 }
 
@@ -87,5 +78,4 @@ export default {
   z-index: 1020;
   /* Ensure it appears above other elements */
 }
-
 </style>

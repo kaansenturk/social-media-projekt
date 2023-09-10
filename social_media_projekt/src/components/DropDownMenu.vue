@@ -1,60 +1,59 @@
 <template>
-    <div class="dropdown-container">
-      <button @click="toggleDropdown" class="dropdown-button">☰</button>
-      <div v-if="isDropdownOpen" class="overlay">
-        <button @click="toggleDropdown" class="dropdown-button2">☰</button>
-        <img class="app_icon" alt="App Logo" src="@/assets/hacker.png">
-        <button @click="goToHome" class="menu-item">Home</button>
-        <button @click="goToAccount" class="menu-item">Account Info</button>
-        <button @click="goToMessenger" class="menu-item">Messenger</button>
-        <button @click="goToFollowers" class="menu-item">Your Followers</button>
-        <button @click="goToCredits" class="menu-item">Credits</button>
-        <button type="submit" @click="logout" class="menu-item">Logout</button>
-      </div>
-      <div v-if="isDropdownOpen" class="background" @click="closeDropdown"></div>
+  <div class="dropdown-container">
+    <button @click="toggleDropdown" class="dropdown-button">☰</button>
+    <div v-if="isDropdownOpen" class="overlay">
+      <button @click="toggleDropdown" class="dropdown-button2">☰</button>
+      <img class="app_icon" alt="App Logo" src="@/assets/hacker.png" />
+      <button @click="goToHome" class="menu-item">Home</button>
+      <button @click="goToAccount" class="menu-item">Account Info</button>
+      <button @click="goToMessenger" class="menu-item">Messenger</button>
+      <button @click="goToFollowers" class="menu-item">Your Followers</button>
+      <button @click="goToCredits" class="menu-item">Credits</button>
+      <button type="submit" @click="logout" class="menu-item">Logout</button>
     </div>
+    <div v-if="isDropdownOpen" class="background" @click="closeDropdown"></div>
+  </div>
 </template>
 
 <script>
 export default {
-  components: {
-  },
+  components: {},
   data() {
     return {
-      isDropdownOpen: false
+      isDropdownOpen: false,
     };
   },
   methods: {
-    goToCredits(){
+    goToCredits() {
       this.closeDropdown();
-      this.$router.push('/credits')
+      this.$router.push("/credits");
     },
     toggleDropdown() {
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     goToAccount() {
       this.closeDropdown();
-      this.$router.push('/account');
+      this.$router.push("/account");
     },
     goToHome() {
       this.closeDropdown();
-      this.$router.push('/');
+      this.$router.push("/");
     },
     goToMessenger() {
       this.closeDropdown();
-      this.$router.push('/messenger');
+      this.$router.push("/messenger");
     },
     goToFollowers() {
       this.closeDropdown();
-      this.$router.push('/follower');
+      this.$router.push("/follower");
     },
     logout() {
-      localStorage.removeItem('logegd_user_id');
-      localStorage.removeItem('logged_user');
-      this.$store.commit('setUser', null)
-      this.$store.commit('setUserId', null)
-      this.$store.dispatch('logout');
-      this.$router.push('/login')
+      localStorage.removeItem("logegd_user_id");
+      localStorage.removeItem("logged_user");
+      this.$store.commit("setUser", null);
+      this.$store.commit("setUserId", null);
+      this.$store.dispatch("logout");
+      this.$router.push("/login");
     },
 
     closeDropdown() {
@@ -65,12 +64,11 @@ export default {
 </script>
 
 <style>
-
 .dropdown-container {
   position: absolute;
   display: inline-block;
-  top: 20px; 
-  left: 10px; 
+  top: 20px;
+  left: 10px;
 }
 
 .dropdown-button {
@@ -78,7 +76,7 @@ export default {
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color:white;
+  color: white;
 }
 
 .dropdown-button2 {
@@ -88,13 +86,12 @@ export default {
   cursor: pointer;
   position: absolute;
   display: inline-block;
-  top: 19px; 
-  left: 9px; 
-  color:white;
+  top: 19px;
+  left: 9px;
+  color: white;
 }
 
-
-.app_icon{
+.app_icon {
   width: 100px;
 }
 
@@ -106,7 +103,7 @@ export default {
   padding: 15px 15px;
   width: 100%;
   text-align: left;
-  color:white;
+  color: white;
 }
 
 .menu-item:hover {
@@ -120,7 +117,7 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 999; 
+  z-index: 999;
   animation: fadeIn 1s;
 }
 
@@ -156,5 +153,4 @@ export default {
 .overlay {
   animation: slideInLeft 0.5s;
 }
-
 </style>

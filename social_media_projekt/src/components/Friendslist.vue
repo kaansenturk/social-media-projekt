@@ -2,26 +2,38 @@
   <div class="friends-title">Your Followees:</div>
   <div class="friends-container" v-if="friendsList.length > 0">
     <div class="friend-list">
-      <div v-for="friend in friendsList" :key="friend.userId" class="friend-item">
+      <div
+        v-for="friend in friendsList"
+        :key="friend.userId"
+        class="friend-item">
         <div class="friend-details">
           <div class="friend-username">{{ friend.username }}</div>
         </div>
         <div class="friend-actions">
-          <button v-if="fromMessenger" @click="$emit('userSelected', friend.userId, friend.username)"><i
-              class="fa-solid fa-message"></i></button>
-          <button v-else @click="goToMessenger"><i class="fa-solid fa-message"></i></button>
-          <button @click="visitUserProfile(friend.userId, friend.username, friend.email)"><i
-              class="fa-solid fa-user"></i></button>
+          <button
+            v-if="fromMessenger"
+            @click="$emit('userSelected', friend.userId, friend.username)">
+            <i class="fa-solid fa-message"></i>
+          </button>
+          <button v-else @click="goToMessenger">
+            <i class="fa-solid fa-message"></i>
+          </button>
+          <button
+            @click="
+              visitUserProfile(friend.userId, friend.username, friend.email)
+            ">
+            <i class="fa-solid fa-user"></i>
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-  name: 'FriendsList',
+  name: "FriendsList",
   props: {
     friends: {
       type: Array,
@@ -34,44 +46,53 @@ export default {
     return {
       friendsList: [],
       API: this.$store.state.API,
-    }
+    };
   },
   mounted() {
     this.getFriends();
   },
   methods: {
     goToMessenger() {
-      this.$router.push("/messenger")
+      this.$router.push("/messenger");
     },
     visitUserProfile(friendId, username, email) {
-      this.$router.push({ name: 'friend', query: { friendId, username, email } }).then(() => {
-        window.location.reload();
-      });
+      this.$router
+        .push({ name: "friend", query: { friendId, username, email } })
+        .then(() => {
+          window.location.reload();
+        });
     },
     async getUserById(userId) {
       try {
         const response = await axios.get(this.API + `/users/${userId}`);
         return response.data;
       } catch (error) {
-        console.error(`An error occurred while fetching user with ID ${userId}: `, error);
+        console.error(
+          `An error occurred while fetching user with ID ${userId}: `,
+          error
+        );
         return null;
       }
     },
     async getFriendsLocation(userId) {
       try {
-        const response = await axios.get(this.API + `/get_user_location/${userId}`)
-        return response.data
+        const response = await axios.get(
+          this.API + `/get_user_location/${userId}`
+        );
+        return response.data;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
     async getFriends() {
       try {
-        const user_id = this.$store.state.logged_user_id
-        const response = await axios.get(this.API + `/getAllFollowees/${user_id}`);
+        const user_id = this.$store.state.logged_user_id;
+        const response = await axios.get(
+          this.API + `/getAllFollowees/${user_id}`
+        );
 
         if (response.status == 200) {
-          this.$store.commit('setFriendsList', []);
+          this.$store.commit("setFriendsList", []);
         }
         let List = [];
         for (const followee of response.data) {
@@ -86,26 +107,23 @@ export default {
                 userId: userId,
                 username: user.username,
                 location: userLocation,
-                email: user.email
+                email: user.email,
               });
             }
-          }
-          catch (error) {
-            console.log(error)
+          } catch (error) {
+            console.log(error);
           }
         }
         this.friendsList = List;
-        this.$store.commit('setFriendsList', List);
+        this.$store.commit("setFriendsList", List);
         return List;
       } catch (error) {
-
-        console.log(error)
-        return null
+        console.log(error);
+        return null;
       }
-    }
-  }
-}
-
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -113,18 +131,19 @@ export default {
   display: flex;
   flex-direction: column;
   width: 16%;
-  position: fixed; top: 50%;
+  position: fixed;
+  top: 50%;
   top: 45%;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1;
-  max-height:51%;
+  max-height: 51%;
 }
-
 
 .friends-title {
   display: flex;
-  position: fixed; top: 40%;
+  position: fixed;
+  top: 40%;
   width: 16%;
   justify-content: center;
   align-items: center;
