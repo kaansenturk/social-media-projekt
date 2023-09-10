@@ -128,7 +128,9 @@ export default {
           );
           var user = response.data;
           user.profilePicData = null;
+          if (user.photo_id !== null){
           user.profilePicData = await this.getPhoto(user.photo_id);
+          }
           this.userList.push(user);
           this.userList = this.userList.flat();
         }
