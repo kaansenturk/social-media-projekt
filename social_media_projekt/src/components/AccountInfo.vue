@@ -377,7 +377,8 @@ export default {
 .container-fluid {
   background-color: #3c4e74;
   z-index:-2
-  
+}
+
 .map-container {
   position: fixed;
   right: 1vh;
