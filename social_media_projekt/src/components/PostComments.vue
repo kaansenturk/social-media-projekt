@@ -9,24 +9,26 @@
       </div>
     </div>
     <CommentCreator class="col-md-7" :postId="postId" />
-    <div class="col-md-0" id="post-item">
-      <div class="post-header">
-        <p>{{ username }}:</p>
+    <div class="post-item-container">
+      <div id="post-item">
+        <div class="post-header">
+          <p>{{ username }}:</p>
+        </div>
+        <div v-if="post.photo_id !== null" class="post-photo">
+          <img :src="photoData[post.photo_id]" alt="Photo" />
+        </div>
+        <div class="post-text">{{ post.caption }}</div>
+        <p class="post-date">{{ post.created_at }}</p>
+        <button @click="likePost(post.id, this.$store.state.logged_user_id)" class="btn">
+          <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
+          <i v-else class="fa-regular fa-heart"></i>
+        </button>
+        <a @click="visitPostLikeProfile(post.id)" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
+        <button class="btn"><i class="fa-solid fa-message"></i></button>
+        <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
       </div>
-      <div v-if="post.photo_id !== null" class="post-photo">
-        <img :src="photoData[post.photo_id]" alt="Photo" />
-      </div>
-      <div class="post-text">{{ post.caption }}</div>
-      <p class="post-date">{{ post.created_at }}</p>
-      <button @click="likePost(post.id, this.$store.state.logged_user_id)" class="btn">
-        <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
-        <i v-else class="fa-regular fa-heart"></i>
-      </button>
-      <a @click="visitPostLikeProfile(post.id)" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
-      <button class="btn"><i class="fa-solid fa-message"></i></button>
-      <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
+      <PostFeed :postId="postId" />
     </div>
-    <PostFeed :postId="postId" />
     <FriendsList class="col-md-2" :friends="friendsList" />
   </div>
 </template>
@@ -109,7 +111,7 @@ export default {
     async fetchPost() {
       try {
         const response = await axios.get(this.API + `/getPost/${this.postId}`);
-  
+
         this.post = response.data;
       } catch (error) {
         console.error(error);
@@ -166,11 +168,19 @@ export default {
     
 <style scoped>
 .account-info {
-  background-color: #2200cd;
-  color: white;
+  background-color: #DAF7A6;
+  border: 1px solid grey;
+  color: #555;
   padding: 35px;
-  margin-left: 15px;
-  height: fit-content;
+  margin: 15px;
+  max-height: 500px;
+  overflow-y: auto;
+  display: flex;
+  max-width: 200px;
+  flex-direction: column;
+  justify-content: top;
+  align-items: center;
+  border-radius: 8px;
 }
 
 .title {
@@ -191,8 +201,20 @@ export default {
 }
 
 #post-item {
+  background-color: #DAF7A6;
   font-size: 24px;
   margin-bottom: 10px;
+  width: 400px;
+  border: 1px solid black;
+}
+
+.post-item-container {
+  display: grid;
+  place-items: center;
+}
+
+.feedContainer {
+  width: 500px;
 }
 </style>
     

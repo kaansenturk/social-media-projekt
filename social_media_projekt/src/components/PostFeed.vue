@@ -4,7 +4,7 @@
       <h2 class="title">Comments:</h2>
       <div v-for="comment in this.feed" :key="comment.id" class="comment-item">
         <div class="comment-header">
-          <p>{{ comment.user_id }}:</p>
+          <p> !!TODO!! ADD USERNAME:</p>
           <div class="comment-text">{{ comment.comment_text }}</div>
           <p class="comment-date">{{ comment.created_at }}</p>
           <button @click="likeComment(comment.id, userId)" class="btn">
@@ -28,6 +28,7 @@ export default {
   },
   data() {
     return {
+      username: null,
       feed: [],
       comments: [],
       userId: this.$store.state.logged_user_id,
@@ -39,7 +40,7 @@ export default {
   // initializes the page with friends, comments, likes etc.
   async mounted() {
     let newLikedCommentsCount = { ...this.likedCommentsCount };
-    await this.fetchComments(this.postId);
+    await this.fetchComments(this.postId,);
     this.feed = this.feed.flat();
     for (const comment of this.feed) {
       console.log(comment)
@@ -126,19 +127,24 @@ export default {
     visitLikeProfile(commentId) {
       this.$router.push({ name: 'commentLikeList', query: { commentId } });
     },
+    async getUserName(userId) {
+      const response = await axios.get(this.$store.state.API + `users/${userId}`);
+      console.log(response.data);
+      return response.data.username
+    }
   },
 
 }
 </script>
 <style>
-
 .comment-text {
   font-family: 'Trebuchet MS', sans-serif;
-;
+  color: #555;
+  ;
 }
 
 .comment-item {
-  border: 1px solid blue;
+  border: 1px solid black;
   padding: 20px;
   margin-bottom: 20px;
   background-color: #ECF0F1;
@@ -179,5 +185,13 @@ button {
 
 .green {
   color: green;
+}
+
+.comment-header {
+  color: #555;
+}
+
+.comment-likes {
+  color: #555;
 }
 </style>
