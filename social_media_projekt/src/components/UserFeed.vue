@@ -16,7 +16,7 @@
         </div>
         <div class="post-text">{{ post.caption }}</div>
         <p class="post-date">{{ post.created_at }}</p>
-        <div v-if="post.id !== 'ad'">
+        <div v-if="!post.isAd">
           <button @click="likePost(post.id, userId)" class="btn">
             <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
             <i v-else class="fa-regular fa-heart"></i>

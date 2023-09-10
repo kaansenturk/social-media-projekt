@@ -4,7 +4,7 @@
       <h2 class="mx-auto title">Comments:</h2>
       <div v-for="comment in this.feed" :key="comment.id" class="mx-auto comment-item">
         <div class="comment-header">
-          <p> !!TODO!! ADD USERNAME:</p>
+          <p> {{ comment.username }}</p>
           <div class="comment-text">{{ comment.comment_text }}</div>
           <p class="comment-date">{{ comment.created_at }}</p>
           <button @click="likeComment(comment.id, userId)" class="btn">
@@ -41,11 +41,14 @@ export default {
   // initializes the page with friends, comments, likes etc.
   async mounted() {
     let newLikedCommentsCount = { ...this.likedCommentsCount };
-    await this.fetchComments(this.postId,);
-    this.feed = this.feed.flat();
+    await this.fetchComments(this.postId);
+    //this.feed = this.feed.flat();
     for (const comment of this.feed) {
       console.log(comment);
       //this.commentLikes = await this.getCommentLikes(comment.id)
+
+      comment.username = await this.getUserName(comment.user_id)
+      console.log(comment.username)
 
       this.likedComments[comment.id] = await this.isCommentLiked(
         comment.id,
@@ -70,20 +73,14 @@ export default {
   },
   methods: {
     // method to get the comments of the post
-    async fetchComments(post_id, username) {
+    async fetchComments(post_id) {
       try {
         const response = await axios.get(
           this.$store.state.API + `/getCommentsOfPost/${post_id}`
         );
-        // Add the username to each comment in the response
-        const responseDataWithUsername = response.data.map((comment) => {
-          return {
-            ...comment,
-            username: username,
-          };
-        });
-        console.log(responseDataWithUsername);
-        this.feed.push(responseDataWithUsername);
+
+        console.log(response.data);
+        this.feed.push(response.data);
         this.feed = this.feed.flat();
         this.feed.sort((a, b) => {
           const dateA = new Date(a.created_at);
@@ -119,9 +116,9 @@ export default {
       );
       console.log(
         "COMMENT LIKES für COMMENT_ID: " +
-          comment_id +
-          " Anzahl CommentLikes: " +
-          response.data
+        comment_id +
+        " Anzahl CommentLikes: " +
+        response.data
       );
       return response.data;
     },
@@ -148,7 +145,7 @@ export default {
       this.$router.push({ name: "commentLikeList", query: { commentId } });
     },
     async getUserName(userId) {
-      const response = await axios.get(this.$store.state.API + `users/${userId}`);
+      const response = await axios.get(this.$store.state.API + `/users/${userId}`);
       console.log(response.data);
       return response.data.username
     }
@@ -163,9 +160,11 @@ export default {
 .title {
   color: #aaa;
 }
+
 .comment-likes:hover {
   cursor: pointer;
 }
+
 .comment-text {
   font-family: "Trebuchet MS", sans-serif;
 }

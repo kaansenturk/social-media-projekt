@@ -235,7 +235,6 @@ export default {
   background-color: #284585;
   color: white;
   padding: 35px;
-  margin-left: 15px;
   height: fit-content;
 }
 
