@@ -6,14 +6,13 @@
 </template>
 
 <script>
-import HeaderPart from './components/Header.vue';
+import HeaderPart from "./components/Header.vue";
 export default {
-  name: 'App',
+  name: "App",
   components: {
     HeaderPart,
   },
-
-}
+};
 </script>
 
 <style>
@@ -23,6 +22,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background-color: #F8F9F9;
+  background-color: #f8f9f9;
 }
 </style>

@@ -1,4 +1,4 @@
-import { createStore } from 'vuex';
+import { createStore } from "vuex";
 
 // Initial state function
 const initialState = () => ({
@@ -21,24 +21,23 @@ export default createStore({
     setApi(state, API) {
       state.API = API;
     },
-    
+
     RESET_STATE(state) {
       Object.assign(state, initialState());
     },
   },
   actions: {
     login({ commit }, { user, user_id }) {
-      commit('setUser', user);
-      commit('setUserId', user_id);
+      commit("setUser", user);
+      commit("setUserId", user_id);
     },
     logout({ commit }) {
-      commit('setUser', null);
-      
-      commit('RESET_STATE');
+      commit("setUser", null);
+      commit("RESET_STATE");
     },
     // action to execute the reset
     resetState({ commit }) {
-      commit('RESET_STATE');
+      commit("RESET_STATE");
     },
   },
   getters: {

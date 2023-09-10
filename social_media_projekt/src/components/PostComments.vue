@@ -1,45 +1,59 @@
 <template>
-  <div class="row">
-    <div class="col-md-2 account-info">
-      <div class="title">
-        <img v-if="this.profilePicData == null" src="../assets/blank_profile_pic.webp" alt="Kein Profilbild"
-          class="profile-picture" />
-        <img v-else :src="this.profilePicData" alt="Profilbild" class="profile-picture">
-        <div>{{ ownUsername }}</div>
+  <div class="page">
+    <div class="row">
+      <div class="col-md-2 account-info">
+        <div class="title">
+          <img
+            v-if="this.profilePicData == null"
+            src="../assets/blank_profile_pic.webp"
+            alt="Kein Profilbild"
+            class="profile-picture" />
+          <img
+            v-else
+            :src="this.profilePicData"
+            alt="Profilbild"
+            class="profile-picture" />
+          <div>{{ ownUsername }}</div>
+        </div>
+      </div>
+      <div class="col-md-10">
+        <div class="mx-auto" id="post-item">
+          <div class="post-header">
+            <p>{{ username }}:</p>
+          </div>
+          <div v-if="post.photo_id !== null" class="post-photo">
+            <img :src="photoData[post.photo_id]" alt="Photo" />
+          </div>
+          <div class="post-text">{{ post.caption }}</div>
+          <p class="post-date">{{ post.created_at }}</p>
+          <button
+            @click="likePost(post.id, this.$store.state.logged_user_id)"
+            class="btn">
+            <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
+            <i v-else class="fa-regular fa-heart"></i>
+          </button>
+          <a @click="visitPostLikeProfile(post.id)" class="post-likes">{{
+            likedPostsCount[post.id] || 0
+          }}</a>
+          <button class="btn"><i class="fa-solid fa-message"></i></button>
+          <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
+        </div>
+
+        <CommentCreator class="mx-auto commentcreator" :postId="postId" />
+        <PostFeed class="mx-auto" :postId="postId" />
       </div>
     </div>
-    <CommentCreator class="col-md-7" :postId="postId" />
-    <div class="post-item-container">
-      <div id="post-item">
-        <div class="post-header">
-          <p>{{ username }}:</p>
-        </div>
-        <div v-if="post.photo_id !== null" class="post-photo">
-          <img :src="photoData[post.photo_id]" alt="Photo" />
-        </div>
-        <div class="post-text">{{ post.caption }}</div>
-        <p class="post-date">{{ post.created_at }}</p>
-        <button @click="likePost(post.id, this.$store.state.logged_user_id)" class="btn">
-          <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
-          <i v-else class="fa-regular fa-heart"></i>
-        </button>
-        <a @click="visitPostLikeProfile(post.id)" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
-        <button class="btn"><i class="fa-solid fa-message"></i></button>
-        <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
-      </div>
-      <PostFeed :postId="postId" />
-    </div>
-    <FriendsList class="col-md-2" :friends="friendsList" />
+    <FriendsList class="col-md-2 friends" :friends="friendsList" />
   </div>
 </template>
 <script>
-import FriendsList from "./Friendslist.vue"
+import FriendsList from "./Friendslist.vue";
 import CommentCreator from "./commentCreator.vue";
-import PostFeed from "./PostFeed.vue"
+import PostFeed from "./PostFeed.vue";
 import axios from "axios";
 //import { watch } from 'vue';
 export default {
-  name: 'PostComments',
+  name: "PostComments",
   components: {
     FriendsList,
     CommentCreator,
@@ -71,10 +85,20 @@ export default {
       this.profilePicData = await this.getPhoto(this.profilePicId);
     }
 
-    this.postLikes = await this.getPostLikes(this.post.id)
-    this.commentAmount[this.post.id] = await this.getCommentAmount(this.post.id)
+    this.postLikes = await this.getPostLikes(this.post.id);
+    this.commentAmount[this.post.id] = await this.getCommentAmount(
+      this.post.id
+    );
 
-    this.likedPosts[this.post.id] = await this.isPostLiked(this.post.id, this.$store.state.logged_user_id);
+    this.likedPosts[this.post.id] = await this.isPostLiked(
+      this.post.id,
+      this.$store.state.logged_user_id
+    );
+    if (this.post.photo_id !== null) {
+      this.photoData[this.post.photo_id] = await this.getPhoto(
+        this.post.photo_id
+      );
+    }
 
     const response = await this.getPostLikes(this.post.id);
     newLikedPostsCount[this.post.id] = response;
@@ -95,15 +119,18 @@ export default {
     // method to get the image appended to a post
     async getPhoto(photoId) {
       try {
-        const response = await axios.get(this.API + `/getPhoto`, { params: { id: photoId }, responseType: 'arraybuffer' });
+        const response = await axios.get(this.API + `/getPhoto`, {
+          params: { id: photoId },
+          responseType: "arraybuffer",
+        });
         const base64 = btoa(
           new Uint8Array(response.data).reduce(
             (data, byte) => data + String.fromCharCode(byte),
-            '',
-          ),
+            ""
+          )
         );
         const imageSrc = `data:image/png;base64,${base64}`;
-        return imageSrc
+        return imageSrc;
       } catch (error) {
         console.error("Error fetching photo:", error);
       }
@@ -111,7 +138,6 @@ export default {
     async fetchPost() {
       try {
         const response = await axios.get(this.API + `/getPost/${this.postId}`);
-
         this.post = response.data;
       } catch (error) {
         console.error(error);
@@ -119,68 +145,98 @@ export default {
     },
     async fetchData() {
       try {
-        const response = await axios.get(this.API + `/users/${this.post.user_id}`);
+        const response = await axios.get(
+          this.API + `/users/${this.post.user_id}`
+        );
         this.username = response.data.username;
-
-        const response1 = await axios.get(this.API + `/users/${this.$store.state.logged_user}`);
+        const response1 = await axios.get(
+          this.API + `/users/${this.$store.state.logged_user_id}`
+        );
         if (response1.data.photo_id) {
-          this.profilePicId = response1.data.photo_id
+          this.profilePicId = response1.data.photo_id;
         }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
     },
     async likePost(post_id, user_id) {
-      const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
+      const response = await axios.get(
+        this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`
+      );
       let newLikedPosts = { ...this.likedPosts }; // Create a shallow copy
-      console.log(response.data)
+      console.log(response.data);
       if (response.data == true) {
-        await axios.post(this.$store.state.API + `/unlikePost/${post_id}/${user_id}`);
+        await axios.post(
+          this.$store.state.API + `/unlikePost/${post_id}/${user_id}`
+        );
         newLikedPosts[post_id] = false;
       } else if (response.data == false) {
-        await axios.post(this.$store.state.API + `/createPostLike/${post_id}/${user_id}`);
+        await axios.post(
+          this.$store.state.API + `/createPostLike/${post_id}/${user_id}`
+        );
         newLikedPosts[post_id] = true;
       }
       this.likedPosts = newLikedPosts; // Replace the entire object to force reactivity
     },
     async getPostLikes(post_id) {
-      const response = await axios.get(this.$store.state.API + `/getPostLikeAmount/${post_id}`);
+      const response = await axios.get(
+        this.$store.state.API + `/getPostLikeAmount/${post_id}`
+      );
       //console.log("POST LIKES für POST_ID: " + post_id + " Anzahl PostLikes: " + response.data)
-      return response.data
+      return response.data;
     },
     async getCommentAmount(post_id) {
-      const response = await axios.get(this.$store.state.API + `/getCommentsOfPostAmount/${post_id}`);
+      const response = await axios.get(
+        this.$store.state.API + `/getCommentsOfPostAmount/${post_id}`
+      );
       //console.log("POST COMMENTS für POST_ID: " + post_id + " Anzahl Comments: " + response.data)
-      return response.data
+      return response.data;
     },
     async isPostLiked(post_id, user_id) {
-      const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
+      const response = await axios.get(
+        this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`
+      );
       return response.data;
     },
     visitPostLikeProfile(postId) {
-      this.$router.push({ name: 'postLikeList', query: { postId } });
+      this.$router.push({ name: "postLikeList", query: { postId } });
     },
-  }
+  },
+};
+</script>
+
+<style scoped>
+.post-likes:hover {
+  cursor: pointer;
+}
+.page {
+  background-color: #3c4e74;
+}
+.friends {
+  margin-top: 15px;
+}
+.commentcreator {
+  max-width: 40%;
+}
+#post-item {
+  border: 1px solid blue;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #aaa;
+  border-radius: 5px;
+  max-width: 50%;
+  overflow: hidden;
+  text-align: left;
+  font-size: 20px;
+  color: white;
 }
 
-
-</script>
-    
-<style scoped>
 .account-info {
-  background-color: #DAF7A6;
-  border: 1px solid grey;
-  color: #555;
+  background-color: #284585;
+  color: white;
   padding: 35px;
-  margin: 15px;
-  max-height: 500px;
-  overflow-y: auto;
-  display: flex;
-  max-width: 200px;
-  flex-direction: column;
-  justify-content: top;
-  align-items: center;
-  border-radius: 8px;
+  margin-left: 15px;
+  height: fit-content;
 }
 
 .title {
@@ -191,7 +247,6 @@ export default {
 .info-item {
   margin-bottom: 5px;
 }
-
 
 .profile-picture {
   width: 70px;
@@ -217,4 +272,3 @@ export default {
   width: 500px;
 }
 </style>
-    
