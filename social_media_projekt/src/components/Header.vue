@@ -57,15 +57,14 @@ export default {
 }
 
 .Header {
-  background-color: #DAF7A6;
+  background-color: #3c4e74;
   height: 100px;
-  border-bottom: 1px solid;
+  border-bottom: 1px solid grey;
 }
 
 .logo-container {
   position: absolute;
   top: 30px;
-  right: 4%;
   text-align: center;
   width: 100%;
   height: 110px;

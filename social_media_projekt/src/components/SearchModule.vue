@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="search-results" v-if="searchResults.length">
+    <div class="search-results" v-if="searchResults.length" style="max-height: 290px; overflow-y: auto;">
       <ul class="list-group">
         <li class="list-group-item" v-for="user in searchResults" :key="user.id">
           {{ user.username }}
@@ -110,6 +110,7 @@ export default {
 <style scoped>
 .search-results {
   margin-top: 15px;
+
 }
 
 .button-group {
@@ -160,4 +161,5 @@ export default {
 .fa-square-xmark {
   color: red;
 }
+
 </style>

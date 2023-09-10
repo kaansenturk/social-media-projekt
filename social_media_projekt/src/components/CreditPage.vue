@@ -1,4 +1,5 @@
 <template>
+<div class="animated-background"></div>
   <div class="credits-container">
     <span class="contributors">Kaan Johann Frederik</span><br />
     <span>Our Techstack, thanks for the nice documentation:</span><br />
@@ -13,6 +14,7 @@
     </transition>
   </div>
 </template>
+
 <script>
 import { ref, onMounted, onUnmounted } from "vue";
 export default {
@@ -115,8 +117,8 @@ export default {
 
 .credits-container {
   width: 50%;
-  height: 400px;
-  margin: 50px auto;
+  height: 600px;
+  margin: 70px auto;
   overflow: auto;
   border: 1px solid #ccc;
   position: relative;

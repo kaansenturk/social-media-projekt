@@ -7,8 +7,8 @@
         <div>{{ username }}</div>
       </div>
     </div>
-    <PostCreator class="col-md-6"/>
-    <FriendsList class="col-md-2 mx-auto" :friends="friendsList"/>
+    <PostCreator class="col-md-6"  style="margin-left: 25%;"/>
+    <FriendsList :friends="friendsList"/>
   </div>
   <FriendsMap v-if="userLocation && userLocation.length ===  2 && friendsList.length > 0" :user="userLocation" :friendsList="this.$store.state.friendsList" class="map-container"></FriendsMap>
   <UserFeed v-if="friendsList.length >= 0" class="userFeed"></UserFeed>
@@ -118,8 +118,7 @@ export default {
 }
 
 .map-container {
-  position: fixed; right: 1vh; bottom: 4vh;
-  width: 15%;
+  position: fixed; right: 4vh; bottom: 5vh;
 }
 
 .account-info {

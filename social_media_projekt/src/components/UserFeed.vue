@@ -215,9 +215,7 @@ export default {
 <style>
 .titleFeed {
   margin-right: 18%;
-  /* Hier den Abstand nach Bedarf anpassen */
   font-size: 34px;
-  /* Sie können auch die Schriftgröße anpassen */
 }
 
 .feedContainer {
@@ -231,14 +229,14 @@ export default {
 
 .post-text {
   font-family: 'Trebuchet MS', sans-serif;
-  color: #333;
+  word-wrap: break-word;
 }
 
 .post-item {
   border: 1px solid #17008a;
   padding: 20px;
   margin-bottom: 20px;
-  background-color: #DAF7A6;
+  background-color: #284585;
   border-radius: 5px;
   max-width: 90%;
   overflow: hidden;
