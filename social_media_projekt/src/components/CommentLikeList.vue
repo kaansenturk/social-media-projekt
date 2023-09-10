@@ -18,7 +18,7 @@
                 <i v-if="likedComments[comment.id]" class="fa-solid fa-heart"></i>
                 <i v-else class="fa-regular fa-heart"></i>
             </button>
-            <a href="" class="comment-likes">{{ likedCommentsCount[comment.id] || 0 }}</a>
+            <span class="comment-likes">{{ likedCommentsCount[comment.id] || 0 }}</span>
         </div>
         <LikeList :commentId=this.commentId :postId=null />
         <FriendsList class="col-md-2" :friends="friendsList" />

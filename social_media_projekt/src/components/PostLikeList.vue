@@ -22,7 +22,7 @@
                 <i v-else class="fa-regular fa-heart"></i>
             </button>
             <a href="" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
-            <button class="btn"><i class="fa-solid fa-message"></i></button>
+            <button @click="visitPostProfile(post.id)" class="btn"><i class="fa-solid fa-message"></i></button>
             <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
         </div>
         <LikeList :postId=this.postId :commentId=null />
@@ -154,6 +154,9 @@ export default {
         async isPostLiked(post_id, user_id) {
             const response = await axios.get(this.$store.state.API + `/isPostLiked/${post_id}/${user_id}`);
             return response.data;
+        },
+        visitPostProfile(postId) {
+            this.$router.push({ name: 'postComments', query: { postId } });
         },
     }
 }
