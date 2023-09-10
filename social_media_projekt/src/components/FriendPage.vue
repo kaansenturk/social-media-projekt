@@ -1,6 +1,6 @@
 <template>
-  <div class="row">
-    <div class="col-md-3 account-info">
+  <div class="container-fluid">
+    <div class="col-md-5 account-info mx-auto text-center">
       <div class="col-md-14 post-list">
         <img v-if="this.profileImageUrl == null" src="../assets/blank_profile_pic.webp" alt="Kein Profilbild"
           class="profile-picture" />
@@ -25,7 +25,7 @@
       </div>
     </div>
     <FriendsList class="col-md-2" :friends="friendsList" />
-    <UserOnlyFeed class="col-md-7" :userId=userId :username='username' />
+    <UserOnlyFeed :userId=userId :username='username' />
   </div>
 </template>
 <script>
@@ -182,25 +182,24 @@ export default {
 </script>
     
 <style scoped>
-.map-container {
-  position: fixed;
-  ;
-  right: 1vh;
-  width: 15%;
+
+.container-fluid {
+  background-color: #3c4e74;
+  padding: 20px;
+  z-index:-2
 }
 
 .account-info {
-  background-color: #2200cd;
+  background-color:  #142957;
   color: white;
-  padding: 35px;
-  margin-left: 15px;
-  max-height: 450px;
-  overflow-y: auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 .title {
-  font-size: 35px;
-  margin-bottom: 10px;
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
 .post-item {

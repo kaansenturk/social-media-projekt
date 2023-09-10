@@ -1,7 +1,7 @@
 <template>
     <div class="feedContainer">
       <div class="col-md-6 post-list mx-auto">
-        <h2 class="title">Posts: </h2>
+        <h2 class="title" style="margin-right: 150px;">Posts: </h2>
         <div v-for="post in this.feed" :key="post.id" class="post-item">
           <div class="post-header">
             <p>{{ username }}:</p>
@@ -175,6 +175,11 @@
   }
   </script>
   <style>
+
+  .feedContainer {
+    margin-left:9%;
+    min-height: 70vh;
+  }
   .post-text {
     font-family: 'Times New Roman', Times, serif;
   }
@@ -183,7 +188,7 @@
     border: 1px solid blue;
     padding: 20px;
     margin-bottom: 20px;
-    background-color: #ECF0F1;
+    background-color: #284585;
     border-radius: 5px;
     max-width: 90%;
     overflow: hidden;

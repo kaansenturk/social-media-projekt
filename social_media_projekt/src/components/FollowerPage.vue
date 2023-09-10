@@ -1,10 +1,14 @@
 <template>
   <div class="row">
     <div class="col-md-3 account-info">
-      <div v-if="profilePicId !== null"><img class="profile-picture" :src="profilePicData"></div>
-      <div v-else><img src="../assets/blank_profile_pic.webp" alt="Profilbild" class="profile-picture" /></div>
+      <div v-if="profilePicId !== null">
+        <img class="profile-picture" :src="profilePicData"/>
+      </div>
+      <div v-else>
+        <img src="../assets/blank_profile_pic.webp" class="profile-picture" />
+      </div>
       <h2 class="title">Account Information</h2>
-      <div>
+      <div class="info">
         <div class="info-item">
           <strong>Username:</strong> {{ username }}
         </div>
@@ -16,44 +20,42 @@
         </div>
       </div>
     </div>
-    <div class="col-md-7 follower-list">
-      <h2>Your {{ currentList === 'Followers' ? 'Follower' : 'Followees' }}</h2>
-
-      <button @click="toggleList">Switch to {{ currentList === 'Followers' ? 'Followees' : 'Followers' }}</button>
-      <div v-if="currentList === 'Followers'">
-        <div v-if="followerList.length === 0" class="no-follower">
-          <p>Nobody's following you yet</p>
-        </div>
-        <div v-for="(follower, index) in followerList" :key="'follower-' + index" class="follower-item">
-          <div v-if="follower.profilePicData">
-            <img :src="follower.profilePicData" alt="Follower Profile Picture" class="profile-picture">
-          </div>
-          <div v-else>
-            <img src="../assets/blank_profile_pic.webp" alt="Default Profile Picture" class="profile-picture">
-          </div>
-          <div @click="visitUserProfile(follower.id, follower.username, follower.email)" class="follower-name">{{ index +
-            1 }}. {{ follower.username }}</div>
-          <div class="follower-email">{{ follower.email }}</div>
-        </div>
+    <div class="col-md-9 follower-list">
+      <div class="list-header">
+        <h2 :style="{ fontFamily: 'Trebuchet MS, sans-serif', color: 'white' }">Your {{ currentList === 'Followers' ? 'Follower' : 'Followees' }}</h2>
+        <button class="toggle-button" @click="toggleList">Switch to {{ currentList === 'Followers' ? 'Followees' : 'Followers' }}</button>
       </div>
+        <div v-if="currentList === 'Followers'">
+          <div v-if="followerList.length === 0" class="no-follower">
+            <p>Nobody's following you yet</p>
+          </div>
+          <div v-for="follower in followerList" :key="follower.id" class="follower-item">
+            <div class="profile-picture-container">
+              <img v-if="follower.profilePicData" :src="follower.profilePicData" class="profile-picture">
+              <img v-else src="../assets/blank_profile_pic.webp" alt="Default Profile Picture" class="profile-picture">
+            </div>
+            <div @click="visitUserProfile(follower.id, follower.username, follower.email)" class="follower-name" :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">{{ follower.username }}</div>
+            <div class="follower-email" :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">{{ follower.email }}</div>
+          </div>
+        </div>
       <div v-if="currentList === 'Followees'">
         <div v-if="followeeList.length === 0" class="no-follower">
           <p>You're not following anybody yet.</p>
         </div>
-        <div v-for="(followee, index) in followeeList" :key="'Followee-' + index" class="follower-item">
-          <div v-if="followee.profilePicData">
-            <img :src="followee.profilePicData" alt="Follower Profile Picture" class="profile-picture">
+        <div v-for="followee in followeeList" :key="followee.id" class="follower-item">
+          <div class="profile-picture-container">
+            <img v-if="followee.profilePicData" :src="followee.profilePicData" alt="Followee Profile Picture" class="profile-picture">
+            <img v-else src="../assets/blank_profile_pic.webp" alt="Default Profile Picture" class="profile-picture">
           </div>
-          <div v-else>
-            <img src="../assets/blank_profile_pic.webp" alt="Default Profile Picture" class="profile-picture">
-          </div>
-          <div class="follower-name">{{ index + 1 }}. {{ followee.username }}</div>
-          <div class="follower-email">{{ followee.email }}</div>
+          <div @click="visitUserProfile(followee.id, followee.username, followee.email)" class="follower-name" :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">{{ followee.username }}</div>
+          <div class="follower-email" :style="{ fontFamily: 'Trebuchet MS, sans-serif' }">{{ followee.email }}</div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+
 <script>
 import axios from "axios";
 import { toRaw } from 'vue';
@@ -164,78 +166,100 @@ export default {
 </script>
   
 <style scoped>
-.no-follower {
-  margin-top: 15px;
-  font-size: x-large;
-}
-
-.map-container {
-  position: fixed;
-  ;
-  right: 1vh;
-  width: 15%;
+.row {
+  background-color: #3c4e74;
 }
 
 .account-info {
-  background-color: #DAF7A6;
-  color: #2C3E50;
+  color: white;
   padding: 20px;
-  margin: 15px;
-  max-height: 400px;
+  height: 100vh;
+  background-color: #142957;
+  height: 300px;
+  font-size: 20px;
 }
 
 .title {
-  font-size: 24px;
+  font-size: 30px;
   margin-bottom: 15px;
 }
 
+.info {
+  margin-bottom: 20px;
+}
+
 .info-item {
   margin-bottom: 10px;
+}
+
+.follower-list {
+  background-color: #3c4e74;
+  padding: 20px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toggle-button {
+  background-color: #3c4e74;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-button:hover {
+  background-color: #142957;
+}
+
+.no-follower {
+  margin-top: 15px;
+  font-size: 18px;
+  text-align: center;
 }
 
 .follower-item {
-  border: 1px solid #ccc;
+  border: 1px solid #17008a;
   padding: 15px;
-  margin: 15px;
-  background-color: white;
+  margin: 15px 0;
+  background-color: #284585;
+  color: white;
   border-radius: 5px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  
 }
 
-.follower-name {
-  font-size: 22px;
-  padding-top: 8px;
-
-}
-
-.follower-name:hover {
-  cursor: pointer;
-}
-
-.follower-count {
-  font-size: 20px;
-  color: #555;
-  margin-right: 90%;
-  margin-top: -30px;
-  margin-bottom: 10px;
-}
-
-.info-item {
-  margin-bottom: 10px;
-}
-
-.post-photo img {
-  max-width: 60%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
+.profile-picture-container {
+  margin-right: 20px;
 }
 
 .profile-picture {
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  margin-bottom: 10px;
 }
+
+.follower-name {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.follower-name:hover {
+  text-decoration: underline;
+}
+
+.follower-email {
+  padding: 30px;
+  font-size: 20px;
+  color: grey;
+}
+
 </style>
-  

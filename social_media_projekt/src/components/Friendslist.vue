@@ -9,6 +9,7 @@
         <div class="friend-actions">
           <button v-if="fromMessenger" @click="$emit('userSelected', friend.userId, friend.username)"><i
               class="fa-solid fa-message"></i></button>
+          <button v-else @click="goToMessenger"><i class="fa-solid fa-message"></i></button>
           <button @click="visitUserProfile(friend.userId, friend.username, friend.email)"><i
               class="fa-solid fa-user"></i></button>
         </div>
@@ -103,7 +104,6 @@ export default {
       }
     }
   }
-
 }
 
 </script>
@@ -113,19 +113,18 @@ export default {
   display: flex;
   flex-direction: column;
   width: 16%;
-  position: fixed;
-  top: 40%;
+  position: fixed; top: 50%;
+  top: 45%;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1;
+  max-height:51%;
 }
 
+
 .friends-title {
-  position: fixed;
-  top: 10vh;
-  top: 320px;
-  left: 0;
   display: flex;
+  position: fixed; top: 40%;
   width: 16%;
   justify-content: center;
   align-items: center;

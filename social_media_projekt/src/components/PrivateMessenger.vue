@@ -1,31 +1,31 @@
 <template>
-  <div class="private-messenger">
-    <div v-if="selectedUser">
-      <h2>Messages with {{ this.friendName }}</h2>
-      <div class="message-list" ref="messageList">
-        <div v-for="(message) in selectedUser.messages" :key="message.id">
-          <div :class="getMessageContainerClass(message.sender)">
-            <!-- <div v-if="shouldDisplayUserName(index)" class="user-name" :class="getUserNameClass(message.sender)">
-              {{ message.sender }}
-            </div> -->
-            <div :class="getMessageClass(message.sender)">
-              {{ message.content }}
+  <div class="message-Background">
+    <div class="private-messenger">
+      <div v-if="selectedUser" class="message-container">
+        <h2 style="color: white;">Messages with {{ this.friendName }}</h2>
+        <div class="message-list" ref="messageList">
+          <div v-for="(message) in selectedUser.messages" :key="message.id">
+            <div :class="getMessageContainerClass(message.sender)">
+              <div :class="getMessageClass(message.sender)">
+                {{ message.content }}
+              </div>
+              <div style="clear: both;"></div>
             </div>
-            <div style="clear: both;"></div>
           </div>
         </div>
+        <div class="message-input">
+          <input v-model="newMessage" placeholder="Type a message..." @keyup.enter="sendMessage" />
+          <button @click="sendMessage">Send</button>
+        </div>
       </div>
-      <div class="message-input">
-    <input v-model="newMessage" placeholder="Type a message..." />
-    <button @click="sendMessage">Send</button>
-  </div>
+      <div v-else>
+        <p>Choose a user to chat with</p>
+      </div>
     </div>
-    <div v-else>
-      <p>Choose a user to chat with</p>
-    </div>
-      <Friendslist :fromMessenger="true" @userSelected="onFriendSelected"></Friendslist>
+    <Friendslist :fromMessenger="true" @userSelected="onFriendSelected"></Friendslist>
   </div>
 </template>
+
 <script>
 import axios from "axios";
 import Friendslist from "./Friendslist.vue";
@@ -184,27 +184,39 @@ export default {
 };
 </script>
 
-<style>
-/* Style for compoennt*/
+<style scoped>
+.message-Background {
+  background-color: #3c4e74;
+  min-height:90vh;
+}
 .private-messenger {
-  max-width: 600px;
-  margin: 0 auto;
+  width: 900px;
   padding: 20px;
+  position:absolute;
+  top:15%;
+  left:25%;
+  background-color: #142957;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  font-family: 'Trebuchet MS', sans-serif;
 }
 
 .message-list {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 10px;
-  max-height: 300px;
+  max-height: 600px;
   overflow-y: auto;
+  background-color: #3c4e74;
+
 }
 
 .message {
   margin-bottom: 3px;
-  padding: 3px;
-  border-radius: 3px;
+  padding: 10px;
+  border-radius: 5px;
   word-break: break-word;
+  clear: both;
 }
 
 .sent-message-container {
@@ -220,13 +232,47 @@ export default {
 .sent-message {
   display: inline-block;
   background-color: #DCF8C6;
-  max-width: 300px;
+  padding: 10px;
+  max-width: 70%;
+  border-radius: 15px;
+  word-wrap: break-word;
 }
 
 .received-message {
   display: inline-block;
   background-color: #F3F3F3;
-  max-width: 300px;
+  padding: 10px;
+  max-width: 70%;
+  border-radius: 15px;
+  word-wrap: break-word;
+}
+
+.message-input {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.message-input input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.message-input button {
+  background-color: #2200cd;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.message-input button:hover {
+  background-color: #1a0099;
 }
 
 .user-name {

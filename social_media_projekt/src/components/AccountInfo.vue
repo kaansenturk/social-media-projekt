@@ -1,10 +1,10 @@
 <template>
-  <div class="row">
+  <div class="container-fluid">
     <div v-if="profilePicId !== null"><img class="profile-picture" :src="profilePicData"><i class="fa-solid fa-pencil"
         @click="showDialog = true"></i></div>
     <div v-else><img src="../assets/blank_profile_pic.webp" alt="Profilbild" class="profile-picture" /><i
         class="fa-solid fa-pencil" @click="showDialog = true"></i></div>
-    <div class="col-md-3 account-info">
+    <div class="col-md-5 account-info mx-auto text-center">
       <h2 class="title">Account Information</h2>
       <dialog :open="showDialog">
         <h2>Choose a new profile picture</h2>
@@ -318,62 +318,134 @@ export default {
 </script>
   
 <style scoped>
-.map-container {
-  position: fixed;
-  ;
-  right: 1vh;
-  width: 15%;
+.container-fluid {
+  background-color: #3c4e74;
+  z-index:-2
 }
 
 .account-info {
-  background-color: #2200cd;
-  padding: 2%;
+  background-color:  #142957;
   color: white;
-  margin: auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 .title {
   font-size: 24px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .info-item {
+  margin-bottom: 10px;
+}
+
+.info-item label {
+  font-weight: bold;
+  display: block;
   margin-bottom: 5px;
 }
 
-.post-item {
-  border: 1px solid blue;
-  padding: 20px;
-  margin-bottom: 20px;
-  background-color: #f5f5f5;
+.info-item input[type="text"],
+.info-item input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  max-width: 90%;
-  overflow: hidden;
-  text-align: left;
-  font-size: 20px;
 }
 
-.post-date {
-  font-size: 14px;
-  color: #555;
-  margin-top: 5px;
+.info-item input[type="text"]:focus,
+.info-item input[type="password"]:focus {
+  outline: none;
+  border-color: #142957;
+  box-shadow: 0px 0px 5px rgba(34, 0, 205, 0.5);
 }
 
-.info-item {
-  margin-bottom: 10px;
+button {
+  background-color: #142957;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
 }
 
-.post-photo img {
-  max-width: 60%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
+button:hover {
+  background-color: #1a0099;
 }
 
 .profile-picture {
   width: 70px;
   height: 70px;
   border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.profile-picture i.fa-pencil {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #2200cd;
+  color: white;
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.dialog-content {
+  text-align: center;
+}
+
+.dialog-content h2 {
+  font-size: 20px;
   margin-bottom: 10px;
-}</style>
-  
+}
+
+.dialog-content input[type="file"] {
+  margin-bottom: 20px;
+}
+
+.dialog-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  margin-top: 10px;
+}
+
+.menu-button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.menu-button-container button {
+  margin: 0 10px;
+}
+
+.change-password-container {
+  margin-top: 20px;
+}
+
+.change-password-container input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.change-password-container button {
+  margin-top: 10px;
+}
+
+.delete-profile-button {
+  background-color: #d0342c;
+  margin-top: 20px;
+}
+
+.delete-profile-button:hover {
+  background-color: #b32b27;
+}
+
+</style>
