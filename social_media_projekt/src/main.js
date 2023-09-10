@@ -9,6 +9,7 @@ import HomePage from "./components/Homepage"
 import FollowerPage from "./components/FollowerPage"
 import PostComments from "./components/PostComments"
 import CreditPage from "./components/CreditPage"
+import ImpressumPage from "./components/ImpressumPage"
 
 import BootstrapVue3 from 'bootstrap-vue-3'
 
@@ -32,6 +33,7 @@ const routes = [
     {path: "/postLikeList", component: PostLikeList, meta: {requiresAuth: true}, name: "postLikeList"},
     {path: "/commentLikeList", component: CommentLikeList, meta: {requiresAuth: true}, name: "commentLikeList"},
     {path: "/credits", component: CreditPage, meta: {requiresAuth: true}},
+    {path: "/impressum", component: ImpressumPage, meta: {requiresAuth: true}},
 
 ]
 const router = createRouter(
