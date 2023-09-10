@@ -30,14 +30,14 @@
         <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
         <i v-else class="fa-regular fa-heart"></i>
       </button>
-      <a href="" class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
+      <a class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
       <button @click="visitPostProfile(post.id)" class="btn">
         <i class="fa-solid fa-message"></i>
       </button>
       <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
     </div>
     <LikeList :postId="this.postId" :commentId="null" />
-    <FriendsList class="col-md-2" :friends="friendsList" />
+    <FriendsList class="col-md-2"/>
   </div>
 </template>
 <script>

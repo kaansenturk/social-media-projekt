@@ -15,7 +15,7 @@
         <div>{{ ownUsername }}</div>
       </div>
     </div>
-    <div class="col-md-0" id="comment-item">
+    <div class="col-md-8" id="comment-item">
       <div class="comment-header">
         <p>{{ username }}:</p>
       </div>
@@ -57,7 +57,7 @@ export default {
       commentLikes: {},
       likedComments: {},
       likedCommentsCount: {},
-      profilePicData: {},
+      profilePicData: null,
       profilePicId: null,
     };
   },
@@ -133,9 +133,10 @@ export default {
         this.username = response.data.username;
 
         const response1 = await axios.get(
-          this.API + `/users/${this.$store.state.logged_user}`
+          this.API + `/users/${this.$store.state.logged_user_id}`
         );
-        if (response1.data.photo_id) {
+        console.log(response1.data)
+        if (response1.data.photo_id != null) {
           this.profilePicId = response1.data.photo_id;
         }
       } catch (error) {

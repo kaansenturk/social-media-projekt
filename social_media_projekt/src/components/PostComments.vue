@@ -1,4 +1,5 @@
 <template>
+  <div class="page">
   <div class="row">
     <div class="col-md-2 account-info">
       <div class="title">
@@ -15,8 +16,7 @@
         <div>{{ ownUsername }}</div>
       </div>
     </div>
-    <CommentCreator class="col-md-7" :postId="postId" />
-    <div class="col-md-0" id="post-item">
+    <div class="col-md-10 mx-auto" id="post-item">
       <div class="post-header">
         <p>{{ username }}:</p>
       </div>
@@ -37,8 +37,10 @@
       <button class="btn"><i class="fa-solid fa-message"></i></button>
       <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
     </div>
+  </div>
+    <CommentCreator class="mx-auto commentcreator" :postId="postId" />
     <PostFeed :postId="postId" />
-    <FriendsList class="col-md-2" :friends="friendsList" />
+    <FriendsList class="col-md-2 friends" :friends="friendsList" />
   </div>
 </template>
 <script>
@@ -89,6 +91,9 @@ export default {
       this.post.id,
       this.$store.state.logged_user_id
     );
+    if (this.post.photo_id !== null) {
+          this.photoData[this.post.photo_id] = await this.getPhoto(this.post.photo_id);
+        }
 
     const response = await this.getPostLikes(this.post.id);
     newLikedPostsCount[this.post.id] = response;
@@ -128,7 +133,6 @@ export default {
     async fetchPost() {
       try {
         const response = await axios.get(this.API + `/getPost/${this.postId}`);
-
         this.post = response.data;
       } catch (error) {
         console.error(error);
@@ -140,9 +144,8 @@ export default {
           this.API + `/users/${this.post.user_id}`
         );
         this.username = response.data.username;
-
         const response1 = await axios.get(
-          this.API + `/users/${this.$store.state.logged_user}`
+          this.API + `/users/${this.$store.state.logged_user_id}`
         );
         if (response1.data.photo_id) {
           this.profilePicId = response1.data.photo_id;
@@ -198,8 +201,30 @@ export default {
 </script>
 
 <style scoped>
+.page {
+  background-color: #3c4e74;
+}
+.friends{
+  margin-top: 15px;
+}
+.commentcreator {
+  max-width: 40%;
+}
+#post-item{
+  border: 1px solid blue;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #aaa;
+  border-radius: 5px;
+  max-width: 70%;
+  overflow: hidden;
+  text-align: left;
+  font-size: 20px;
+  color: white;
+}
+
 .account-info {
-  background-color: #2200cd;
+  background-color: #284585;
   color: white;
   padding: 35px;
   margin-left: 15px;

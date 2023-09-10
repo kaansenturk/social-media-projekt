@@ -133,7 +133,6 @@ export default {
   width: 16%;
   position: fixed;
   top: 50%;
-  top: 45%;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1;
@@ -143,7 +142,7 @@ export default {
 .friends-title {
   display: flex;
   position: fixed;
-  top: 40%;
+  top: 45%;
   width: 16%;
   justify-content: center;
   align-items: center;

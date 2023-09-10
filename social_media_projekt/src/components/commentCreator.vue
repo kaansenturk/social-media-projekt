@@ -56,73 +56,13 @@ export default {
 </script>
 
 <style>
-.image-preview {
-  max-width: 100%;
-  max-height: 200px;
-  object-fit: contain;
-}
-.active {
-  border: 2px dashed #0066ff;
-}
-
-.file-list {
-  margin-top: 20px;
-}
-
-.file-item {
-  margin: 5px 0;
-}
-.file-uploader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100px;
-}
-
-.drop-area {
-  border: 2px dashed #ccc;
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-}
 #comment_text {
   width: 100%;
-  height: 100px;
 }
-
 .comment-container {
-  height: 20%;
+  height: 15%;
   padding: 30px;
-  background-color: #fff;
+  background-color: #aaa;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.login-container h1 {
-  text-align: center;
-}
-
-.login-container input[type="text"],
-.login-container input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.login-container button {
-  width: 100%;
-  padding: 10px;
-  background-color: #2200cd;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.login-container button:hover {
-  background-color: #2200cd;
 }
 </style>

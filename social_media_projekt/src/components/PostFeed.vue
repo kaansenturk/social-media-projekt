@@ -1,8 +1,8 @@
 <template>
   <div class="feedContainer">
     <div class="col-md-7 comment-list mx-auto">
-      <h2 class="title">Comments:</h2>
-      <div v-for="comment in this.feed" :key="comment.id" class="comment-item">
+      <h2 class="mx-auto title">Comments:</h2>
+      <div v-for="comment in this.feed" :key="comment.id" class="mx-auto comment-item">
         <div class="comment-header">
           <p>{{ comment.user_id }}:</p>
           <div class="comment-text">{{ comment.comment_text }}</div>
@@ -150,6 +150,16 @@ export default {
 };
 </script>
 <style>
+/* .feedContainer {
+  border: 1px solid #17008a;
+  border-radius: 5px;
+} */
+.title {
+  color: #aaa;
+}
+.comment-likes:hover {
+  cursor: pointer;
+}
 .comment-text {
   font-family: "Trebuchet MS", sans-serif;
 }
@@ -158,7 +168,7 @@ export default {
   border: 1px solid blue;
   padding: 20px;
   margin-bottom: 20px;
-  background-color: #ecf0f1;
+  background-color: #284585;
   border-radius: 5px;
   max-width: 90%;
   overflow: hidden;

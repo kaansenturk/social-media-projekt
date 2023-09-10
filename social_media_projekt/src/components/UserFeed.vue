@@ -1,7 +1,7 @@
 <template>
   <div class="feedContainer">
     <div class="col-md-7 post-list mx-auto">
-      <h2 class="titleFeed" style="margin-left: 20px">Your Feed:</h2>
+      <h2 class="titleFeed">Your Feed:</h2>
       <div v-for="post in this.feed" :key="post.id" class="post-item">
         <div class="post-header">
           <p class="username">{{ post.username }}:</p>
@@ -78,7 +78,6 @@ export default {
     },
     async fetchPostsLoop(friendsList) {
       for (let friend of friendsList) {
-        console.log(friend);
         await this.fetchPosts(friend.userId, friend.username);
       }
       this.feed = this.feed.flat();
@@ -105,16 +104,22 @@ export default {
         const response = await axios.get(
           this.$store.state.API + `/getPosts?user_id=${userId}`
         );
-        // Add the username to each post in the response
-        const responseDataWithUsername = response.data.map((post) => {
-          return {
-            ...post,
-            username: username,
-          };
-        });
+        // Add the username to each post in the response and dont allow a post twice
+        const responseDataWithUsername = response.data
+          .filter((post) => {
+            return !this.feed.some(
+              (existingPost) => existingPost.id === post.id
+            );
+          })
+          .map((post) => {
+            return {
+              ...post,
+              username: username,
+            };
+          });
         this.feed = [...this.feed, ...responseDataWithUsername];
         this.feed = this.feed.flat();
-
+        console.log(this.feed);
         this.feed.sort((a, b) => {
           const dateA = new Date(a.created_at);
           const dateB = new Date(b.created_at);

@@ -243,35 +243,7 @@ export default {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
 .post-container button:hover {
   background-color: #17008a;
-}
-.login-container h1 {
-  text-align: center;
-}
-
-.login-container input[type="text"],
-.login-container input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.login-container button {
-  width: 100%;
-  padding: 10px;
-  background-color: #2200cd;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.login-container button:hover {
-  background-color: #2200cd;
 }
 </style>

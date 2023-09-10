@@ -15,7 +15,7 @@
         <div>{{ username }}</div>
       </div>
     </div>
-    <PostCreator class="col-md-6" style="margin-left: 25%" />
+    <PostCreator class="col-md-6" style="margin-left: 25%; margin-top: 5px;" />
     <FriendsList :friends="friendsList" />
   </div>
   <FriendsMap
