@@ -1,8 +1,8 @@
 <template>
   <div class="col-md-0 likes-list">
     <div v-if="likeList.length == 0" class="no-likes">
-      <p v-if="postId != null" style="color: white;">Nobody likes this post:</p>
-      <p v-else-if="commentId != null" style="color: white;">Nobody likes this comment:</p>
+      <p v-if="postId != null" style="color: white;">Nobody liked this post yet:</p>
+      <p v-else-if="commentId != null" style="color: white;">Nobody liked this comment yet:</p>
     </div>
     <div v-else class="user-item-container">
       <p v-if="postId != null" style="color: white;">Users who liked this post:</p>

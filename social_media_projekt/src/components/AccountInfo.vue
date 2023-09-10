@@ -15,7 +15,7 @@
         title="Change profilepicture"
         @click="showDialog = true"></i>
     </div>
-    <div class="col-md-5 account-info mx-auto text-center">
+    <div class="account-info mx-auto text-center">
       <h2 class="title">Account Information</h2>
       <dialog :open="showDialog">
         <h2>Choose a new profile picture</h2>
@@ -88,7 +88,8 @@
       </div>
     </div>
     <FriendsList class="col-md-2" />
-    <UserOnlyFeed
+    <UserOnlyFeed 
+      class="mx-auto"
       :userId="this.$store.state.logged_user_id"
       :username="username" />
   </div>

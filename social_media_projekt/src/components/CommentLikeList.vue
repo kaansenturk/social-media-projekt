@@ -16,7 +16,8 @@
         <div>{{ ownUsername }}</div>
       </div>
     </div>
-    <div class="col-md-8 mx-auto" id="comment-item">
+    <div class="col-md-8 mx-auto">
+    <div class="mx-auto" id="comment-item">
       <div class="comment-header">
         <p>{{ username }}:</p>
       </div>
@@ -33,6 +34,7 @@
       }}</span>
     </div>
     <LikeList :commentId="this.commentId" :postId="null" />
+</div>
     <FriendsList class="col-md-2" :friends="friendsList" />
   </div>
 </div>
@@ -183,7 +185,7 @@ export default {
 
 <style scoped>
 .page {
-    background-color: #284585;
+    background-color: #3c4e74;
 }
 #comment-item{
   border: 1px solid blue;

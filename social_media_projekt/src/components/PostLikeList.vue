@@ -1,46 +1,48 @@
 <template>
-    <div class="page">
-  <div class="row">
-    <div class="col-md-2 account-info">
-      <div class="title">
-        <img
-          v-if="this.profilePicData == null"
-          src="../assets/blank_profile_pic.webp"
-          alt="Kein Profilbild"
-          class="profile-picture" />
-        <img
-          v-else
-          :src="this.profilePicData"
-          alt="Profilbild"
-          class="profile-picture" />
-        <div>{{ ownUsername }}</div>
+  <div class="page">
+    <div class="row">
+      <div class="col-md-2 account-info">
+        <div class="title">
+          <img
+            v-if="this.profilePicData == null"
+            src="../assets/blank_profile_pic.webp"
+            alt="Kein Profilbild"
+            class="profile-picture" />
+          <img
+            v-else
+            :src="this.profilePicData"
+            alt="Profilbild"
+            class="profile-picture" />
+          <div>{{ ownUsername }}</div>
+        </div>
+      </div>
+      <div class="col-md-10">
+        <div class="mx-auto" id="post-item">
+          <div class="post-header">
+            <p>{{ username }}:</p>
+          </div>
+          <div v-if="post.photo_id !== null" class="post-photo">
+            <img :src="photoData[post.photo_id]" alt="Photo" />
+          </div>
+          <div class="post-text">{{ post.caption }}</div>
+          <p class="post-date">{{ post.created_at }}</p>
+          <button
+            @click="likePost(post.id, this.$store.state.logged_user_id)"
+            class="btn">
+            <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
+            <i v-else class="fa-regular fa-heart"></i>
+          </button>
+          <a class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
+          <button @click="visitPostProfile(post.id)" class="btn">
+            <i class="fa-solid fa-message"></i>
+          </button>
+          <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
+        </div>
+        <LikeList :postId="this.postId" :commentId="null" />
       </div>
     </div>
-    <div class="col-md-0 mx-auto"  id="post-item">
-      <div class="post-header">
-        <p>{{ username }}:</p>
-      </div>
-      <div v-if="post.photo_id !== null" class="post-photo">
-        <img :src="photoData[post.photo_id]" alt="Photo" />
-      </div>
-      <div class="post-text">{{ post.caption }}</div>
-      <p class="post-date">{{ post.created_at }}</p>
-      <button
-        @click="likePost(post.id, this.$store.state.logged_user_id)"
-        class="btn">
-        <i v-if="likedPosts[post.id]" class="fa-solid fa-heart"></i>
-        <i v-else class="fa-regular fa-heart"></i>
-      </button>
-      <a class="post-likes">{{ likedPostsCount[post.id] || 0 }}</a>
-      <button @click="visitPostProfile(post.id)" class="btn">
-        <i class="fa-solid fa-message"></i>
-      </button>
-      <span class="comment-amount">{{ commentAmount[post.id] || 0 }}</span>
-    </div>
-    <LikeList :postId="this.postId" :commentId="null" />
-    <FriendsList class="col-md-2"/>
+    <FriendsList />
   </div>
-</div>
 </template>
 <script>
 import FriendsList from "./Friendslist.vue";
@@ -199,7 +201,7 @@ export default {
 </script>
 
 <style scoped>
-#post-item{
+#post-item {
   border: 1px solid blue;
   padding: 20px;
   margin-bottom: 20px;
@@ -215,11 +217,13 @@ export default {
 .page {
   background-color: #3c4e74;
 }
+.post-likes:hover {
+  cursor: pointer;
+}
 .account-info {
   background-color: #2200cd;
   color: white;
   padding: 35px;
-  margin-left: 15px;
   height: fit-content;
 }
 

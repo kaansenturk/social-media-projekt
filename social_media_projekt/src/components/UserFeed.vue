@@ -277,7 +277,9 @@ export default {
 
 .post-likes {
   color: #333;
-  /* Set your desired text color here */
+}
+.post-likes:hover {
+  cursor: pointer;
 }
 
 .post-photo img {
