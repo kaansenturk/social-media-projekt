@@ -304,7 +304,7 @@ button {
 }
 
 .username {
-  color: #333;
+  color: white;
   font-size: 150%;
 }
 </style>

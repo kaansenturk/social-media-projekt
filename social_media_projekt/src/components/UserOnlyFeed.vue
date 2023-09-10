@@ -221,7 +221,7 @@ export default {
 
 .post-date {
   font-size: 14px;
-  color: #555;
+  color: #aaa;
   margin-top: 5px;
 }
 
