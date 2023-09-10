@@ -320,6 +320,7 @@ export default {
 .follower-list {
   background-color: #3c4e74;
   padding: 20px;
+  min-height: 90vh; 
 }
 
 .list-header {
