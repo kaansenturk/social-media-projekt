@@ -117,7 +117,7 @@ export default {
 
 .credits-container {
   width: 50%;
-  height: 600px;
+  height: 400px;
   margin: 70px auto;
   overflow: auto;
   border: 1px solid #ccc;
