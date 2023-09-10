@@ -172,12 +172,12 @@ export default {
 }
 
 .user-name {
-  color: #555;
+  color: #aaa;
 }
 
 .user-date {
   font-size: 14px;
-  color: #555;
+  color: #aaa;
   margin-top: 5px;
 }
 
