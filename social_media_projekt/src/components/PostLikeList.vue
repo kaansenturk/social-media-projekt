@@ -1,4 +1,5 @@
 <template>
+    <div class="page">
   <div class="row">
     <div class="col-md-2 account-info">
       <div class="title">
@@ -15,7 +16,7 @@
         <div>{{ ownUsername }}</div>
       </div>
     </div>
-    <div class="col-md-0" id="post-item">
+    <div class="col-md-0 mx-auto"  id="post-item">
       <div class="post-header">
         <p>{{ username }}:</p>
       </div>
@@ -39,6 +40,7 @@
     <LikeList :postId="this.postId" :commentId="null" />
     <FriendsList class="col-md-2"/>
   </div>
+</div>
 </template>
 <script>
 import FriendsList from "./Friendslist.vue";
@@ -64,7 +66,7 @@ export default {
       likedPosts: {},
       likedPostsCount: {},
       profilePicId: null,
-      profilePicData: {},
+      profilePicData: null,
     };
   },
   created() {
@@ -139,7 +141,7 @@ export default {
         this.username = response.data.username;
 
         const response1 = await axios.get(
-          this.API + `/users/${this.$store.state.logged_user}`
+          this.API + `/users/${this.$store.state.logged_user_id}`
         );
         if (response1.data.photo_id) {
           this.profilePicId = response1.data.photo_id;
@@ -197,6 +199,22 @@ export default {
 </script>
 
 <style scoped>
+#post-item{
+  border: 1px solid blue;
+  padding: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  background-color: #aaa;
+  border-radius: 5px;
+  max-width: 40%;
+  overflow: hidden;
+  text-align: center;
+  font-size: 20px;
+  color: white;
+}
+.page {
+  background-color: #3c4e74;
+}
 .account-info {
   background-color: #2200cd;
   color: white;

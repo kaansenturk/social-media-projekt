@@ -1,12 +1,12 @@
 <template>
   <div class="col-md-0 likes-list">
     <div v-if="likeList.length == 0" class="no-likes">
-      <p v-if="postId != null">Nobody likes this post:</p>
-      <p v-else-if="commentId != null">Nobody likes this comment:</p>
+      <p v-if="postId != null" style="color: white;">Nobody likes this post:</p>
+      <p v-else-if="commentId != null" style="color: white;">Nobody likes this comment:</p>
     </div>
     <div v-else class="user-item-container">
-      <p v-if="postId != null">Users who liked this post:</p>
-      <p v-else-if="commentId != null">Users who liked this comment:</p>
+      <p v-if="postId != null" style="color: white;">Users who liked this post:</p>
+      <p v-else-if="commentId != null" style="color: white;">Users who liked this comment:</p>
       <div v-for="user in userList" :key="user.user_id" class="user-item">
         <div v-if="user.photo_id">
           <img

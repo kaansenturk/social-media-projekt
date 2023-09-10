@@ -1,4 +1,5 @@
 <template>
+    <div class="page">
   <div class="row">
     <div class="col-md-2 account-info">
       <div class="title">
@@ -15,7 +16,7 @@
         <div>{{ ownUsername }}</div>
       </div>
     </div>
-    <div class="col-md-8" id="comment-item">
+    <div class="col-md-8 mx-auto" id="comment-item">
       <div class="comment-header">
         <p>{{ username }}:</p>
       </div>
@@ -34,6 +35,7 @@
     <LikeList :commentId="this.commentId" :postId="null" />
     <FriendsList class="col-md-2" :friends="friendsList" />
   </div>
+</div>
 </template>
 <script>
 import FriendsList from "./Friendslist.vue";
@@ -180,11 +182,27 @@ export default {
 </script>
 
 <style scoped>
+.page {
+    background-color: #284585;
+}
+#comment-item{
+  border: 1px solid blue;
+  padding: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  background-color: #aaa;
+  border-radius: 5px;
+  max-width: 40%;
+  overflow: hidden;
+  text-align: center;
+  font-size: 20px;
+  color: white;
+}
+
 .account-info {
-  background-color: #2200cd;
+  background-color: #284585;
   color: white;
   padding: 35px;
-  margin-left: 15px;
   height: fit-content;
 }
 
