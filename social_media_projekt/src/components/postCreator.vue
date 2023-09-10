@@ -52,7 +52,7 @@
           @change="handleFileChange"
           style="display: none" />
       </div>
-      <button type="button" @click.prevent="submitPost">posten</button>
+      <button type="button" @click.prevent="submitPost">post</button>
     </form>
   </div>
 </template>
