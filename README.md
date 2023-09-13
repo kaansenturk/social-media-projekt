@@ -4,7 +4,7 @@ Dokumentation:
 
 Setup über Makefile:
     in root-directory:
-        ````
+        ```
         make init # ausführen für komplettes Setup inklusive neuer DB.
         make start # ausführen um backend und frontend lokal hochzufahren
         ```
@@ -104,3 +104,24 @@ Statistiken/Analytics: Wenn es sich um eine Seite für Unternehmen oder öffentl
 
     Blank Profile Pic: 
     https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png
+
+    Vue-leaflet-logo:
+    https://vue2-leaflet.netlify.app/logo.png
+
+    GitHub Logo:
+    https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+
+    FastAPI Logo:
+    https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png
+    
+    Axios Logo:
+    https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Axios_%28computer_library%29_logo.svg/1280px-Axios_%28computer_library%29_logo.svg.png
+
+    Python Logo:
+    https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1869px-Python-logo-notext.svg.png
+
+    Amazon EC2 Logo:
+    https://devopsdatacenter.files.wordpress.com/2024/04/amazon_ec2.png
+
+    SQLite Logo:
+    https://e7.pngegg.com/pngimages/890/928/png-clipart-sqlite-logo-sqlite-logo-icons-logos-emojis-tech-companies-thumbnail.png
