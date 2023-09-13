@@ -75,17 +75,15 @@ $pip install geocoder
 
 - Startseite: Eine Anfangsseite, auf dem der Nutzer sich anmelden oder auch registrieren kann.
 
-- Account Info: Ein persönliches Profil, auf dem Nutzer Informationen wie ihren Namen, ein Profilbild und andere Details über sich selbst angeben können und angezeigt bekommen.
+- Home: Die Hauptseite enthält viele Funktionen wie die Suche, mit der Nutzer nach anderen Nutzern suchen können, eine Timeline, der Hauptbereich, in dem Nutzer Inhalte wie Texte, Bilder oder GIFs veröffentlichen und anzeigen können. Diese Inhalte werden in   einer chronologischen Reihenfolge angezeigt, eine Liste für die gefolgten Nutzer und eine GeoLocation Map, mit der man die Standorte von sich und anderen gefolgten Nutzern sehen kann.
 
-- Beiträge/Timeline: Der Hauptbereich, in dem Nutzer Inhalte wie Texte, Bilder oder GIFs veröffentlichen und anzeigen können. Diese Inhalte werden in einer chronologischen Reihenfolge angezeigt.
+- Account Info: Ein persönliches Profil, auf dem Nutzer Informationen wie ihren Namen, ein Profilbild und andere Details über sich selbst angeben können und angezeigt bekommen.
 
 - Followee/Follower: Eine Liste der anderen Nutzer, mit denen der Nutzer eine Verbindung hergestellt hat, entweder durch Abonnenten (Follower) oder durch das Abonnieren (Folgen) ihrer Aktivitäten.
 
-- Interaktionsmöglichkeiten: Die Social-Media-Plattfomr ermöglicht es den Nutzern, Beiträge zu kommentieren, zu liken um Interaktionen zu fördern.
+- Interaktionsmöglichkeiten: Die Social-Media-Plattform ermöglicht es den Nutzern, Beiträge zu kommentieren, zu liken um Interaktionen zu fördern.
 
 - Nachrichten/Messenger: Ein privater Messaging-Dienst, über den Nutzer direkt miteinander kommunizieren können.
-
-- Suchfunktion: Eine Suchleiste, mit der Nutzer nach anderen Nutzern suchen können.
 
 
 
